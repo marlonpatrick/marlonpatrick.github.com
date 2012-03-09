@@ -7,7 +7,7 @@ title: Marlon Patrick
 subtitle: Dicas de um programador
 author: Marlon Patrick
 simple_search: http://google.com/search
-description: Dicas, Java, sugestões, Java, experências do dia-a-dia e por fim, Java
+description: Dicas, Java, sugest&otilde;es, Java, experi&ecirc;ncias do dia-a-dia, Java...
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -19,7 +19,7 @@ date_format: "%d de %B de %Y"
 subscribe_rss: /atom.xml
 subscribe_email:
 # RSS feeds can list your email address if you like
-email: marlonpatrick10@gmail.com
+email:
 
 # ----------------------- #
 #    Jekyll & Plugins     #
@@ -59,7 +59,7 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/twitter.ht
 # ----------------------- #
 
 # Github repositories
-github_user: marlonpatrick10
+github_user:
 github_repo_count: 0
 github_show_profile_link: true
 github_skip_forks: true
