@@ -48,15 +48,17 @@ forma:
 		<section>
 			<h1>Categorias</h1>
 			<span id="todas_categorias">
-				{% for category in site.categories %}
-					<a href="{{"/"}}{{site.category_dir}}{{"/"}}{{ category | first }}">{{ category | first }}</a>
-				{% endfor %}
+				{% raw %}
+					{% for category in site.categories %}
+						<a href="{{"/"}}{{site.category_dir}}{{"/"}}{{ category | first | downcase }}">{{ category | first }}</a>
+					{% endfor %}
+				{% endraw %}
 			</span>
 		</section>
 	4.3 - No arquivo octopress/_config.yml adicione o novo modulo no atributo default_asides:
 	default_asides: [custom/asides/versiculo.html, asides/recent_posts.html, custom/asides/categorias.html, custom/asides/about.html]
 
-A mesma l&oacute;gica das categorias pode ser aplicada para tags, al&eacute; disso voc&ecirc; pode construir outros 
+A mesma l&oacute;gica das categorias pode ser aplicada para tags, al&eacute;m disso voc&ecirc; pode construir outros 
 m&oacute;dulos, como o que criei para postar um vers&iacute;culo b&iacute;blico(tudo bem que a galera de TI n&atilde;o se liga muito nisso), 
 mas, ta&iacute; pra quem tiver um tempinho.
 	
