@@ -33,7 +33,7 @@ destination: public
 plugins: plugins
 code_dir: downloads/code
 category_dir: blog/categorias
-default_asides: [custom/asides/versiculo.html, asides/recent_posts.html, custom/asides/categorias.html, custom/asides/about.html]
+category_title_prefix: "Categoria: "
 markdown: rdiscount
 pygments: false # default python pygments have been replaced by pygments.rb
 
