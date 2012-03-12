@@ -1,0 +1,8 @@
+<section>
+  <h1>Categorias</h1>
+  <span id="todas_categorias">
+    {% for category in site.categories %}
+		<a href="{{"/"}}{{site.category_dir}}{{"/"}}{{ category | first }}">{{ category | first }}</a>
+    {% endfor %}
+  </span>
+</section>
