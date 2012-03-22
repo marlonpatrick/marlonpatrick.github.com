@@ -22,9 +22,10 @@ agora), pois, n&atilde;o h&aacute; suporte nenhum para esse tipo de mecanismo, v
 e alterar as palavras direto nos html's.
 
 **3 - Internacionaliza&ccedil;&atilde;o(datas)**: Se voc&ecirc; observar os nomes dos meses e dias da semana por padr&aacute;o 
-s&atilde;o ingl&ecirc;s, mas, fica tranquilo, &eacute; s&oacute; copiar a solu&ccedil;&atilde;o de <a href="http://hugolyra.com/" title="Hugo Lyra" target="_blank">Hugo</a>:
-	3.1 - Abra o arquivo octopress/plugins/date.rb
-	3.2 - Acrescente o seguinte codigo no inicio do arquivo:
+s&atilde;o ingl&ecirc;s, mas, fica tranquilo, &eacute; s&oacute; copiar a solu&ccedil;&atilde;o de 
+<a href="http://hugolyra.com/" title="Hugo Lyra" target="_blank">Hugo</a>:  
+3.1 - Abra o arquivo octopress/plugins/date.rb  
+3.2 - Acrescente o seguinte codigo no inicio do arquivo:
 		Date::MONTHNAMES = [nil] + %w(Janeiro Fevereiro Marco Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro)  
 		Date::DAYNAMES = %w(Domingo Segunda-Feira Terca-Feira Quarta-Feira Quinta-Feira Sexta-Feira Sabado)  
 		Date::ABBR_MONTHNAMES = [nil] + %w(Jan Fev Mar Abr Mai Jun Jul Aug Sep Out Nov Dez)  
@@ -42,9 +43,9 @@ s&atilde;o ingl&ecirc;s, mas, fica tranquilo, &eacute; s&oacute; copiar a solu&c
 		end
 
 **4 - Categorias**: N&atilde;o h&aacute; um template pronto para exibir as categorias na barra lateral, portanto criei um da seguinte 
-forma:
-	4.1 - Crie um arquivo octopress/source/_includes/custom/asides/categorias.html
-	4.2 - O conteudo do arquivo sera:
+forma:  
+4.1 - Crie um arquivo octopress/source/_includes/custom/asides/categorias.html  
+4.2 - O conteudo do arquivo sera:  
 		<section>
 			<h1>Categorias</h1>
 			<span id="todas_categorias">
@@ -55,8 +56,8 @@ forma:
 				{% endraw %}
 			</span>
 		</section>
-	4.3 - No arquivo octopress/_config.yml adicione o novo modulo no atributo default_asides:
-	default_asides: [custom/asides/versiculo.html, asides/recent_posts.html, custom/asides/categorias.html, custom/asides/about.html]
+4.3 - No arquivo octopress/_config.yml adicione o novo modulo no atributo default_asides:
+default_asides: [custom/asides/versiculo.html, asides/recent_posts.html, custom/asides/categorias.html, custom/asides/about.html]
 
 A mesma l&oacute;gica das categorias pode ser aplicada para tags, al&eacute;m disso voc&ecirc; pode construir outros 
 m&oacute;dulos, como o que criei para postar um vers&iacute;culo b&iacute;blico(tudo bem que a galera de TI n&atilde;o se liga muito nisso), 
@@ -65,10 +66,10 @@ mas, ta&iacute; pra quem tiver um tempinho.
 **5 - Customizando a url do GitHub para o seu pr&oacute;prio dom&iacute;nio**: Apesar de est&aacute; bem explicado no site do 
 <a href="http://github.com/" title="GitHub" target="_blank">GitHub</a>, eu apanhei um 
 pouco nessa etapa devido a minha total e absoluta falta de conhecimento em gerencimanto de dom&iacute;nio, mas, basicamente o que se tem 
-de fazer &eacute;:
-	5.1 - Criar um arquivo CNAME em octopress/source, onde o conteudo sera o seu dominio: meudominio.com 
-	5.2 - Criar um registro(zone file) A (host) com o ip do GitHub:207.97.227.245
-	5.3 - Criar um registro(zone file) CNAME(host alias) com o link da sua pagina no GitHub: meuusuario.github.com
+de fazer &eacute;:  
+5.1 - Criar um arquivo CNAME em octopress/source, onde o conteudo sera o seu dominio: meudominio.com  
+5.2 - Criar um registro(zone file) A (host) com o ip do GitHub:207.97.227.245  
+5.3 - Criar um registro(zone file) CNAME(host alias) com o link da sua pagina no GitHub: meuusuario.github.com  
 	
 Para essa etapa recomendo que depois que as altera&ccedil;&otilde;es forem comitadas de fato(rake deploy) voc&ecirc; espere 
 pelo menos umas 2h para ent&atilde;o a nova configura&ccedil;&atilde;o ser espalhada pelos DNS's do mundo.
