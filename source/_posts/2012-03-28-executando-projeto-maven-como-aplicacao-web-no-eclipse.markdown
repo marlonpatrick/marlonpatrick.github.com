@@ -3,7 +3,7 @@ layout: post
 title: "Executando projeto Maven como aplica&ccedil;&atilde;o Web no Eclipse"
 date: 2012-03-28 18:49
 comments: true
-categories: [Maven,Eclipse]
+categories: [Maven, Eclipse]
 tags: [Maven, Eclipse, m2eclipse]
 ---
 
