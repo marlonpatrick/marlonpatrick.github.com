@@ -1,8 +1,13 @@
-<div class="sharing">
+<table width="90%">
+  <tr>
+   {% if site.google_plus_one %}
+    <td align="left" valign="top" width="45%"><div align="right" style="vertical-align: top;" class="g-plusone" data-size="{{ site.google_plus_one_size }}" data-annotation="none"></div></td>
+   {% endif %}  
+   {% if site.facebook_like %}
+    <td align="center" valign="top" width="45%"><div align="center" style="vertical-align: top;" class="fb-like" layout="button_count" data-send="false" data-show-faces="false"></div></td>
+   {% endif %}
   {% if site.twitter_tweet_button %}
-  <a href="http://twitter.com/share" class="twitter-share-button" target="_blank" data-url="{{ site.url }}{{ page.url }}" data-via="{{ site.twitter_user }}" data-count='none' data-counturl="{{ site.url }}{{ page.url }}">Tweet</a>
+    <td align="right" valign="top" width="10%"><a href="http://twitter.com/share" class="twitter-share-button" target="_blank" data-url="{{ site.url }}{{ page.url }}" data-via="{{ site.twitter_user }}" data-count='none' data-counturl="{{ site.url }}{{ page.url }}">Tweet</a></td>
   {% endif %}
-  {% if site.facebook_like %}
-    <div class="fb-like" layout="button_count" data-send="true" data-width="450" data-show-faces="false"></div>
-  {% endif %}
-</div>
+  </tr>
+</table>
