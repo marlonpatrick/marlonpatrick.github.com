@@ -3,7 +3,7 @@ layout: post
 title: "SSH em Java"
 date: 2012-03-18 21:22
 comments: true
-categories: [API's Java]
+categories: [APIs Java]
 tags: [SSH, Java]
 ---
 

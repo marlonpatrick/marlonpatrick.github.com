@@ -62,6 +62,22 @@ default_asides: [custom/asides/versiculo.html, asides/recent_posts.html, custom/
 A mesma l&oacute;gica das categorias pode ser aplicada para tags, al&eacute;m disso voc&ecirc; pode construir outros 
 m&oacute;dulos, como o que criei para postar um vers&iacute;culo b&iacute;blico(tudo bem que a galera de TI n&atilde;o se liga muito nisso), 
 mas, ta&iacute; pra quem tiver um tempinho.
+
+**Update: Encontrei uma forma mais fácil e mais segura neste <a href="http://anthonydigirolamo.github.com/blog/2011/09/21/octopress-category-listing/" target="_blank" title="Octopress Category Listing">link</a> para exibir as categorias. Você só tem que acrescentar uma linha de código no arquivo category_generator.rb:
+	def category_links(categories)
+	    dir = @context.registers[:site].config['category_dir']
+	    categories = categories.keys if categories.class == Hash <<------- Adicione esta linha
+	    categories = categories.sort!.map do |item|
+
+Com isso, você agora pode listar as categorias da seguinte forma:
+	<section>
+      	    <h1>Categorias</h1>
+               <span id="todas_categorias">
+               {% raw %}
+		   {{ site.categories | category_links }}
+               {% endraw %}
+               </span>
+	 </section>
 	
 **5 - Customizando a url do GitHub para o seu pr&oacute;prio dom&iacute;nio**: Apesar de est&aacute; bem explicado no site do 
 <a href="http://github.com/" title="GitHub" target="_blank">GitHub</a>, eu apanhei um 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "VirtualBox:Criando uma rede interna entre Host e VM's com ip's estáticos"
+title: "VirtualBox:Criando uma rede interna entre Host e VMs com ips estáticos"
 date: 2012-06-03 12:46
 comments: true
 categories: [Virtualização]
