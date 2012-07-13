@@ -15,6 +15,8 @@ Sim, eu sei que dá pra contornar a maioria desses problemas com o processamento
 
 Pois bem, esses dias estava fazendo uma dessas telas e acabei me deparando com esses problemas. Deixar o código das páginas complexo não é uma boa opção para esse trabalho e ficar fazendo as validações diretamente nos back beans também não me pareceu a solução mais elegante(apesar de funcionar bem). Nos tempos de Struts existia o conceito de validação de form o que não é natural no JSF, pois, os validadores são determinados componente a componente. Mas aí, encontrei essa funcionalidade no Seam Faces, com a tag <s:validateForm />. Com essa tag do Seam Faces podemos definir um JSF Validator para o form e não apenas para um campo específico e esse validador é acionado assim que o form é submetido.
 
+Obs: Qualquer dificuldade de adicionar o Seam Faces no seu projeto leia este outro post [Adicionando Seam Faces No Seu Projeto Maven](/blog/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/).
+
 Com isso, já temos uma maneira de validar o form apenas no momento que o mesmo for submetido, mas, ainda teria de fazer as validações manualmente para cada campo, foi aí que me veio a idéia de usar a api Bean Validation para fazer esse trabalho para mim. A idéia é simples, eu coloco anotações Bean Validation no meu modelo, desabilito as validações do ciclo de vida JSF com a tag <f:validateBean /> (JSF 2 e Bean Validation são integradas e as validações são ativadas por padrão) e valido o modelo no meu form validator chamando as validações Bean Validation programaticamente. Dessa forma meu form é validado com a api Bean Validation no momento exato que me interessa, ou seja, no submit.
 
 O código para isso segue abaixo:
