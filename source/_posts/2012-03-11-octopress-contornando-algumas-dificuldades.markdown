@@ -89,3 +89,5 @@ de fazer &eacute;:
 	
 Para essa etapa recomendo que depois que as altera&ccedil;&otilde;es forem comitadas de fato(rake deploy) voc&ecirc; espere 
 pelo menos umas 2h para ent&atilde;o a nova configura&ccedil;&atilde;o ser espalhada pelos DNS's do mundo.
+
+<strong>Sofonias 3.15:</strong> O SENHOR afastou as sentenças que eram contra ti e lançou fora o teu inimigo. O Rei de Israel, o SENHOR, está no meio de ti; tu já não verás mal algum.

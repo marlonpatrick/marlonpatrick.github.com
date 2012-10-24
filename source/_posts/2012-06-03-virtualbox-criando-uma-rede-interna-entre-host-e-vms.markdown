@@ -55,5 +55,4 @@ A minha VM CentOS ficou com a interface de rede eth0 sendo a interface de rede N
 
 Bem, com isso você já pode se conectar nas suas VM's ou suas VM's se conectarem ao host, para verificar isso, um teste simples é executar um ping entre as máquinas.
 
-
-
+<strong>João 20.29:</strong>Disse-lhe Jesus: Porque me viste, creste? Bem-aventurados os que não viram e creram.

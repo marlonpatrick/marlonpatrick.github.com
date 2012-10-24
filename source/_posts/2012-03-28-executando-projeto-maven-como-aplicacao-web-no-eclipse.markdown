@@ -18,3 +18,5 @@ S&oacute; para garantir, v&aacute; no menu Project > Properties > Project Facets
 
 
 **Update:**No caso de haver problemas de compatibilidade com a versão do m2e-extras, então, será necessário usar o update site http://m2eclipse.sonatype.org/sites/m2e-webby/ que suporta a versão mais recente do Maven.
+
+<strong>2 João 1.9:</strong>Todo aquele que prevarica e não persevera na doutrina de Cristo não tem a DEUS; quem persevera na doutrina de Cristo, esse tem tanto o Pai como o Filho.

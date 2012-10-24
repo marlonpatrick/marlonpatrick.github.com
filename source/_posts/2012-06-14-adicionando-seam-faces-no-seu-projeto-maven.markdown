@@ -265,3 +265,5 @@ Com esse pom, meu projeto web foi executado no JBoss AS 7 sem erros na inicializ
 
 
 Bem é isso, espero que funcione de primeira. Uma dica que deixo é dar uma olhada no Seam BOM, é uma dependência do tipo pom que fornece todos os módulos do Seam 3 de uma forma mais organizada e você pode ir adicionando ao seu projeto a medida que for precisando.
+
+<strong>João 1.12:</strong>Mas a todos quantos o receberam (Jesus) deu-lhes o poder de serem feitos filhos de Deus, a saber, aos que crêem no seu nome.

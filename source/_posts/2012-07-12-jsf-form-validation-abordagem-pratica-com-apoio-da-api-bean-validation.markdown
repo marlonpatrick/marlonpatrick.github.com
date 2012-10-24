@@ -226,3 +226,5 @@ Na página(xhtml) deve ficar algo como segue abaixo:
 	</html>
 
 Essa validação de form aliada ao Bean Validation vai me ajudar muito a construir páginas mais complexas com JSF sem ter tanta dor de cabeça com validações fora de hora, espero que ajude você também. Vlw!
+
+<strong>1 João 5.14:</strong>E esta é a confiança que temos nele (Jesus), que se pedirmos alguma coisa segundo a sua vontade, ele nos ouve.

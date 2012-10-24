@@ -81,3 +81,5 @@ implementar a interface com.jcraft.jsch.UserInfo.
 				
 Tenho usado bastante essa api no trabalho e recomendo fortemente, muito simples e completa, al&eacute;m disso, voc&ecirc;s podem encontrar diversos exemplos 
 <a href="http://www.jcraft.com/jsch/examples/" target="_blank" title="Exemplos JSCH">aqui</a>.Abra&ccedil;os!
+
+<strong>Salmos 118.29:</strong>Louvai ao SENHOR, porque ele é bom, porque a sua benignidade é para sempre.

@@ -41,3 +41,4 @@ Então, é só fazer assim:
 
 É isso. Vlw!
 
+<strong>1 Timóteo 2.5:</strong>Porque há um só Deus, e um só Mediador entre Deus e os homens, Jesus Cristo homem.
