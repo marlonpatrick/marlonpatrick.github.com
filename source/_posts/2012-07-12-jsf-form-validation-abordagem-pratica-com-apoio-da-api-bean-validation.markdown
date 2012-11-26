@@ -3,8 +3,8 @@ layout: post
 title: "JSF Form Validation:Abordagem prática com apoio da API Bean Validation + Seam Faces"
 date: 2012-07-12 19:08
 comments: true
-categories: [JSF, APIs Java]
-tags: [JSF, JSF Form Validation, Bean Validation, JSR 303, JSF Validation, Seam Faces] 
+categories: [JSF, JBoss Seam]
+tags: [JSF, JBoss Seam, JSF Form Validation, Bean Validation, JSR 303, JSF Validation, Seam Faces] 
 ---
 
 Bem, se você já trabalha com JSF a algum tempo sabe que criar telas com fluxos um pouco mais complexos usando as validações built-in ou até mesmo Bean Validation sabe que isso pode se tornar um tanto complicado. Basicamente o problema é que muitas vezes as validações são acionadas em momentos inoportunos, momentos em que não é necessário a tal validação, mas, isso acontece devido ao tão mencionado ciclo de vida JSF.

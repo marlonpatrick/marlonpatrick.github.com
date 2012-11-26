@@ -3,8 +3,8 @@ layout: post
 title: "Adicionando Seam Faces no seu projeto Maven"
 date: 2012-06-14 22:02
 comments: true
-categories: [JSF, Maven]
-tags: [JSF, Seam Faces, Jboss Seam, Maven]
+categories: [JSF, Maven, JBoss Seam]
+tags: [JSF, Seam Faces, JBoss Seam, Maven]
 ---
 
 Nos tempos de Maven o título desse post parece até meio idiota, mas, a equipe do JBoss Seam 3 conseguiu tornar algo que deveria ser simples numa atividade dolorosa. Pois é, adicionar o Seam Faces como dependência do seu projeto Maven não é tão simples como é sugerido na <a href="http://seamframework.org/Seam3/FacesModule" target="_blank" title="Seam Faces">página oficial</a>. Lá eles mostram o que deve ser adicionado no seu pom.xml para obter o Seam Faces:
