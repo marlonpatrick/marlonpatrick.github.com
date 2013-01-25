@@ -23,4 +23,4 @@ Por padrão, o Seam Persistence define o flushMode como AUTO. O problema do flus
 
 Esse método irá produzir um bean CDI do tipo FlushModeManager que será usado pelo SMPC para definir o flushMode do EntityManager que ele irá gerenciar. O novo bean irá substituir o bean padrão criado pelo Seam Persistence, e com ele, você pode definir o flushMode de três maneiras: AUTO, COMMIT e MANUAL. Vlw!
 
-<strong>Provérbios 3.9:</strong>Honra ao Senhor com os teus bens, e com as primícias de toda a tua renda.
+<strong>Provérbios 3.9-10:</strong>Honra ao Senhor com os teus bens, e com as primícias de toda a tua renda. E se encherão os teus celeiros, e transbordarão de vinho os teus lagares.
