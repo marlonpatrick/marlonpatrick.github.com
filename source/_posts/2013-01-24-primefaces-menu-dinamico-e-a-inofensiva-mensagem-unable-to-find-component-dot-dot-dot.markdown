@@ -3,7 +3,7 @@ layout: post
 title: "PrimeFaces:Menu dinâmico e a inofensiva mensagem Unable to find component..."
 date: 2013-01-24 12:00
 comments: true
-categories: [JSF]
+categories: [JSF,PrimeFaces]
 tags: [JSF, PrimeFaces, Dynamic Menu, Menu Dinâmico, MenuBar] 
 ---
 

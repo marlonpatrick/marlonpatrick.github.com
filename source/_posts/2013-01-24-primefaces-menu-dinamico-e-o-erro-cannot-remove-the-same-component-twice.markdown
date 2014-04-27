@@ -3,7 +3,7 @@ layout: post
 title: "PrimeFaces: Menu Dinâmico e o erro Cannot remove the same component twice"
 date: 2013-01-24 22:39
 comments: true
-categories: [JSF]
+categories: [JSF,PrimeFaces]
 tags: [JSF, PrimeFaces, Dynamic Menu, Menu Dinâmico, MenuBar]
 ---
 
