@@ -36,7 +36,7 @@ O exemplo mais básico é logar as queries de um simples objeto Connection:
 		con.close();
 	}
 
-Nesse exemplo estou acessando um banco PostgreSQL e perceba que a URL fica um pouco diferente do padrão pois preciso acrescentar o driver do Jdbcdslog como proxy para o driver original do Postgre. Você pode perceber isso em **jdbc:jdbcdslog:postgresql** e também no parâmetro targetDriver. O resultado desse código é algo como:
+Nesse exemplo estou acessando um banco PostgreSQL e perceba que a URL fica um pouco diferente do padrão pois preciso acrescentar o driver do Jdbcdslog como proxy para o driver original do Postgre. Você pode perceber isso em **jdbc:jdbcdslog:postgresql** e também no parâmetro **targetDriver**. O resultado desse código é algo como:
 
 	[main] INFO org.jdbcdslog.StatementLogger - select * from ceos.product where id=1;
 
@@ -91,7 +91,7 @@ Das várias opções de log disponíveis, a única que deixamos ativa foi o log 
 
 OBS:Caso seu JBoss esteja executando em modo domínio ao invés de standalone então essa configuração pode ser feita no arquivo JBOSS_HOME/domain/configuration/domain.xml
 
-4 - Ainda no arquivo standalone.xml vamos criar o datasource. Dentro da tag `<datasources>` coloque o seguinte conteúdo:
+4 - Ainda no arquivo standalone.xml vamos criar o datasource. Abaixo seguem dois exemplos, um para um datasource normal e outro para um XA-DataSoure, ambos devem ficar dentro da tag `<datasources>`:
 
 	<datasource jta="true" jndi-name="java:/mpinfods" pool-name="MPINFO-POOL" enabled="true" use-ccm="true">
 	    <connection-url>jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver</connection-url>
@@ -117,9 +117,45 @@ OBS:Caso seu JBoss esteja executando em modo domínio ao invés de standalone en
 	    </statement>
 	</datasource>
 
-Nesse ponto você deve prestar atenção na tag `<connection-url>` e substituir os valores de acordo com o seu ambiente, além disso, perceba que na tag `<driver>` usamos o nome do driver do jdbcdslog que definiremos no próximo passo.
+	<xa-datasource jndi-name="java:/mpinfoxads" pool-name="MPINFO-XA-POOL" enabled="true" use-ccm="true">
+		<xa-datasource-property name="PortNumber">5432</xa-datasource-property>
+		<xa-datasource-property name="DatabaseName">mpinfo</xa-datasource-property>
+		<xa-datasource-property name="ServerName">172.16.1.6</xa-datasource-property>
+		<xa-datasource-property name="targetDS">org.postgresql.xa.PGXADataSource</xa-datasource-property>
+		<driver>jdbcdslog</driver>
+		<new-connection-sql>select 1</new-connection-sql>
+		<transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+		<xa-pool>
+			<min-pool-size>0</min-pool-size>
+			<max-pool-size>10</max-pool-size>
+			<flush-strategy>IdleConnections</flush-strategy>
+			<is-same-rm-override>false</is-same-rm-override>
+			<interleaving>false</interleaving>
+			<pad-xid>false</pad-xid>
+			<wrap-xa-resource>false</wrap-xa-resource>
+		</xa-pool>
+		<security>
+			<user-name>mpinfo</user-name>
+			<password>mpinfo</password>
+		</security>
+		<validation>
+			<valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"/>
+			<validate-on-match>true</validate-on-match>
+			<background-validation>false</background-validation>
+			<exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"/>
+		</validation>
+		<timeout>
+			<idle-timeout-minutes>3</idle-timeout-minutes>
+		</timeout>
+		<statement>
+			<track-statements>true</track-statements>
+			<share-prepared-statements>false</share-prepared-statements>
+		</statement>
+	</xa-datasource>
 
-5 - Dentro da tag `<datasources>` acrescentar a definição do driver que faz o log:
+Nesse ponto você deve prestar atenção em informações como ips, usuários, senhas e substituir de acordo com o seu ambiente, além disso, perceba que na tag `<driver>` usamos o nome do driver do jdbcdslog que definiremos no próximo passo.
+
+5 - Dentro da tag `<datasources>` (standalone.xml)  acrescentar a definição do driver que faz o log:
 
 	<drivers>
 		<driver name="jdbcdslog" module="com.googlecode.usc.jdbcdslog">
