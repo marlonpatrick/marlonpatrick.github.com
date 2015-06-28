@@ -13,6 +13,8 @@ Um exemplo bem simples pra quem usa Primefaces é ao se trabalhar com abas, onde
 
 Sim, eu sei que dá pra contornar a maioria desses problemas com o processamento parcial (atributo execute nas tags padrões e process nas tags Primefaces), mas, a verdade é que o código começa a ficar complexo e em alguns casos não tem jeito mesmo e muita gente acaba abidicando dessas validações e colocam as validações no próprio back bean.
 
+<!-- more -->
+
 Pois bem, esses dias estava fazendo uma dessas telas e acabei me deparando com esses problemas. Deixar o código das páginas complexo não é uma boa opção para esse trabalho e ficar fazendo as validações diretamente nos back beans também não me pareceu a solução mais elegante(apesar de funcionar bem). Nos tempos de Struts existia o conceito de validação de form o que não é natural no JSF, pois, os validadores são determinados componente a componente. Mas aí, encontrei essa funcionalidade no Seam Faces, com a tag <s:validateForm />. Com essa tag do Seam Faces podemos definir um JSF Validator para o form e não apenas para um campo específico e esse validador é acionado assim que o form é submetido.
 
 Obs: Qualquer dificuldade de adicionar o Seam Faces no seu projeto leia este outro post [Adicionando Seam Faces No Seu Projeto Maven](/blog/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/).

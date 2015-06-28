@@ -22,6 +22,8 @@ Nos tempos de Maven o título desse post parece até meio idiota, mas, a equipe 
 	   <scope>runtime</scope>
 	</dependency>
 
+<!-- more -->
+
 Não deixa de ser verdade, as libs do Seam Faces serão baixadas pelo Maven, porém, as suas dependências não, por isso que me propus a fazer este post. Se você executar seu projeto apenas com o trecho de código acima no seu pom.xml vai obter erros dos mais variados tipos indo de ClassNotFoundException até "Bean name is ambiguous", isso porque Seam Faces não baixa todas as suas dependências(pra que serve o Maven então?).
 
 Bem, depois de muito tentar e pesquisar, cheguei a uma configuração mínima para que o Seam Faces possa ser adicionado no seu projeto sem causar erros. Vale observar que meus testes foram feitos no JBoss AS 7. Segue o pom:

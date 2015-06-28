@@ -12,6 +12,8 @@ Uma necessidade básica em quase todos os projetos de software é o log de instr
 - Falta de integração com frameworks de logging: a lib atende bem a os requisitos de Log de SQL, porém, não se integra com frameworks de log como log4j, java logging, apache commons logging e etc o que acaba obrigando o desenvolvedor a criar um arquivo de log específico para SQL.
 - Dificuldades para se trabalhar com DataSources, em especial, XA-DataSources: a ferramenta de log atende bem os dois requisitos acima, porém, é limitada a ser usada com objetos java.sql.Connection, ou em outros casos, podem ser usados com DataSources "normais", porém, não atendem quando precisamos logar sql de XA-DataSources.
 
+<!-- more -->
+
 Para quem usa o Hibernate a primeira escolha normalmente é configurá-lo para logar as queries geradas, o resultado é algo como:
 
 	select this_.code from employee this_ where this_.code=?

@@ -14,6 +14,8 @@ Essa mensagem é provocada pelo mal funcionamento do controle de transação do 
 
 O problema é que o TransactionPhaseListener é habilitado por padrão desde que o seu projeto tenha o Seam Faces, Seam Persistence e Seam Transaction, assim, o simples fato de colocar essas libs no seu projeto já adiciona o comportamento acima descrito no sistema, e na maioria dos casos, acaba entrando em conflito com o controle de transação escolhido para ser usado na aplicação. No meu caso, o comportamento do TransactionPhaseListener não atendia e pior, atrapalhava. A solução que encontrei foi desabilitar esse comportamento através da seguinte configuração no arquivo beans.xml:
 
+<!-- more -->
+
 	<?xml version="1.0" encoding="UTF-8"?>
 	<beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	       xmlns:s="urn:java:ee" xmlns:t="urn:java:org.jboss.seam.transaction"

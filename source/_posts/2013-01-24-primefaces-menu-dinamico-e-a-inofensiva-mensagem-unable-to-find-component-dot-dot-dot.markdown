@@ -11,6 +11,8 @@ Eu sou particularmente fã incondicional do PrimeFaces e um dos componentes que 
 
 Bem, estou usando esse componente exatamente no cenário descrito acima com a versão 3.4.1 do PrimeFaces e a implementação de referência do JSF(Mojarra) na sua versão 2.1.7. Com essa combinação (PrimeFaces/Mojarra) nas versões descritas acima (acredito que em outras também) percebi no log de minha aplicação que todas as vezes que executava uma chamada ajax, para cada item do menu gerado com o MenuBar dinâmico, havia uma mensagem mais ou menos assim:<strong>Unable to find component with clientId 'menuitem200', no need to remove it.</strong>.
 
+<!-- more -->
+
 Até um determinado momento em nada me afetava tal mensagem, e provavelmente é assim para 99% dos casos. Agora, se você assim como eu, caiu no 1% restante, essa mensagem pode causar um sério problema de performance nas chamadas ajax. Esse problema de performance só irá acontecer se você tiver uma página muito grande, com muitos componentes gerados como foi o meu caso.
 
 Toda vez que eu fazia uma chamada ajax nessa página o procedimento executado pelo PrimeFaces que gerava as mensagens "Unable to find component..." chegava a levar cerca de 1 minuto e 30 segundos para terminar, o que é totalmente inviável. Não é que o código executado na chamada era super pesado, esses mais de 1 minuto se referem apenas execução do método que gerava as mensagens como mostra o log abaixo:

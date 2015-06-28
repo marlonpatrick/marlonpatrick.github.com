@@ -19,6 +19,8 @@ um scp remote-to-local ou local-to-remote. Assim como o Putty, o JSCH pode acess
 
 Vou deixar aqui um exemplo bem simples:
 
+<!-- more -->
+
 1 - Primeiro voc&ecirc; precisa criar uma classe para guardar as informa&ccedil;&otilde;es do usu&aacute;rio. Para isso &eacute; necess&aacute;rio
 implementar a interface com.jcraft.jsch.UserInfo.
 

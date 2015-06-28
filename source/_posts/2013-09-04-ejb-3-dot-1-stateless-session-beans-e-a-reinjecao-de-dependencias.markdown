@@ -13,6 +13,8 @@ Mas, para o meu post fazer sentido preciso colocar a resposta padrão: "SFSBs pr
 
 Porém, com o advento do CDI e o seu poderoso mecanismo de injeção de dependências isso muda um pouco, pois, mesmo um SLSB pode ter um "pseudo conversational state" quando usa esse recurso. A maioria dos desenvolvedores (inclusive eu até hoje a tarde) acredita que a injeção de dependências de um EJB acontece apenas durante a criação da instância e com isso supõem coisas como: "Não posso injetar um managed bean @SessionScoped num SLSB, pois, como não tenho garantia de ser atendido sempre pela mesma instância posso obter uma que tem o managed bean de uma outra sessão".
 
+<!-- more -->
+
 Na verdade não é bem assim, descobri isso hoje e se soubesse antes teria me evitado uma grande dor de cabeça, por isso resolvi compartilhar aqui. A especificação EJB 3.1 na página 74 item 4.3.2 fala o seguinte:
 > If a session bean makes use of dependency injection, the container injects these references after the bean instance is created, and before any business methods are invoked on the bean instance.
 

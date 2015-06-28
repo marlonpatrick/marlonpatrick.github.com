@@ -23,6 +23,8 @@ Depois de muito procurar, encontrei esse <a href="http://www.rafaelbiriba.com/20
 
 E porque eu to escrevendo outro post então? Pois é, o post do Rafael deixa algumas coisas implícitas, e como eu nunca tinha usado VirtualBox, ainda tive que dá uma fuçada, então, vou simplesmente detalhar o que ele explica. Vamos ao que interessa!
 
+<!-- more -->
+
 1 - Configurar uma rede host-only: Abra o VirtualBox(estou usando 4.1.12) e vá em File > Preferences > Rede e adicione uma rede host-only no seu VirtualBox como mostra a imagem abaixo:
 
 ![1]

@@ -23,6 +23,8 @@ Até aí tudo bem, nós nem temos conhecimento, pois, trabalhamos com a interfac
 			at private javassist.util.proxy.MethodHandler User_$$_javassist_19.handler
 			at User_$$_javassist_19
 
+<!-- more -->
+
 O caso é que o Hibernate (usando a api Javassist) fez um proxy na minha classe User para adicionar comportamento Lazy numa das propriedades da classe e adicionou um atributo chamado handler, o qual, não há nenhuma anotação JAXB definindo como deve ser tratado esse atributo na hora do marshal e por isso o erro acima ocorreu.
 
 Bem, dando uma pesquisada a minha solução é fazer o unproxy na classe proxyada pelo Hibernate e então faço marshal no meu objeto real. Para obter o objeto correto com Hibernate é só copiar o código abaixo:

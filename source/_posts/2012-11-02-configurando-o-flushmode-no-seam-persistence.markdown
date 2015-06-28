@@ -11,6 +11,8 @@ Uma das grandes vantagens de usar o Seam Persistence é o Seam Managed Persisten
 
 Porém, uma das coisas que tive dificuldade de encontrar na documentação do Seam Persistence foi como definir o FlushMode do meu EntityManagere por isso resolvi fazer esse post. Dando uma fuçada no código do Seam, encontrei a classe FlushModeManager e sua implementação padrão FlushModeManagerImpl, que justamente são usadas para definir o flushMode do EntityManager gerenciado pelo SMPC.
 
+<!-- more -->
+
 Por padrão, o Seam Persistence define o flushMode como AUTO. O problema do flushMode configurado como AUTO é que o desenvolvedor não tem domínio sobre o momento que o ORM irá sincronizar os objetos em memória com a base de dados, o que muitas vezes, pode gerar resultados inesperados. Se você concorda comigo e deseja mudar o flushMode usado pelo SMPC é só copiar o código abaixo:
 
 	@Produces

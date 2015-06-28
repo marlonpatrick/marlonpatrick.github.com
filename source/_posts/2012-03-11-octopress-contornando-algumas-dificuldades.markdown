@@ -17,6 +17,8 @@ est&atilde;o dispon&iacute;veis para Linux. No entanto, eu fiz toda a configura&
 servem apenas para dizer: "Ruby, eu quero que voc&ecirc; execute como se fosse a vers&atilde;o XYZ", nesse caso, baixei a vers&atilde;o do 
 Ruby utilizada no tutorial e pronto, problema resolvido.
 
+<!-- more -->
+
 **2 - Internacionaliza&ccedil;&atilde;o**: Esse ponto &eacute; minha &uacute;nica reclama&ccedil;&atilde;o com o Octopress(pelo menos at&eacute; 
 agora), pois, n&atilde;o h&aacute; suporte nenhum para esse tipo de mecanismo, voc&ecirc; tem que ir p&aacute;gina por p&aacute;gina
 e alterar as palavras direto nos html's.
