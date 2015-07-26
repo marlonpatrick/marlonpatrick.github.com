@@ -1,0 +1,69 @@
+post_meta_date_format: MMM DD, YYYY
+all_categories_date_format: MMM DD, YYYY
+all_tags_date_format: MMM DD, YYYY
+all_archives_date_format: MMM DD, YYYY
+all_archives_month_format: MMMM
+
+label_newer_posts: NEWER POSTS
+label_older_posts: OLDER POSTS
+label_page: Page
+label_of: of
+label_in: in
+label_search_category: Search Category
+label_search_tag: Search Tag
+label_search_date: "Search Date (YEARMONTHDAY)"
+
+versicle_text: I am the wayi, the truth and the life. No one comes to the Father except through me.
+versicle_author: Jesus Christ
+
+sidebar:
+    menu:
+        home:
+            title: Home
+            url: /en
+        categories:
+            title: Categories
+            url: /en/all-categories
+        tags:
+            title: Tags
+            url: /en/all-tags
+        archives:
+            title: Archive
+            url: /en/all-archives
+        search:
+            title: Search
+            url: /#search
+        about:
+            title: About
+            url: /#about
+    author_links:
+         github:
+             title: GitHub
+         stack_overflow:
+             title: Stack Overflow
+        # twitter:
+        #     title: Twitter
+        # facebook:
+        #     title: Facebook
+        # google_plus:
+        #     title: Google +
+         linked_in:
+             title: Linked In
+        # mail:
+        #     title: Mail
+         shelfari:
+             title: Shelfari
+             title: Shelfari
+    rss:
+        rss:
+            title: RSS
+
+author:
+    email: marlonpatrick10@gmail.com
+    bio: Passionate about programming (and soccer), Workaholic, CR Flamengo fan, Married, Christian
+    job: Software Developer
+    location: Pernambuco - Brazil
+
+read_more_message: Continue reading
+go_to_message: Go to web site
+

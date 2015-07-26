@@ -1,0 +1,21 @@
+---
+title: "JasperReports: Resolvendo NoSuchMethodError ao usar uma imagem"
+date: 2014-04-28 09:21
+lang: pt-br
+alias: blog/2014/04/28/jasperreports-resolvendo-nosuchmethoderror-ao-usar-uma-imagem/index.html
+categories:
+ - JasperReports
+ - iReport
+tags:
+ - JasperReports
+ - iReport
+ - iText
+---
+
+O erro acontece quando você tenta gerar um relatório feito com Jasper/iReport que usa uma imagem. A mensagem de erro é algo como: <strong>Caused by: java.lang.NoSuchMethodError: com.lowagie.text.Image.getPlainWidth()F</strong>.
+
+<!-- more -->
+
+O problema é que você está usando uma versão do iText incompatível com a versão do JasperReports. Até a versão 3.0.0 do Jasper/iReport a versão correta do iText é 1.3.1. A partir da versão 3.1.0 do Jasper/iReport a versão correta do iText é 2.1.0.
+
+Uma dica melhor é verificar a pasta lib do seu iReport o qual irá conter todas as libs com suas versões corretas, assim, pode garantir que está usando a versão adequada de cada dependência do Jasper.

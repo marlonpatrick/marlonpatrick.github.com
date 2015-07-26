@@ -1,0 +1,74 @@
+post_meta_date_format: DD/MM/YYYY
+all_categories_date_format: DD/MM/YYYY
+all_tags_date_format: DD/MM/YYYY
+all_archives_date_format: DD/MM/YYYY
+all_archives_month_format: MMMM
+
+label_newer_posts: POSTS MAIS NOVOS
+label_older_posts: POSTS MAIS ANTIGOS
+label_previous: ANTERIOR
+label_next: PRÓXIMO
+label_page: Página
+label_of: de
+label_in: em
+label_search_category: Pesquisar Categoria
+label_search_tag: Pesquisar Tag
+label_search_date: "Pesquisar Data (ANOMESDIA)"
+
+versicle_text: Eu sou o caminho, e a verdade e a vida; ninguém vem ao Pai, senão por mim.
+versicle_author: Jesus Cristo
+
+sidebar:
+    menu:
+        home:
+            title: Início
+            url: /
+        categories:
+            title: Categorias
+            url: /all-categories
+        tags:
+            title: Tags
+            url: /all-tags
+        archives:
+            title: Arquivo
+            url: /all-archives
+        search:
+            title: Pesquisar
+            url: /#search
+        about:
+            title: Sobre
+            url: /#about
+    author_links:
+         github:
+             title: GitHub
+             url: https://github.com/marlonpatrick10
+         stack_overflow:
+             title: Stack Overflow
+             url: http://stackoverflow.com/users/1842759/marlon-patrick
+        # twitter:
+        #     title: Twitter
+        # facebook:
+        #     title: Facebook
+        # google_plus:
+        #     title: Google +
+         linked_in:
+             title: Linked In
+             url: https://br.linkedin.com/in/marlonpatrick
+        # mail:
+        #     title: Mail
+         shelfari:
+             title: Shelfari
+             url: http://www.shelfari.com/o1515626551/shelf
+    rss:
+        rss:
+            title: RSS
+            url: /atom.xml
+
+author:
+    email: marlonpatrick10@gmail.com
+    bio: Aficionado por programação (e futebol), Workaholic, Flamenguista, Casado, Cristão
+    job: Desenvolvedor de Software
+    location: Pernambuco - Brasil
+
+read_more_message: Continuar leitura
+go_to_message: Ir para o site
