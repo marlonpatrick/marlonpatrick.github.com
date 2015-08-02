@@ -27,7 +27,7 @@
     <div class="post-footer main-content-wrap">
         <% if ((post.tags) && (post.tags.length > 0)) { %>
             <div class="post-footer-tags">
-                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                <span class="text-color-light text-small"><%- __('label_tagged_in') %></span><br/>
                 <%- partial('post/tag', {tags: post.tags})%>
             </div>
         <% } %>

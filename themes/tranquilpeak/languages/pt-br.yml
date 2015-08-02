@@ -14,6 +14,7 @@ label_in: em
 label_search_category: Pesquisar Categoria
 label_search_tag: Pesquisar Tag
 label_search_date: "Pesquisar Data (ANOMESDIA)"
+label_tagged_in: TAGS
 
 versicle_text: Eu sou o caminho, e a verdade e a vida; ninguém vem ao Pai, senão por mim.
 versicle_author: Jesus Cristo
@@ -22,16 +23,16 @@ sidebar:
     menu:
         home:
             title: Início
-            url: /
+            url: /pt-br
         categories:
             title: Categorias
-            url: /all-categories
+            url: /pt-br/all-categories
         tags:
             title: Tags
-            url: /all-tags
+            url: /pt-br/all-tags
         archives:
             title: Arquivo
-            url: /all-archives
+            url: /pt-br/all-archives
         search:
             title: Pesquisar
             url: /#search
@@ -66,7 +67,7 @@ sidebar:
 
 author:
     email: marlonpatrick10@gmail.com
-    bio: Aficionado por programação (e futebol), Workaholic, Flamenguista, Casado, Cristão
+    bio: Aficionado por programação (e futebol), Flamenguista, Marido, Cristão
     job: Desenvolvedor de Software
     location: Pernambuco - Brasil
 

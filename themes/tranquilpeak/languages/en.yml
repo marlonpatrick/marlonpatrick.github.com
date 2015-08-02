@@ -12,24 +12,25 @@ label_in: in
 label_search_category: Search Category
 label_search_tag: Search Tag
 label_search_date: "Search Date (YEARMONTHDAY)"
+label_tagged_in: TAGGED IN
 
-versicle_text: I am the wayi, the truth and the life. No one comes to the Father except through me.
+versicle_text: I am the way, the truth and the life. No one comes to the Father except through me.
 versicle_author: Jesus Christ
 
 sidebar:
     menu:
         home:
             title: Home
-            url: /en
+            url: /
         categories:
             title: Categories
-            url: /en/all-categories
+            url: /all-categories
         tags:
             title: Tags
-            url: /en/all-tags
+            url: /all-tags
         archives:
             title: Archive
-            url: /en/all-archives
+            url: /all-archives
         search:
             title: Search
             url: /#search
@@ -60,7 +61,7 @@ sidebar:
 
 author:
     email: marlonpatrick10@gmail.com
-    bio: Passionate about programming (and soccer), Workaholic, CR Flamengo fan, Married, Christian
+    bio: Passionate about programming (and soccer), CR Flamengo fan, Husband, Christian
     job: Software Developer
     location: Pernambuco - Brazil
 

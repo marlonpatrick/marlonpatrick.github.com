@@ -8,8 +8,7 @@
     </form>
     <h5 class="archive-result text-color-base text-xlarge"></h5>
     <section class="boxes">
-        <% site.posts.sort('date', 'desc').each(function(post) { %>
-	  <% if (page.lang == post.lang) { %>
+        <% site.posts.find({lang: page.lang}).sort('date', 'desc').each(function(post) { %>
             <% var currentYear = post.date.year(); %>
             <% var currentMonth = post.date.format('MM'); %>
             <% if (lastYear != currentYear) { %>
@@ -37,7 +36,6 @@
                 <a class="archive-post-title" href="<%- url_for(post.path) %>"><%= post.title || '(no title)' %></a>
                 <span class="archive-post-date"><%= ' - ' + post.date.locale(page.lang).format(__('all_archives_date_format')).toLowerCase() %></span>
             </li>
-	 <% } %>
         <% }) %>
     </section>
 </div>
