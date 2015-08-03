@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en,pt-br,default">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Marlon Patrick">
+    <title>EJB 3.1: Stateless Session Beans and reinjection dependencies - Marlon Patrick</title>
+    <meta name="author" content="Marlon Patrick">
+    <meta name="description" content="Marlon Patrick">
+    <link rel="icon" href="/assets/images/null">
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="atom.xml">
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29896969-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="http://marlonpatrick.info">Marlon Patrick</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-categories">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-tags">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-archives">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archive</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs" href="/#search">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/#about">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/marlonpatrick10" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://stackoverflow.com/users/1842759/marlon-patrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://br.linkedin.com/in/marlonpatrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.shelfari.com/o1515626551/shelf" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-book"></i>
+                    <span class="sidebar-button-desc">Shelfari</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/atom.xml">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">EJB 3.1: Stateless Session Beans and reinjection dependencies</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Wed Sep 04 2013 22:50:00 GMT-0300">
+        Sep 04, 2013
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/EJB/">EJB</a>
+
+
+    
+</div>
+
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        <p>When you start working with EJB one of the first things to learn is about the different types of beans, which at 3.1 specification are: Stateful Session Beans (SFSB), Stateless Session Beans (SLSB), Singleton Sessions Beans and Message-Drive Beans. With this comes one of the most common questions: “What is the difference between Stateful and Stateless beans?”. Well, this post is not one to explain these differences, if you need that follows a good <a target="_ blank" href="http://www.theserverside.com/tutorial/Which-EJB-to-use-Stateful-stateless-and-singleton-session-beans-compared">link</a>.</p>
+<a id="more"></a>
+<p>But to my post need to make sense to put the standard response:. “SFSBs preserve the state even if they occur several calls methods in the bean as the container ensures that the customer will always be serviced by the same instance. Already SLSBs not preserve state because, for each method call the customer makes it can be serviced by a different instance.”</p>
+<p>However, with the advent of CDI and its powerful dependency injection mechanism that changes a bit, because even a SLSB can have a “pseudo conversational state” when using this feature. Most developers (including me until this afternoon) believes that the injection of dependencies for an EJB happens only during instance creation and thus assume things like, “I can not inject a managed bean @SessionScoped in an SLSB, for as I have no guarantee of being always attended by the same instance I can get one that has the managed bean to another session”.</p>
+<p>In fact it is not so, I found it today and if he knew me before would have avoided big headache, so I decided to share here. The EJB 3.1 specification on page 74 item 4.3.2 says the following:</p>
+<blockquote>
+<p>If a session bean makes use of dependency injection, the container injects these references after the bean instance is created, and before any business methods are invoked on the bean instance.</p>
+</blockquote>
+<p>Ie the dependency injection is done after creating the bean instance and also before each call of a business method. This was very useful for me, as was already racking their brains on how to keep the EntityManager to inject in my EJBs (through Seam Managed Persistence Context my EntityManager is a @ConversationScoped) according to the EJB client context. As the container reinjected dependencies before each method call actually I do not even need to have worried about it.</p>
+<p>Somehow, this definition can give SLSBs the ability to have a “conversational state”. For example, if you inject in a SLSB a bean with session scope (@SessionScoped), regardless of which pool instance process your request the bean is session-scoped always according to the current client session. In other words, there is no possibility of a SLSB have a session bean another client. This allows a SLSB receive the user logged in as an instance field through @Inject without causing any problem if two users use the same instance of SLSB alternately. For example:</p>
+<pre><code><span class="keyword">@Stateless</span>
+<span class="keyword">public</span> <span class="keyword">class</span> StatelessSessionBean{
+    <span class="keyword">@Inject</span>
+    <span class="keyword">@LoggedInUser</span>
+    <span class="keyword">protected</span> User loggedInUser;<span class="comment">//@SessionScoped</span>
+
+    <span class="keyword">public</span> <span class="keyword">void</span> test(){
+        System.<span class="keyword">out</span>.println(<span class="string">"ejb:"</span>+<span class="keyword">this</span>);
+        System.<span class="keyword">out</span>.println(<span class="string">"user:"</span>+<span class="keyword">this</span>.loggedInUser);
+    }
+}
+</code></pre><p>Then the result of several calls the method “test” by different users is as follows:</p>
+<pre><code>User <span class="number">1</span> invoke
+<span class="number">17</span>:<span class="number">02</span>:<span class="number">20</span>,<span class="number">800</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">5</span>) ejb:StatelessSessionBean@<span class="number">406189</span>
+<span class="number">17</span>:<span class="number">02</span>:<span class="number">20</span>,<span class="number">801</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">5</span>) user:User <span class="number">1</span>
+
+User <span class="number">2</span> invoke
+<span class="number">17</span>:<span class="number">02</span>:<span class="number">56</span>,<span class="number">227</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) ejb:StatelessSessionBean@<span class="number">406189</span>
+<span class="number">17</span>:<span class="number">02</span>:<span class="number">56</span>,<span class="number">228</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) user:User <span class="number">2</span>
+
+User <span class="number">2</span> invoke
+<span class="number">17</span>:<span class="number">03</span>:<span class="number">24</span>,<span class="number">376</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) ejb:StatelessSessionBean@<span class="number">406189</span>
+<span class="number">17</span>:<span class="number">03</span>:<span class="number">24</span>,<span class="number">378</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) user:User <span class="number">2</span>
+
+User <span class="number">1</span> invoke
+<span class="number">17</span>:<span class="number">03</span>:<span class="number">24</span>,<span class="number">517</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">6</span>) ejb:StatelessSessionBean@<span class="number">1</span>c05227
+<span class="number">17</span>:<span class="number">03</span>:<span class="number">24</span>,<span class="number">518</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">6</span>) user:User <span class="number">1</span>
+
+User <span class="number">1</span> invoke
+<span class="number">17</span>:<span class="number">04</span>:<span class="number">24</span>,<span class="number">045</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">1</span>) ejb:StatelessSessionBean@<span class="number">406189</span>
+<span class="number">17</span>:<span class="number">04</span>:<span class="number">24</span>,<span class="number">047</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">1</span>) user:User <span class="number">1</span>
+
+User <span class="number">2</span> invoke
+<span class="number">17</span>:<span class="number">04</span>:<span class="number">24</span>,<span class="number">179</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) ejb:StatelessSessionBean@<span class="number">1</span>c05227
+<span class="number">17</span>:<span class="number">04</span>:<span class="number">24</span>,<span class="number">179</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) user:User <span class="number">2</span>
+</code></pre><p>Note that even being serviced by the same instance, the field “loggedInUser” varies correctly according to the user that invoked the method.</p>
+
+	<blockquote>
+<p><em>I am the way, the truth and the life. No one comes to the Father except through me.</em><br><strong><em>Jesus Christ</em></strong></p>
+</blockquote>
+
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/CDI/">CDI</a> <a class="tag tag--primary tag--small t-link" href="/tags/Dependency-Injection/">Dependency Injection</a> <a class="tag tag--primary tag--small t-link" href="/tags/Stateless-Session-Bean/">Stateless Session Bean</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2014/04/26/primefaces-contornando-problemas-com-datatable-resizable-slash-draggable/"  data-tooltip="PrimeFaces: contornando problemas com dataTable resizable/draggable">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2013/09/04/ejb-3-dot-1-stateless-session-beans-e-a-reinjecao-de-dependencias/" data-tooltip="EJB 3.1: Stateless Session Beans e a reinjeção de dependências">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2013/09/04/ejb-3-dot-1-stateless-session-beans-and-dependencies-reinjection/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2013/09/04/ejb-3-dot-1-stateless-session-beans-and-dependencies-reinjection/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2013/09/04/ejb-3-dot-1-stateless-session-beans-and-dependencies-reinjection/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2014/04/26/primefaces-contornando-problemas-com-datatable-resizable-slash-draggable/"  data-tooltip="PrimeFaces: contornando problemas com dataTable resizable/draggable">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2013/09/04/ejb-3-dot-1-stateless-session-beans-e-a-reinjecao-de-dependencias/" data-tooltip="EJB 3.1: Stateless Session Beans e a reinjeção de dependências">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2013/09/04/ejb-3-dot-1-stateless-session-beans-and-dependencies-reinjection/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2013/09/04/ejb-3-dot-1-stateless-session-beans-and-dependencies-reinjection/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2013/09/04/ejb-3-dot-1-stateless-session-beans-and-dependencies-reinjection/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+                </div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Marlon Patrick</h4>
+        
+            <h5 id="about-card-bio"><p>Passionate about programming (and soccer), CR Flamengo fan, Husband, Christian</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Software Developer</p>
+
+            </h5>
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Pernambuco - Brazil
+            </h5>
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('/assets/images/cover.png');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'marlonpatrickdicasdeumprogramador';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','PfLcPuxspuRJ_JEy-A8a','2.0.0');
+    </script>
+
+
+</html>

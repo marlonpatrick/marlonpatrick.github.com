@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en,pt-br,default">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Marlon Patrick">
+    <title>Adicionando Seam Faces no seu projeto Maven - Marlon Patrick</title>
+    <meta name="author" content="Marlon Patrick">
+    <meta name="description" content="Marlon Patrick">
+    <link rel="icon" href="/assets/images/null">
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="atom.xml">
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29896969-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="http://marlonpatrick.info">Marlon Patrick</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/pt-br">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Início</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/pt-br/all-categories">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categorias</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/pt-br/all-tags">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/pt-br/all-archives">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Arquivo</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs" href="/#search">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Pesquisar</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/#about">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">Sobre</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/marlonpatrick10" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://stackoverflow.com/users/1842759/marlon-patrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://br.linkedin.com/in/marlonpatrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.shelfari.com/o1515626551/shelf" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-book"></i>
+                    <span class="sidebar-button-desc">Shelfari</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/atom.xml">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">Adicionando Seam Faces no seu projeto Maven</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Thu Jun 14 2012 22:02:00 GMT-0300">
+        14/06/2012
+    </time>
+    
+        <span>em </span>
+        
+    <a class="category-link" href="/categories/JBoss-Seam/">JBoss Seam</a>
+
+
+    
+</div>
+
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        <p>Nos tempos de Maven o título desse post parece até meio idiota, mas, a equipe do JBoss Seam 3 conseguiu tornar algo que deveria ser simples numa atividade dolorosa. Pois é, adicionar o Seam Faces como dependência do seu projeto Maven não é tão simples como é sugerido na <a href="http://seamframework.org/Seam3/FacesModule" target="_blank" title="Seam Faces">página oficial</a>. Lá eles mostram o que deve ser adicionado no seu pom.xml para obter o Seam Faces:</p>
+<a id="more"></a>
+<pre><code><span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+   <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.faces<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+   <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-faces-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+   <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+   <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.faces<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+   <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-faces<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+   <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+   <span class="tag">&lt;<span class="title">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+</code></pre><p>Não deixa de ser verdade, as libs do Seam Faces serão baixadas pelo Maven, porém, as suas dependências não, por isso que me propus a fazer este post. Se você executar seu projeto apenas com o trecho de código acima no seu pom.xml vai obter erros dos mais variados tipos indo de ClassNotFoundException até “Bean name is ambiguous”, isso porque Seam Faces não baixa todas as suas dependências(pra que serve o Maven então?).</p>
+<p>Bem, depois de muito tentar e pesquisar, cheguei a uma configuração mínima para que o Seam Faces possa ser adicionado no seu projeto sem causar erros. Vale observar que meus testes foram feitos no JBoss AS 7. Segue o pom:</p>
+<pre><code><span class="tag">&lt;<span class="title">project</span> <span class="attribute">xmlns</span>=<span class="value">="http:</span>//<span class="attribute">maven.apache.org</span>/<span class="attribute">POM</span>/<span class="attribute">4.0.0</span>" <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span>
+    <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="title">modelVersion</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>teste.seam<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-faces<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">packaging</span>&gt;</span>war<span class="tag">&lt;/<span class="title">packaging</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">repositories</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">repository</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">id</span>&gt;</span>JBOSS_NEXUS<span class="tag">&lt;/<span class="title">id</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">url</span>&gt;</span>http://repository.jboss.org/nexus/content/groups/public<span class="tag">&lt;/<span class="title">url</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">repository</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">repositories</span>&gt;</span>
+
+   <span class="tag">&lt;<span class="title">dependencyManagement</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.spec<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-javaee-web-6.0<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>2.0.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="title">type</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+      <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+   <span class="tag">&lt;/<span class="title">dependencyManagement</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+        <span class="comment">&lt;!-- CDI  --&gt;</span>        
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>javax.enterprise<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>cdi-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- JSF  --&gt;</span>
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.spec.javax.faces<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-jsf-api_2.0_spec<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Servlet --&gt;</span>
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.spec.javax.servlet<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-servlet-api_3.0_spec<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Praticamente todos os modulos do Seam 3 precisam do Solder --&gt;</span>        
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.1.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Seam Faces precisa do seam-international(mesmo que você não use para nada) --&gt;</span>        
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.international<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-international<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Seam International precisa do joda-time --&gt;</span>        
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>joda-time<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>joda-time<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Seam Faces precisa do seam-transaction(mesmo que você não use para nada) --&gt;</span>        
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.transaction<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-transaction<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-servlet-api_3.0_spec<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.spec.javax.servlet<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Seam Faces precisa do seam-persistence(mesmo que você não use para nada) --&gt;</span>        
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.persistence<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-persistence<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.transaction<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-transaction<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>                
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.transaction<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-transaction-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>                
+            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Seam Persistence precisa do Hibernate(mesmo que você não use para nada) --&gt;</span>        
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.hibernate<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>hibernate-entitymanager<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>4.1.4.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Seam Faces precisa do seam-security(mesmo que você não use para nada) --&gt;</span>        
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.security<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-security<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.persistence<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-persistence<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-solder<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.international<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-international-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.international<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-international<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Seam Faces precisa do prettyfaces(mesmo que você não use para nada) --&gt;</span>
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.ocpsoft<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>prettyfaces-jsf2<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.3.3<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Seam Faces precisa do drools(mesmo que você não use para nada) --&gt;</span>
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.drools<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>knowledge-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>5.4.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+        <span class="comment">&lt;!-- Enfim, o Seam Faces --&gt;</span>
+        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.faces<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-faces<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.international<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-international-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
+            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+
+    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">project</span>&gt;</span>
+</code></pre><p>Perceba que eu usei bastante as tags de exclusão de artefatos, o caso é que o Solder, por exemplo, é baixado junto com vários módulos como o Seam Faces, Seam Internacional, Seam Transaction e etc. Fiz isso para evitar conflitos e explicitar para o leitor quais as dependências necessárias. Você pode remover algum desses “exclusions” e ir testando para vê se não vai haver problema.</p>
+<p>Com esse pom, meu projeto web foi executado no JBoss AS 7 sem erros na inicialização e então pude usar o Seam Faces para fazer algumas coisas como:</p>
+<pre><code><span class="variable">@Named</span>
+<span class="variable">@RequestScoped</span>
+public class SeamFacesTeste {
+
+
+    <span class="variable">@Inject</span>
+    FacesContext facesContext;
+
+    <span class="variable">@Inject</span>
+    Flash flash;
+
+    <span class="variable">@Inject</span>
+    HttpServletRequest request;
+
+    <span class="variable">@Inject</span>
+    HttpServletResponse response;
+
+}
+</code></pre><p>Bem é isso, espero que funcione de primeira. Uma dica que deixo é dar uma olhada no Seam BOM, é uma dependência do tipo pom que fornece todos os módulos do Seam 3 de uma forma mais organizada e você pode ir adicionando ao seu projeto a medida que for precisando.</p>
+
+	<blockquote>
+<p><em>Eu sou o caminho, e a verdade e a vida; ninguém vem ao Pai, senão por mim.</em><br><strong><em>Jesus Cristo</em></strong></p>
+</blockquote>
+
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGS</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/JSF/">JSF</a> <a class="tag tag--primary tag--small t-link" href="/tags/Maven/">Maven</a> <a class="tag tag--primary tag--small t-link" href="/tags/Seam-Faces/">Seam Faces</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2012/07/12/jaxb-plus-hibernate-plus-javassist/"  data-tooltip="JAXB + Hibernate + Javassist">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2012/06/14/adding-seam-faces-in-your-maven-project/" data-tooltip="Adding Seam Faces in your Maven project">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/pt-br/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/pt-br/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/pt-br/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2012/07/12/jaxb-plus-hibernate-plus-javassist/"  data-tooltip="JAXB + Hibernate + Javassist">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2012/06/14/adding-seam-faces-in-your-maven-project/" data-tooltip="Adding Seam Faces in your Maven project">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/pt-br/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/pt-br/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/pt-br/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+                </div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Marlon Patrick</h4>
+        
+            <h5 id="about-card-bio"><p>Aficionado por programação (e futebol), Flamenguista, Marido, Cristão</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Desenvolvedor de Software</p>
+
+            </h5>
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Pernambuco - Brasil
+            </h5>
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('/assets/images/cover.png');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'marlonpatrickdicasdeumprogramador';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','PfLcPuxspuRJ_JEy-A8a','2.0.0');
+    </script>
+
+
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en,pt-br,default">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Marlon Patrick">
+    <title>PrimeFaces: Dynamic Menu and the error Cannot remove the same component twice - Marlon Patrick</title>
+    <meta name="author" content="Marlon Patrick">
+    <meta name="description" content="Marlon Patrick">
+    <link rel="icon" href="/assets/images/null">
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="atom.xml">
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29896969-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="http://marlonpatrick.info">Marlon Patrick</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-categories">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-tags">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-archives">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archive</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs" href="/#search">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/#about">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/marlonpatrick10" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://stackoverflow.com/users/1842759/marlon-patrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://br.linkedin.com/in/marlonpatrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.shelfari.com/o1515626551/shelf" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-book"></i>
+                    <span class="sidebar-button-desc">Shelfari</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/atom.xml">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">PrimeFaces: Dynamic Menu and the error Cannot remove the same component twice</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Thu Jan 24 2013 22:39:00 GMT-0300">
+        Jan 24, 2013
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/JSF/">JSF</a>, <a class="category-link" href="/categories/JSF/PrimeFaces/">PrimeFaces</a>
+
+
+    
+</div>
+
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        <p>If you are using the MenuBar component PrimeFaces to generate dynamic menus you may have encountered the error:<strong>Can not remove the same component twice</strong>. This error occurs for the same reason explained in the post <a href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/">PrimeFaces: Dynamic Menu and harmless message Unable to Find Component … </a>.</p>
+<a id="more"></a>
+<p>The difference is that the “Unable to find component …” message is just a warnning the server log to a very specific case can be a performance problem, since the message “Cannot remove the same component twice” is an error fact that prevents the rendering of JSF screen. In my case, the error occurs when a JSF Validator throws a ValidatorException a screen that has a dynamic menu (PrimeFaces MenuBar).</p>
+<p>Another important thing is that the error occurs in the 3.4.1 version of PrimeFaces (did not get to check other versions) in conjunction with the implementation Mojarra JSF 2.1.9 or higher. If the Mojarra version 2.1.9 is less than the error occurs instead is played on the server log the message “Unable to find component …”.</p>
+<p>The solution placed in the post mentioned above also serves to this case and there explain better why the issue. Just click <a href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/">aqui</a> and gives a given. I have even opened a PrimeFaces issue in the bug tracking the following <a target="_blank" href="http://code.google.com/p/primefaces/issues/detail?id=4431">link</a>.</p>
+
+	<blockquote>
+<p><em>I am the way, the truth and the life. No one comes to the Father except through me.</em><br><strong><em>Jesus Christ</em></strong></p>
+</blockquote>
+
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Dynamic-Menu/">Dynamic Menu</a> <a class="tag tag--primary tag--small t-link" href="/tags/JSF/">JSF</a> <a class="tag tag--primary tag--small t-link" href="/tags/MenuBar/">MenuBar</a> <a class="tag tag--primary tag--small t-link" href="/tags/Mojarra/">Mojarra</a> <a class="tag tag--primary tag--small t-link" href="/tags/PrimeFaces/">PrimeFaces</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2013/01/24/primefaces-menu-dinamico-e-o-erro-cannot-remove-the-same-component-twice/"  data-tooltip="PrimeFaces: Menu Dinâmico e o erro Cannot remove the same component twice">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/" data-tooltip="PrimeFaces: Dynamic Menu and harmless message Unable to find component ...">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2013/01/24/primefaces-menu-dinamico-e-o-erro-cannot-remove-the-same-component-twice/"  data-tooltip="PrimeFaces: Menu Dinâmico e o erro Cannot remove the same component twice">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/" data-tooltip="PrimeFaces: Dynamic Menu and harmless message Unable to find component ...">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+                </div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Marlon Patrick</h4>
+        
+            <h5 id="about-card-bio"><p>Passionate about programming (and soccer), CR Flamengo fan, Husband, Christian</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Software Developer</p>
+
+            </h5>
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Pernambuco - Brazil
+            </h5>
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('/assets/images/cover.png');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'marlonpatrickdicasdeumprogramador';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','PfLcPuxspuRJ_JEy-A8a','2.0.0');
+    </script>
+
+
+</html>

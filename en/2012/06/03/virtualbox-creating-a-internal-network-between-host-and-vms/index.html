@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en,pt-br,default">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Marlon Patrick">
+    <title>VirtualBox: Creating an internal network between host and VMs with static ips - Marlon Patrick</title>
+    <meta name="author" content="Marlon Patrick">
+    <meta name="description" content="Marlon Patrick">
+    <link rel="icon" href="/assets/images/null">
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="atom.xml">
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29896969-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="http://marlonpatrick.info">Marlon Patrick</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-categories">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-tags">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-archives">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archive</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs" href="/#search">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/#about">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/marlonpatrick10" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://stackoverflow.com/users/1842759/marlon-patrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://br.linkedin.com/in/marlonpatrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.shelfari.com/o1515626551/shelf" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-book"></i>
+                    <span class="sidebar-button-desc">Shelfari</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/atom.xml">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">VirtualBox: Creating an internal network between host and VMs with static ips</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sun Jun 03 2012 12:46:00 GMT-0300">
+        Jun 03, 2012
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Virtualization/">Virtualization</a>, <a class="category-link" href="/categories/Virtualization/VirtualBox/">VirtualBox</a>
+
+
+    
+</div>
+
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        <p>Well, virtual machine configurations are not directly related to programming, but often virtual machines are useful for testing some situations as was my case, I had to simulate a database cluster.</p>
+<a id="more"></a>
+<p>Scenario: I have a postgres server installed in my native OS (Ubuntu 12.04) and wanted to test data replication in a cluster with other 2 machines. In case, I used VirtualBox to create two virtual machines: one with Windows 7 and one with CentOS 6.2. The basic requirement for replication to work before any setting in the database is that the machines connect to each other on the network, that’s where this post.</p>
+<p>When I decided to implement this environment researched enough to try to find the best way and it was not as easy as I thought it would be (perhaps because I had never used VirtualBox for nothing). If you try to search Google on how to prepare a similar environment, many blogs, forums and etc, suggest that you configure the VM with a network card in bridge mode, the problem is that this way whenever I need to call the virtual machines and there is no a real network that I can receive an IP the environment would crash, ie could only use the VM’s if indeed exists any real network.</p>
+<p>After much searching, I found that <a href="http://www.rafaelbiriba.com/2010/02/22/virtualbox-vms-com-ips-estaticos-e-internet-de-maneira-simples.html" target="_ blank" title="Rafael Biriba">post(pt-br)</a> of Rafael Biriba that explains exactly how to create a network between VMs and host, assigning static ip and with the VMs accessing the internet. Perfect!</p>
+<p>And because I to write another post then? Yes, the post of Rafael makes some implicit things, and as I had never used VirtualBox, still had to give poke around, then it’ll just detail what he says. Lets go to what matters!</p>
+<p>1 - Set up a host-only network: Open VirtualBox (I’m using 4.1.12) and go to File &gt; Preferences &gt; Network and add a host-only network on your VirtualBox as shown in image below:</p>
+<p><img src="passo_1.png" alt="1" title="Host-only"></p>
+<p>The “IPv4 Address” is the IP that your OS host will receive the network interface vboxnet0 (for Windows the name of the network interface may change) every time you open your VirtualBox in my case, I used the ip 172.16.1.1. An important point is that the DHCP server of this host-only network should be Disabled, which will help us assign the IP’s further static.</p>
+<p>2 - Configure the network interfaces in VMs: Select your VM and click on Settings &gt; Network and configure two network interfaces as shown in the images below. The first interface to be the NAT type and it is she who will ensure internet access for the SO’s guests and the second must be host-only type, it is through her that the VMs and the host will communicate. In host-only interface you must select the interface that we configured in step 1 for all VMs that you want to put on the same network.</p>
+<p><img src="passo_2_a.png" alt="2" title="Rede NAT"></p>
+<p><img src="passo_2_b.png" alt="3" title="Rede Host-only"></p>
+<p>3 - Assign static ip’s on the VM’s: At this point, the host OS already has a network interface, which in this case was configured with the ip 172.16.1.1. This IP will not change (unless you do it manually), missing only we configure the static ip’s in VM’s.</p>
+<p>In the case of my Windows VM the Local Network Connection 1 represents the NAT interface and the same should get an IP via DHCP (which is already the default behavior), since the Local Network Connection 2 is the host-only interface and it should be modified to receive an IP statically as below:</p>
+<p><img src="passo_3_a.png" alt="4" title="Rede local Windows"></p>
+<p>My VM CentOS got the network interface eth0 and the NAT network interface, just like in Windows machine it should receive an IP via DHCP. The eth1 interface is equivalent to host-only network and you must assign a different IP statically, below my settings:</p>
+<p><img src="passo_3_b.png" alt="5" title="Redes CentOS"></p>
+<p>4 - Additional details</p>
+<ul>
+<li><p>It is not the scope of this post describing how to install additional ones for guests (VirtualBoxGuestAdditions) but it is important that you install this tool on your virtual machines.</p>
+</li>
+<li><p>I had problems in both Windows and CentOS as regards communication due to firewall blocks, so if you have a problem make sure that is not it.</p>
+</li>
+<li><p>In CentOS, NAT interface was first recognized, however, the host-only interface was only recognized when I installed NetworkManager.</p>
+</li>
+</ul>
+<p>Well, with that you can now connect in your VM’s or your VM’s to connect to the host, to check this, a simple test is ping between machines.</p>
+
+	<blockquote>
+<p><em>I am the way, the truth and the life. No one comes to the Father except through me.</em><br><strong><em>Jesus Christ</em></strong></p>
+</blockquote>
+
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Static-IP/">Static IP</a> <a class="tag tag--primary tag--small t-link" href="/tags/VirtualBox/">VirtualBox</a> <a class="tag tag--primary tag--small t-link" href="/tags/Virtualization/">Virtualization</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2012/06/03/virtualbox-criando-uma-rede-interna-entre-host-e-vms/"  data-tooltip="VirtualBox:Criando uma rede interna entre Host e VMs com ips estáticos">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2012/03/28/executando-projeto-maven-como-aplicacao-web-no-eclipse/" data-tooltip="Executando projeto Maven como aplicação Web no Eclipse">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2012/06/03/virtualbox-creating-a-internal-network-between-host-and-vms/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2012/06/03/virtualbox-creating-a-internal-network-between-host-and-vms/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2012/06/03/virtualbox-creating-a-internal-network-between-host-and-vms/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2012/06/03/virtualbox-criando-uma-rede-interna-entre-host-e-vms/"  data-tooltip="VirtualBox:Criando uma rede interna entre Host e VMs com ips estáticos">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2012/03/28/executando-projeto-maven-como-aplicacao-web-no-eclipse/" data-tooltip="Executando projeto Maven como aplicação Web no Eclipse">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2012/06/03/virtualbox-creating-a-internal-network-between-host-and-vms/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2012/06/03/virtualbox-creating-a-internal-network-between-host-and-vms/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2012/06/03/virtualbox-creating-a-internal-network-between-host-and-vms/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+                </div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Marlon Patrick</h4>
+        
+            <h5 id="about-card-bio"><p>Passionate about programming (and soccer), CR Flamengo fan, Husband, Christian</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Software Developer</p>
+
+            </h5>
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Pernambuco - Brazil
+            </h5>
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('/assets/images/cover.png');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'marlonpatrickdicasdeumprogramador';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','PfLcPuxspuRJ_JEy-A8a','2.0.0');
+    </script>
+
+
+</html>

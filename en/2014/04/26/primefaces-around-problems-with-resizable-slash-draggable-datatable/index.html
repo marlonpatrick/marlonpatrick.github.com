@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en,pt-br,default">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Marlon Patrick">
+    <title>PrimeFaces: around problems with resizable/draggable dataTable - Marlon Patrick</title>
+    <meta name="author" content="Marlon Patrick">
+    <meta name="description" content="Marlon Patrick">
+    <link rel="icon" href="/assets/images/null">
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="atom.xml">
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29896969-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="http://marlonpatrick.info">Marlon Patrick</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-categories">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-tags">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-archives">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archive</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs" href="/#search">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/#about">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/marlonpatrick10" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://stackoverflow.com/users/1842759/marlon-patrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://br.linkedin.com/in/marlonpatrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.shelfari.com/o1515626551/shelf" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-book"></i>
+                    <span class="sidebar-button-desc">Shelfari</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/atom.xml">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">PrimeFaces: around problems with resizable/draggable dataTable</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sat Apr 26 2014 16:29:00 GMT-0300">
+        Apr 26, 2014
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/PrimeFaces/">PrimeFaces</a>
+
+
+    
+</div>
+
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        <p>I will leave here workarounds for some PrimeFaces bugs when using dataTable with features resizable or draggable. Some of these bugs have been corrected, but if for some reason you like me works with any version of PrimeFaces containing the error and can not update it will be of great help.</p>
+<a id="more"></a>
+<p><strong>1 - NullPointerException to resize the size of a column (fixed in version 3.5)</strong></p>
+<p>The problem occurs in a dataTable which is resizable and draggable at the same time. I found the following tickets in the PrimeFaces issue tracker to address the problem: <a href="https://code.google.com/p/primefaces/issues/detail?id=3674" title="Issue 3674" target="_blank">3674</a>, <a href="https://code.google.com/p/primefaces/issues/detail?id=4012" title="Issue 4012" target="_blank">4012</a>,<a href="https://code.google.com/p/primefaces/issues/detail?id=4796" title="Issue 4796" target="_blank">4796</a> and <a href="https://code.google.com/p/primefaces/issues/detail?id=5167" title="Issue 5167" target="_blank">5167</a>. In version 3.4.1 of PrimeFaces the error log is something like:</p>
+<pre><code><span class="number">01</span>:<span class="number">40</span>:<span class="number">49</span>,<span class="number">907</span> INFO  [javax<span class="class">.enterprise</span><span class="class">.resource</span><span class="class">.webcontainer</span><span class="class">.jsf</span><span class="class">.context</span>] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">1</span>) java<span class="class">.lang</span><span class="class">.NullPointerException</span>: java<span class="class">.lang</span><span class="class">.NullPointerException</span>
+at org<span class="class">.primefaces</span><span class="class">.component</span><span class="class">.datatable</span><span class="class">.feature</span><span class="class">.ResizableColumnsFeature</span><span class="class">.decode</span>(ResizableColumnsFeature<span class="class">.java</span>:<span class="number">35</span>) [primefaces-<span class="number">3.4</span>.<span class="number">1</span><span class="class">.jar</span>:]
+at org<span class="class">.primefaces</span><span class="class">.component</span><span class="class">.datatable</span><span class="class">.DataTableRenderer</span><span class="class">.decode</span>(DataTableRenderer<span class="class">.java</span>:<span class="number">53</span>) [primefaces-<span class="number">3.4</span>.<span class="number">1</span><span class="class">.jar</span>:]
+at javax<span class="class">.faces</span><span class="class">.component</span><span class="class">.UIComponentBase</span><span class="class">.decode</span>(UIComponentBase<span class="class">.java</span>:<span class="number">787</span>) [jboss-jsf-api_2.<span class="number">1</span>_spec-<span class="number">2.0</span>.<span class="number">1</span><span class="class">.Final</span><span class="class">.jar</span>:<span class="number">2.0</span>.<span class="number">1</span>.Final]
+at org<span class="class">.primefaces</span><span class="class">.component</span><span class="class">.api</span><span class="class">.UIData</span><span class="class">.processDecodes</span>(UIData<span class="class">.java</span>:<span class="number">224</span>) [primefaces-<span class="number">3.4</span>.<span class="number">1</span><span class="class">.jar</span>:]
+at com<span class="class">.sun</span><span class="class">.faces</span><span class="class">.context</span><span class="class">.PartialViewContextImpl</span><span class="variable">$PhaseAwareVisitCallback</span>.<span class="function"><span class="title">visit</span><span class="params">(PartialViewContextImpl.java:<span class="number">506</span>)</span></span> [jsf-impl-<span class="number">2.1</span>.<span class="number">7</span>-jbossorg-<span class="number">2</span><span class="class">.jar</span>:]
+at com<span class="class">.sun</span><span class="class">.faces</span><span class="class">.component</span><span class="class">.visit</span><span class="class">.PartialVisitContext</span><span class="class">.invokeVisitCallback</span>(PartialVisitContext<span class="class">.java</span>:<span class="number">183</span>) [jsf-impl-<span class="number">2.1</span>.<span class="number">7</span>-jbossorg-<span class="number">2</span><span class="class">.jar</span>:]
+at org<span class="class">.primefaces</span><span class="class">.component</span><span class="class">.api</span><span class="class">.UIData</span><span class="class">.visitTree</span>(UIData<span class="class">.java</span>:<span class="number">635</span>) [primefaces-<span class="number">3.4</span>.<span class="number">1</span><span class="class">.jar</span>:]
+</code></pre><p>Briefly the error happens because when you resize a column the PrimeFaces processes both resizing (resize) and the reordering (reorder) of the column. This can be easily realized if you use the colResize and colReorder event to generate a log.</p>
+<p>A detailed explanation is as follows: to create the effect of the resize a column PrimeFaces creates a tag <code>&lt;span&gt;</code> in the header of the column and makes this tag an object <a href="http://jqueryui.com/draggable/" title="jQuery UI - Draggable" target="_blank">draggable</a>, thus when the user drags the “column” for her to stay greater or minor and loose there is a “collision” between the resizer and reorder feature of dataTable. This is because the report that the dataTable is draggable the PrimeFaces makes all draggable columns so that they can be dragged and reordered and makes the whole table header <a href="http://jqueryui.com/droppable/" title=" jQuery UI - Droppable" target="_blank">droppable</a>. The problem is that the implementation of PrimeFaces missed configuring the droppable to accept only reordering columns and thus to release the <code>&lt;span&gt;</code> that resizes to the drop reordering of the column is used and the PrimeFaces understands that the column is being reordered and resized, with this method you should adjust the size of the column does not receive a parameter (the id of the resized column) it needs to function properly and then causes the error.</p>
+<p>To solve this problem I added a script after closing the tag <code>&lt;p:dataTable&gt;</code> that defines a specific scope for ‘<span>‘ which is used in resizing columns. So, to resize a column even if the user release the mouse on the table header of the drop column reordering will not be called because the draggable object ‘<span>‘ has a different scope of droppable object (table header). The code is as follows:</span></span></p>
+<pre><code><span class="tag">&lt;<span class="title">p:dataTable</span> <span class="attribute">draggableColumns</span>=<span class="value">"true"</span> <span class="attribute">resizableColumns</span>=<span class="value">"true"</span>&gt;</span>
+       <span class="comment">&lt;!-- your code --&gt;</span>
+<span class="tag">&lt;/ <span class="attribute">p:</span> <span class="attribute">dataTable</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript">
+    $( <span class="string">".ui-column-resizer"</span> ).draggable( <span class="string">"option"</span>, <span class="string">"scope"</span>, <span class="string">'resizer'</span>);<span class="comment">//resizer is the name of the scope that chose, could be any other name</span>
+</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</code></pre><p><strong>2 - NullPointerException to resize a dynamic column (fixed in version 3.5.7)</strong></p>
+<p>In this case simply just have a resizable dataTable with dynamic columns so that the error happens. I found the following tickets in the PrimeFaces issue tracker to address the problem: <a href="https://code.google.com/p/primefaces/issues/detail?id=4238" title="Issue 4238" target="_blank">4238</a> and <a href="https://code.google.com/p/primefaces/issues/detail?id=4797" title="Issue 4797" target="_blank">4797</a>. Funny that even with several people reporting the problem the PrimeFaces the team scored both issues as “Unable to replicate.” According to one observer the problem was resolved in version 3.5.7, but could not prove.</p>
+<p>The point where the error occurs is the same as the case described above, so the log is similar and only what changes is the root cause of the problem. Previously, the NullPointer reason is that the parameter with the id of the resized column is not sent to the server, as in the case of dynamic columns, even when the id is sent PrimeFaces can not find the corresponding column. The method that is used to fetch the column by id is <code>DataTable.findColumn (String clinetId)</code> which only looks for simple columns and ignores the dynamics.</p>
+<p>In my case, it was not so important that the Column object were found and that their width field was setted as the width used on my screen is stored in another specific object of my system. So my solution was only override the class that processes the resize the dataTable event (org.primefaces.component.datatable.feature.ResizableColumnsFeature), but specifically the decode method:</p>
+<pre><code>@Override
+<span class="keyword">public</span> <span class="literal">void</span> decode(FacesContext context, DataTable table) {
+    <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">String</span>&gt; <span class="keyword">params</span> = FacesContext<span class="built_in">.</span>getCurrentInstance()<span class="built_in">.</span>getExternalContext()<span class="built_in">.</span>getRequestParameterMap();
+    <span class="built_in">String</span> clientId = table<span class="built_in">.</span>getClientId();
+
+    <span class="built_in">String</span> columnId = <span class="keyword">params</span><span class="built_in">.</span>get(clientId + <span class="string">"_columnId"</span>);
+    <span class="built_in">String</span> width = <span class="keyword">params</span><span class="built_in">.</span>get(clientId + <span class="string">"_width"</span>);
+    Column column = table<span class="built_in">.</span>findColumn(columnId);
+
+    <span class="keyword">if</span>(column != <span class="built_in">null</span>){ <span class="comment">//added this if that to avoid NullPointerException</span>
+        column<span class="built_in">.</span>setWidth(<span class="built_in">Integer</span><span class="built_in">.</span>parseInt(width));
+    }
+}
+</code></pre><p>Dessa forma o evento colResize pode ser invocado e é através dele que resolvo meu problema. Talvez o código seja difícil de aplicar em outro sistema, mas, de toda forma vou deixar aqui pelo menos para você ter uma idéia de como fiz e poder adaptar a solução:</p>
+<p>Thus the colResize event can be invoked and it is through him that solve my problem. Perhaps the code is difficult to apply in another system, but anyway I will leave here at least you get an idea of how I did and be able to adapt the solution:</p>
+<pre><code>public void onResizeColumn<span class="params">(ColumnResizeEvent event)</span> {
+    <span class="keyword">if</span> <span class="params">(event.getColumn<span class="params">()</span> == null)</span> {
+        String index = getColumnIndex<span class="params">(event)</span>;
+        DynaColumn dynaColumn = this.getColumns<span class="params">()</span>.get<span class="params">(Integer.parseInt<span class="params">(index)</span>)</span>;<span class="comment">//getColumns() is the list you use to generate the dynamic columns</span>
+        dynaColumn.setWidth<span class="params">(event.getWidth<span class="params">()</span>)</span>;<span class="comment">//DynaColumn is a particular object of my system</span>
+    }
+}
+
+private String getColumnIndex<span class="params">(ColumnResizeEvent event)</span> {
+    String columnId = FacesContext.getCurrentInstance<span class="params">()</span>.getExternalContext<span class="params">()</span>.getRequestParameterMap<span class="params">()</span>.get<span class="params">(event.getComponent<span class="params">()</span>.getClientId<span class="params">()</span> + <span class="string">"_columnId"</span>)</span>;
+    String[] columnIdSplited = columnId.split<span class="params">(<span class="string">":"</span>)</span>;
+    return columnIdSplited[columnIdSplited.length - <span class="number">1</span>];
+}
+</code></pre><p>In my JSF page using the DynaColumn.width field to set the size of the column even if the Column object PrimeFaces has not been updated.</p>
+<pre><code><span class="xml"><span class="tag">&lt;<span class="title">p:dataTable</span> <span class="attribute">resizableColumns</span>=<span class="value">"true"</span>&gt;</span>
+       <span class="comment">&lt;!-- your code --&gt;</span>
+    <span class="tag">&lt;<span class="title">p:columns</span> <span class="attribute">value</span>=<span class="value">"#</span></span></span><span class="expression">{<span class="variable">viewManager.columns</span>}</span><span class="xml"><span class="tag"><span class="value">"</span> <span class="attribute">var</span>=<span class="value">"dynaColumn"</span>&gt;</span>
+           <span class="comment">&lt;!-- your code --&gt;</span>
+    <span class="tag">&lt;/<span class="title">p:columns</span>&gt;</span>
+<span class="tag">&lt;/ <span class="attribute">p:</span> <span class="attribute">dataTable</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">ui:repeat</span> <span class="attribute">var</span>=<span class="value">"dynaColumn"</span> <span class="attribute">value</span>=<span class="value">"#</span></span></span><span class="expression">{<span class="variable">viewManager.columns</span>}</span><span class="xml"><span class="tag"><span class="value">"</span> <span class="attribute">varStatus</span>=<span class="value">"status"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="undefined">
+        var columnWidth = #</span></span><span class="expression">{<span class="variable">dynaColumn.width</span>}</span><span class="xml"><span class="actionscript">;
+        <span class="keyword">if</span>(columnWidth &gt; <span class="number">0</span>)</span></span><span class="expression">{
+            $('[<span class="variable">id</span>=<span class="string">"dataTableID:dynamicColumns:#{status.index}"</span>]')<span class="variable">.</span>
+                <span class="variable">children</span>('<span class="variable">.ui-dt-c</span>')<span class="variable">.css</span>('<span class="variable">width</span>',<span class="variable">columnWidth</span>);
+        }</span><span class="xml"><span class="undefined">
+    </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>                
+<span class="tag">&lt;/<span class="title">ui:repeat</span>&gt;</span></span>
+</code></pre><p>The issue <a href="https://code.google.com/p/primefaces/issues/detail?id=4238" title="Issue 4238" target="_blank">4238</a> proposes another way around the problem, in addition, other possible solutions would adjust the ResizableColumnsFeature.decode method to search the column the right way or else the onResize set the Column object rather than a system object itself. If any of these fixes will be implemented javascript would not be necessary to adjust the width of columns in the JSF page thus simplifying the solution. In my case there is a business requirement that forced me to make the form presented here.</p>
+<p><strong>3 - colReorder event runs for any ajax call and not only in the column reordering</strong></p>
+<p>To simulate this error simply just have a draggable dataTable and make any ajax call on the screen. I found the ticket <a href="https://code.google.com/p/primefaces/issues/detail?id=4985" title="Issue 4985" target="_blank">4985</a> in the rimeFaces issue tracker that addresses the problem. The same was marked “not be corrected,” then I believe still happen in any version.</p>
+<p>To solve the problem I overwrite the org.primefaces.component.datatable.feature.DraggableColumnsFeature class to adjust the shouldDecode method:</p>
+<pre><code><span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">shouldDecode</span><span class="params">(FacesContext context, DataTable table)</span> </span>{
+  <span class="keyword">return</span> table.isDraggableColumns() &amp;&amp; <span class="keyword">this</span>.isDragRequest(context);
+}
+
+<span class="keyword">private</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isDragRequest</span><span class="params">(FacesContext context)</span> </span>{
+  String eventName =  context.getExternalContext().getRequestParameterMap().get(<span class="string">"javax.faces.behavior.event"</span>);
+
+  <span class="keyword">if</span>(<span class="string">"colReorder"</span>.equals(eventName)){
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+  }
+
+  <span class="keyword">return</span> <span class="keyword">false</span>;
+}
+</code></pre><p>Thus, the colReorder event will now be called at the appropriate time.</p>
+
+	<blockquote>
+<p><em>I am the way, the truth and the life. No one comes to the Father except through me.</em><br><strong><em>Jesus Christ</em></strong></p>
+</blockquote>
+
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/DataTable/">DataTable</a> <a class="tag tag--primary tag--small t-link" href="/tags/JSF/">JSF</a> <a class="tag tag--primary tag--small t-link" href="/tags/PrimeFaces/">PrimeFaces</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2014/04/28/jasperreports-solving-nosuchmethoderror-to-use-an-image/"  data-tooltip="JasperReports: Solving NoSuchMethodError to use an image">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2014/04/26/primefaces-contornando-problemas-com-datatable-resizable-slash-draggable/" data-tooltip="PrimeFaces: contornando problemas com dataTable resizable/draggable">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2014/04/26/primefaces-around-problems-with-resizable-slash-draggable-datatable/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2014/04/26/primefaces-around-problems-with-resizable-slash-draggable-datatable/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2014/04/26/primefaces-around-problems-with-resizable-slash-draggable-datatable/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2014/04/28/jasperreports-solving-nosuchmethoderror-to-use-an-image/"  data-tooltip="JasperReports: Solving NoSuchMethodError to use an image">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/pt-br/2014/04/26/primefaces-contornando-problemas-com-datatable-resizable-slash-draggable/" data-tooltip="PrimeFaces: contornando problemas com dataTable resizable/draggable">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2014/04/26/primefaces-around-problems-with-resizable-slash-draggable-datatable/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2014/04/26/primefaces-around-problems-with-resizable-slash-draggable-datatable/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2014/04/26/primefaces-around-problems-with-resizable-slash-draggable-datatable/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+                </div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Marlon Patrick</h4>
+        
+            <h5 id="about-card-bio"><p>Passionate about programming (and soccer), CR Flamengo fan, Husband, Christian</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Software Developer</p>
+
+            </h5>
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Pernambuco - Brazil
+            </h5>
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('/assets/images/cover.png');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'marlonpatrickdicasdeumprogramador';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','PfLcPuxspuRJ_JEy-A8a','2.0.0');
+    </script>
+
+
+</html>

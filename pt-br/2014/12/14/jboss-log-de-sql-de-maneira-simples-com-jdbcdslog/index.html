@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en,pt-br,default">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Marlon Patrick">
+    <title>JBOSS: Log de SQL de maneira simples com jdbcdslog - Marlon Patrick</title>
+    <meta name="author" content="Marlon Patrick">
+    <meta name="description" content="Marlon Patrick">
+    <link rel="icon" href="/assets/images/null">
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="atom.xml">
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29896969-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="http://marlonpatrick.info">Marlon Patrick</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/pt-br">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Início</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/pt-br/all-categories">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categorias</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/pt-br/all-tags">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/pt-br/all-archives">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Arquivo</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs" href="/#search">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Pesquisar</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/#about">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">Sobre</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/marlonpatrick10" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://stackoverflow.com/users/1842759/marlon-patrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://br.linkedin.com/in/marlonpatrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.shelfari.com/o1515626551/shelf" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-book"></i>
+                    <span class="sidebar-button-desc">Shelfari</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/atom.xml">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">JBOSS: Log de SQL de maneira simples com jdbcdslog</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sun Dec 14 2014 17:36:00 GMT-0300">
+        14/12/2014
+    </time>
+    
+        <span>em </span>
+        
+    <a class="category-link" href="/categories/JBOSS/">JBOSS</a>, <a class="category-link" href="/categories/JBOSS/SQL/">SQL</a>, <a class="category-link" href="/categories/JBOSS/SQL/Log/">Log</a>, <a class="category-link" href="/categories/JBOSS/SQL/Log/Hibernate/">Hibernate</a>
+
+
+    
+</div>
+
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        <p>Uma necessidade básica em quase todos os projetos de software é o log de instruções SQL e para esse fim existe uma infinidade de opções. No entanto, apesar das várias alternativas, muitas vezes o log não é feito da melhor forma:</p>
+<a id="more"></a>
+<ul>
+<li>Excesso de log: são logadas coisas demais (consultas, abertura e fechamento de conexões, abertura e fechamento de resultsets) e o programador não tem a possibilidade de configurar o que deve ou não ser logado.</li>
+<li>Falta de integração com frameworks de logging: a lib atende bem a os requisitos de Log de SQL, porém, não se integra com frameworks de log (log4j, java logging, apache commons logging) o que acaba obrigando o desenvolvedor a criar um arquivo de log específico para SQL.</li>
+<li>Dificuldades para se trabalhar com DataSources, em especial, XA-DataSources: a ferramenta de log atende bem os dois requisitos acima, porém, é limitada a ser usada com objetos java.sql.Connection, ou em outros casos, podem ser usados com DataSources “normais”, porém, não atendem quando precisamos logar sql de XA-DataSources.</li>
+</ul>
+<p>Para quem usa o Hibernate a primeira escolha normalmente é configurá-lo para logar as queries geradas, o resultado é algo como:</p>
+<pre><code><span class="operator">select this_.code <span class="keyword">from</span> employee this_ <span class="keyword">where</span> this_.code=?
+<span class="keyword">INSERT</span> <span class="keyword">INTO</span> stock_transaction (<span class="keyword">CHANGE</span>, <span class="keyword">CLOSE</span>, <span class="built_in">DATE</span>, <span class="keyword">OPEN</span>, STOCK_ID, VOLUME) <span class="keyword">VALUES</span> (?, ?, ?, ?, ?, ?)</span>
+</code></pre><p>Nesse caso temos dois problemas, o primeiro é que os valores dos filtros e colunas não são logados, é mostrado apenas o caracter <strong>?</strong> indicando que foi substituído por um parâmetro. O outro problema é que nem sempre as consultas são realizadas pelo Hibernate, nesses casos, o log não seria mostrado nem mesmo o log sem parâmetros.</p>
+<p>Pois bem, depois de testar algumas libs de log de sql encontrei uma que me atendeu em todos esses aspectos: controle do que será logado, integração com os frameworks de log mais populares, funcionar com Connection, DataSource e XA-Datasource, logar o sql com todos os seus parâmetros de modo que eu possa copiar e colar numa ferramenta de acesso a banco e executar o script, e por fim, logar qualquer sql que se faça através da conexão monitorada seja feita pelo Hibernate ou por qualquer outro modo. O nome da lib é <a href="https://code.google.com/p/jdbcdslog/" title="jdbcdslog" target="_blank">jdbcdslog</a>.</p>
+<p>O exemplo mais básico é logar as queries de um simples objeto Connection:</p>
+<pre><code>public static void main<span class="params">(String[] args)</span> throws Exception {
+    Class.forName<span class="params">(<span class="string">"org.jdbcdslog.DriverLoggingProxy"</span>)</span>;
+
+    String url = <span class="string">"jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver"</span>;
+    Connection con = DriverManager.getConnection<span class="params">(url, <span class="string">"mpinfo"</span>, <span class="string">"mpinfo"</span>)</span>;
+
+    PreparedStatement ps = con.prepareStatement<span class="params">(<span class="string">"select * from product where id=?"</span>)</span>;
+    ps.setLong<span class="params">(<span class="number">1</span>, <span class="number">1</span>)</span>;
+    ps.execute<span class="params">()</span>;
+
+    con.close<span class="params">()</span>;
+}
+</code></pre><p>Nesse exemplo estou acessando um banco PostgreSQL e perceba que a URL fica um pouco diferente do padrão pois preciso acrescentar o driver do Jdbcdslog como proxy para o driver original do Postgre. Você pode perceber isso em <strong>jdbc:jdbcdslog:postgresql</strong> e também no parâmetro <strong>targetDriver</strong>. O resultado desse código é algo como:</p>
+<pre><code>[main] INFO org.jdbcdslog.StatementLogger - <span class="operator">select * <span class="keyword">from</span> ceos.product <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span>;</span>
+</code></pre><p>Mas o que quero demonstrar mesmo aqui nesse post é como usar essa lib para logar sql de datasources no JBoss, aqui no meu ambiente vou usar o JBoss EAP 6.2, mas acredito que a partir da versão do JBoss 7 não muda quase nada. Para isso vamos criar módulos no JBoss com o driver do Postgre e também do jdbcdslog.</p>
+<p>1 - Primeiro devemos criar a pasta JBOSS_HOME/modules/system/layers/base/org/postgresql/main/. Dentro dessa pasta colocaremos o jar do Postgre de acordo com a versão que você usa, por exemplo, postgresql-9.3-1101-jdbc41.jar. Além disso devemos criar um arquivo chamado module.xml com o seguinte conteúdo:</p>
+<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"org.postgresql"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"postgresql-9.3-1101-jdbc41.jar"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.api"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+</code></pre><p>Esse procedimento deverá ser feito para qualquer banco de dados que você queira logar as queries, seja Postgre, Oracle, MySQL etc. A lógica é a mesma, basta prestar atenção nos nomes dos arquivos e na pasta o qual serão colocados. A sugestão é utilizar o nome do pacote principal do jar, no caso do Postgre é o org.postgresql.</p>
+<p>2 - Agora é a vez de criamos o módulo do jdbcdslog. Para isso criamos a pasta JBOSS_HOME/modules/system/layers/base/com/googlecode/usc/jdbcdslog/main/. Nessa pasta iremos colocar o jar do jdbcdslog, por exemplo, jdbcdslog-1.0.6.2.jar. Também precisaremos criar um arquivo chamado module.xml com o seguinte conteúdo:</p>
+<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"com.googlecode.usc.jdbcdslog"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"jdbcdslog-1.0.6.2.jar"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.slf4j"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.api"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>/&gt;</span>
+    <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.postgresql"</span> <span class="attribute">optional</span>=<span class="value">"true"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+</code></pre><p>Perceba que a dependência do módulo do Postgre é opcional. Será necessário incluir os módulos de outros bancos de dados (Oracle, Mysql) como dependência do módulo do jdbcdslog caso você queira fazer o log deles também.</p>
+<p>3 - Agora abra o arquivo JBOSS_HOME/standalone/configuration/standalone.xml e configure os logs do jdbcdslog. Procure a tag do subsistema de log, algo como <code>&lt;subsystem xmlns=&quot;urn:jboss:domain:logging:1.3&quot;&gt;</code>, dentro dessa tag coloque o seguinte conteúdo:</p>
+<pre><code><span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.StatementLogger"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"DEBUG"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.ConnectionLogger"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.ResultSetLogger"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.SlowQueryLogger"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+</code></pre><p>Das várias opções de log disponíveis, a única que deixamos ativa foi o log de statements, ou seja, log de comandos DML e DDL.</p>
+<p>OBS:Caso seu JBoss esteja executando em modo domínio ao invés de standalone então essa configuração pode ser feita no arquivo JBOSS_HOME/domain/configuration/domain.xml</p>
+<p>4 - Ainda no arquivo standalone.xml vamos criar o datasource. Abaixo seguem dois exemplos, um para um datasource normal e outro para um XA-DataSoure, ambos devem ficar dentro da tag <code>&lt;datasources&gt;</code>:</p>
+<pre><code><span class="tag">&lt;<span class="title">datasource</span> <span class="attribute">jta</span>=<span class="value">"true"</span> <span class="attribute">jndi-name</span>=<span class="value">"java:/mpinfods"</span> <span class="attribute">pool-name</span>=<span class="value">"MPINFO-POOL"</span> <span class="attribute">enabled</span>=<span class="value">"true"</span> <span class="attribute">use-ccm</span>=<span class="value">"true"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">connection-url</span>&gt;</span>jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver<span class="tag">&lt;/<span class="title">connection-url</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">driver</span>&gt;</span>jdbcdslog<span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">new-connection-sql</span>&gt;</span>select 1<span class="tag">&lt;/<span class="title">new-connection-sql</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">transaction-isolation</span>&gt;</span>TRANSACTION_READ_COMMITTED<span class="tag">&lt;/<span class="title">transaction-isolation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">pool</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">min-pool-size</span>&gt;</span>10<span class="tag">&lt;/<span class="title">min-pool-size</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">max-pool-size</span>&gt;</span>20<span class="tag">&lt;/<span class="title">max-pool-size</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">pool</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">security</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">user-name</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">user-name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">password</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">security</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">validation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">validate-on-match</span>&gt;</span>false<span class="tag">&lt;/<span class="title">validate-on-match</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">background-validation</span>&gt;</span>false<span class="tag">&lt;/<span class="title">background-validation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">background-validation-millis</span>&gt;</span>1<span class="tag">&lt;/<span class="title">background-validation-millis</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">validation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">statement</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">prepared-statement-cache-size</span>&gt;</span>32<span class="tag">&lt;/<span class="title">prepared-statement-cache-size</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">share-prepared-statements</span>&gt;</span>false<span class="tag">&lt;/<span class="title">share-prepared-statements</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">statement</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">datasource</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">xa-datasource</span> <span class="attribute">jndi-name</span>=<span class="value">"java:/mpinfoxads"</span> <span class="attribute">pool-name</span>=<span class="value">"MPINFO-XA-POOL"</span> <span class="attribute">enabled</span>=<span class="value">"true"</span> <span class="attribute">use-ccm</span>=<span class="value">"true"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"PortNumber"</span>&gt;</span>5432<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"DatabaseName"</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"ServerName"</span>&gt;</span>172.16.1.6<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"targetDS"</span>&gt;</span>org.postgresql.xa.PGXADataSource<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">driver</span>&gt;</span>jdbcdslog<span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">new-connection-sql</span>&gt;</span>select 1<span class="tag">&lt;/<span class="title">new-connection-sql</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">transaction-isolation</span>&gt;</span>TRANSACTION_READ_COMMITTED<span class="tag">&lt;/<span class="title">transaction-isolation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-pool</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">min-pool-size</span>&gt;</span>0<span class="tag">&lt;/<span class="title">min-pool-size</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">max-pool-size</span>&gt;</span>10<span class="tag">&lt;/<span class="title">max-pool-size</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">flush-strategy</span>&gt;</span>IdleConnections<span class="tag">&lt;/<span class="title">flush-strategy</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">is-same-rm-override</span>&gt;</span>false<span class="tag">&lt;/<span class="title">is-same-rm-override</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">interleaving</span>&gt;</span>false<span class="tag">&lt;/<span class="title">interleaving</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">pad-xid</span>&gt;</span>false<span class="tag">&lt;/<span class="title">pad-xid</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">wrap-xa-resource</span>&gt;</span>false<span class="tag">&lt;/<span class="title">wrap-xa-resource</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">xa-pool</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">security</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">user-name</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">user-name</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">password</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">security</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">validation</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">valid-connection-checker</span> <span class="attribute">class-name</span>=<span class="value">"org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">validate-on-match</span>&gt;</span>true<span class="tag">&lt;/<span class="title">validate-on-match</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">background-validation</span>&gt;</span>false<span class="tag">&lt;/<span class="title">background-validation</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">exception-sorter</span> <span class="attribute">class-name</span>=<span class="value">"org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">validation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">timeout</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">idle-timeout-minutes</span>&gt;</span>3<span class="tag">&lt;/<span class="title">idle-timeout-minutes</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">timeout</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">statement</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">track-statements</span>&gt;</span>true<span class="tag">&lt;/<span class="title">track-statements</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">share-prepared-statements</span>&gt;</span>false<span class="tag">&lt;/<span class="title">share-prepared-statements</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">statement</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">xa-datasource</span>&gt;</span>
+</code></pre><p>Nesse ponto você deve prestar atenção em informações como ips, usuários, senhas e substituir de acordo com o seu ambiente, além disso, perceba que na tag <code>&lt;driver&gt;</code> usamos o nome do driver do jdbcdslog que definiremos no próximo passo.</p>
+<p>5 - Dentro da tag <code>&lt;datasources&gt;</code> (standalone.xml)  acrescentar a definição do driver que faz o log:</p>
+<pre><code><span class="tag">&lt;<span class="title">drivers</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">driver</span> <span class="attribute">name</span>=<span class="value">"jdbcdslog"</span> <span class="attribute">module</span>=<span class="value">"com.googlecode.usc.jdbcdslog"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">driver-class</span>&gt;</span>org.jdbcdslog.DriverLoggingProxy<span class="tag">&lt;/<span class="title">driver-class</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">xa-datasource-class</span>&gt;</span>org.jdbcdslog.XADataSourceProxy<span class="tag">&lt;/<span class="title">xa-datasource-class</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">drivers</span>&gt;</span>
+</code></pre><p>Pronto, com isso já poderemos usar o datasource e verificar no log do JBoss que qualquer select, update, insert etc que for feito através das conexões desse datasource serão logadas, a saída será algo como:</p>
+<pre><code>11:35:00,066 INFO  [org.jdbcdslog.StatementLogger] (EJB default - 6) <span class="operator">select u.<span class="keyword">password</span> <span class="keyword">from</span> <span class="keyword">user</span> u <span class="keyword">where</span> u.login=<span class="string">'admin'</span>;</span>
+</code></pre><p>Se você usa um XA-DataSource talvez se depare com o seguinte erro:</p>
+<pre><code><span class="type">Caused</span> by: javax.resource.<span class="type">ResourceException</span>: <span class="type">IJ000453</span>: <span class="type">Unable</span> to get managed connection <span class="keyword">for</span> java:/<span class="type">MPINFO</span>-<span class="type">XA</span>-<span class="type">Datasource</span>
+
+<span class="type">Caused</span> by: java.lang.<span class="type">LinkageError</span>: loader constraint violation: loader (instance of &lt;bootloader&gt;) previously initiated loading <span class="keyword">for</span> a different <span class="class"><span class="keyword">type</span> <span class="keyword"><span class="keyword">with</span></span> <span class="title">name</span> "<span class="title">javax/transaction/xa/XAResource</span>"</span>
+</code></pre><p>A exceção acontece devido a um problema de ClassLoader no JBoss, a questão é que existem duas definições para a classe javax.transaction.xa.XAResource: uma que fica no pacote padrão da JVM e outra que fica num jar dentro do JBoss. Então, por algum motivo, o JBoss carrega a classe a partir da sua lib e o jdbcdslog carrega a classe a partir da lib padrão da JVM (rt.jar) e com isso ocorre a exceção alegando que uma classe com esse mesmo nome já havia sido carregada. Pois bem, para resolver isso ajustei uma configuração no JBoss para evitar que ele carregue a classe que está contida nas suas próprias libs e carregue somente a classe a partir da JVM. O procedimento consiste em alterar o conteúdo do arquivo JBOSS_HOME/modules/system/layers/base/javax/transaction/api/main/module.xml:</p>
+<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"jboss-transaction-api_1.1_spec-1.0.1.Final-redhat-2.jar"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">filter</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclude</span> <span class="attribute">path</span>=<span class="value">"javax/transaction/xa"</span>/&gt;</span>
+                <span class="tag">&lt;<span class="title">include</span> <span class="attribute">path</span>=<span class="value">"**"</span>/&gt;</span>
+            <span class="tag">&lt;/<span class="title">filter</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">resource-root</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">system</span> <span class="attribute">export</span>=<span class="value">"true"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">paths</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">path</span> <span class="attribute">name</span>=<span class="value">"javax/transaction/xa"</span>/&gt;</span>
+            <span class="tag">&lt;/<span class="title">paths</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">system</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+</code></pre><p>Recomendo que você salve o arquivo original antes de fazer qualquer modificação, ele provavelmente não terá a tag <code>&lt;dependencies&gt;</code> e também não terá a tag <code>&lt;filter&gt;</code>. Com esse ajuste terminamos todas as configurações necessárias, agora é testar e verificar que o log gerado está de acordo com os comandos executados.</p>
+
+	<blockquote>
+<p><em>Eu sou o caminho, e a verdade e a vida; ninguém vem ao Pai, senão por mim.</em><br><strong><em>Jesus Cristo</em></strong></p>
+</blockquote>
+
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGS</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Hibernate/">Hibernate</a> <a class="tag tag--primary tag--small t-link" href="/tags/JBOSS/">JBOSS</a> <a class="tag tag--primary tag--small t-link" href="/tags/JPA/">JPA</a> <a class="tag tag--primary tag--small t-link" href="/tags/Log/">Log</a> <a class="tag tag--primary tag--small t-link" href="/tags/SQL/">SQL</a> <a class="tag tag--primary tag--small t-link" href="/tags/jdbcdslog/">jdbcdslog</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/undefined/2015/08/03/hello-world/"  data-tooltip="Hello World">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2014/12/14/jboss-sql-log-in-simple-way-with-jdbcdslog/" data-tooltip="JBOSS: SQL log in a simple way with jdbcdslog">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/pt-br/2014/12/14/jboss-log-de-sql-de-maneira-simples-com-jdbcdslog/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/pt-br/2014/12/14/jboss-log-de-sql-de-maneira-simples-com-jdbcdslog/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/pt-br/2014/12/14/jboss-log-de-sql-de-maneira-simples-com-jdbcdslog/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/undefined/2015/08/03/hello-world/"  data-tooltip="Hello World">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2014/12/14/jboss-sql-log-in-simple-way-with-jdbcdslog/" data-tooltip="JBOSS: SQL log in a simple way with jdbcdslog">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/pt-br/2014/12/14/jboss-log-de-sql-de-maneira-simples-com-jdbcdslog/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/pt-br/2014/12/14/jboss-log-de-sql-de-maneira-simples-com-jdbcdslog/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/pt-br/2014/12/14/jboss-log-de-sql-de-maneira-simples-com-jdbcdslog/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+                </div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Marlon Patrick</h4>
+        
+            <h5 id="about-card-bio"><p>Aficionado por programação (e futebol), Flamenguista, Marido, Cristão</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Desenvolvedor de Software</p>
+
+            </h5>
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Pernambuco - Brasil
+            </h5>
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('/assets/images/cover.png');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'marlonpatrickdicasdeumprogramador';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','PfLcPuxspuRJ_JEy-A8a','2.0.0');
+    </script>
+
+
+</html>
