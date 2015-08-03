@@ -48,4 +48,4 @@ O problema é que o TransactionPhaseListener é habilitado por padrão desde que
 	</beans>
 
 
-Com essa configuração no beans.xml a classe TransactionPhaseListener será ignorada pelo CDI e portanto ficará desabilitada, eliminando assim o problema no controle de transação e aquela mensagem chata (JBAS010152). Na verdade, quando consegui me livrar desse problema apareceram outros no meu projeto, pois, ele estava ocultando alguns defeitos no meu controle de transação, então, recomendo tentar validar sua estratégia após desabilitar o TransactionPhaseListener e se certificar que está em perfeito funcionamento. Vlw!
+Com essa configuração no beans.xml a classe TransactionPhaseListener será ignorada pelo CDI e portanto ficará desabilitada, eliminando assim o problema no controle de transação e aquela mensagem chata (JBAS010152). Na verdade, quando consegui me livrar desse problema apareceram outros no meu projeto, pois, ele estava ocultando alguns defeitos no meu controle de transação, então, recomendo tentar validar sua estratégia após desabilitar o TransactionPhaseListener e se certificar que está em perfeito funcionamento.

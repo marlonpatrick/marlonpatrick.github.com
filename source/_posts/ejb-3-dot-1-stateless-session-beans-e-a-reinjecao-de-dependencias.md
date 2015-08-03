@@ -7,10 +7,7 @@ alias: blog/2013/09/04/ejb-3-dot-1-stateless-session-beans-e-a-reinjecao-de-depe
 categories:
  - EJB
 tags:
- - EJB
  - Stateless Session Bean
- - SLSB
- - Reinjeção de dependências
  - Injeção de dependências
 ---
 
@@ -25,7 +22,7 @@ Porém, com o advento do CDI e o seu poderoso mecanismo de injeção de dependê
 Na verdade não é bem assim, descobri isso hoje e se soubesse antes teria me evitado uma grande dor de cabeça, por isso resolvi compartilhar aqui. A especificação EJB 3.1 na página 74 item 4.3.2 fala o seguinte:
 > If a session bean makes use of dependency injection, the container injects these references after the bean instance is created, and before any business methods are invoked on the bean instance.
 
-Ou seja, a injeção de dependências é feita depois de criar a instância do bean e também antes de cada chamada de um método de negócio. Isso foi de grande valia para mim, pois, já estava quebrando a cabeça em como manteria o EntityManager que injeto nos meus EJBs (através do Seam Managed Persistence Context meu EntityManager é um @ConversationScoped) de acordo com o contexto do cliente do EJB. Como o container reinjeta as dependências antes de cada chamada de método na verdade eu nem precisa ter me preocupado com isso.
+Ou seja, a injeção de dependências é feita depois de criar a instância do bean e também antes de cada chamada de um método de negócio. Isso foi de grande valia para mim, pois, já estava quebrando a cabeça em como manteria o EntityManager que injeto nos meus EJBs (através do Seam Managed Persistence Context meu EntityManager é um @ConversationScoped) de acordo com o contexto do cliente do EJB. Como o container reinjeta as dependências antes de cada chamada de método na verdade eu nem precisava ter me preocupado com isso.
 
 De alguma forma, essa definição pode dar aos SLSBs a capacidade de ter um "estado de conversação". Por exemplo, se você injetar em um SLSB um bean com escopo de sessão (@SessionScoped), independentemente de qual instância do pool processar sua solicitação o bean com escopo de sessão sempre estará de acordo com a sessão do cliente atual. Em outras palavras, não existe a possibilidade de um SLSB ter um bean de sessão de outro cliente. Isso permite que uma SLSB receba o usuário logado como um campo de instância através de @Inject sem causar nenhum problema caso dois usuários usem a mesma instância do SLSB alternadamente. Por exemplo:
 

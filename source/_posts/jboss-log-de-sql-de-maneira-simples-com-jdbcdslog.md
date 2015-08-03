@@ -21,8 +21,8 @@ Uma necessidade básica em quase todos os projetos de software é o log de instr
 
 <!-- more -->
 
-- Excesso de log: são logadas coisas demais como consultas, abertura e fechamento de conexões, abertura e fechamento de resultsets e etc e o programador não tem a possibilidade de configurar o que deve ou não ser logado.
-- Falta de integração com frameworks de logging: a lib atende bem a os requisitos de Log de SQL, porém, não se integra com frameworks de log como log4j, java logging, apache commons logging e etc o que acaba obrigando o desenvolvedor a criar um arquivo de log específico para SQL.
+- Excesso de log: são logadas coisas demais (consultas, abertura e fechamento de conexões, abertura e fechamento de resultsets) e o programador não tem a possibilidade de configurar o que deve ou não ser logado.
+- Falta de integração com frameworks de logging: a lib atende bem a os requisitos de Log de SQL, porém, não se integra com frameworks de log (log4j, java logging, apache commons logging) o que acaba obrigando o desenvolvedor a criar um arquivo de log específico para SQL.
 - Dificuldades para se trabalhar com DataSources, em especial, XA-DataSources: a ferramenta de log atende bem os dois requisitos acima, porém, é limitada a ser usada com objetos java.sql.Connection, ou em outros casos, podem ser usados com DataSources "normais", porém, não atendem quando precisamos logar sql de XA-DataSources.
 
 Para quem usa o Hibernate a primeira escolha normalmente é configurá-lo para logar as queries geradas, o resultado é algo como:
@@ -69,7 +69,7 @@ Mas o que quero demonstrar mesmo aqui nesse post é como usar essa lib para loga
 
 Esse procedimento deverá ser feito para qualquer banco de dados que você queira logar as queries, seja Postgre, Oracle, MySQL etc. A lógica é a mesma, basta prestar atenção nos nomes dos arquivos e na pasta o qual serão colocados. A sugestão é utilizar o nome do pacote principal do jar, no caso do Postgre é o org.postgresql.
 
-2 - Agora é a vez de criamos o módulo do jdbcdslog. Para isso criamos a pasta JBOSS_HOME/modules/system/layers/base/com/googlecode/usc/jdbcdslog/main/. Nessa pasta irems colocar o jar do jdbcdslog, por exemplo, jdbcdslog-1.0.6.2.jar. Também precisaremos criar um arquivo chamado module.xml com o seguinte conteúdo:
+2 - Agora é a vez de criamos o módulo do jdbcdslog. Para isso criamos a pasta JBOSS_HOME/modules/system/layers/base/com/googlecode/usc/jdbcdslog/main/. Nessa pasta iremos colocar o jar do jdbcdslog, por exemplo, jdbcdslog-1.0.6.2.jar. Também precisaremos criar um arquivo chamado module.xml com o seguinte conteúdo:
 
 	<module xmlns="urn:jboss:module:1.1" name="com.googlecode.usc.jdbcdslog">
 	    <resources>

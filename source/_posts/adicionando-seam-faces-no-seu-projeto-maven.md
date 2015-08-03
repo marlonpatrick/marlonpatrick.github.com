@@ -5,13 +5,10 @@ comments: true
 lang: pt-br
 alias: blog/2012/06/14/adicionando-seam-faces-no-seu-projeto-maven/index.html
 categories:
- - JSF
- - Maven
  - JBoss Seam
 tags:
  - JSF
  - Seam Faces
- - JBoss Seam
  - Maven
 ---
 

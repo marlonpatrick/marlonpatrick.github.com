@@ -6,11 +6,11 @@ lang: pt-br
 alias: blog/2012/06/03/virtualbox-criando-uma-rede-interna-entre-host-e-vms/index.html
 categories:
  - Virtualização
+ - VirtualBox
 tags:
  - VirtualBox
- - VM
- - Máquina Virtual
  - IP estático
+ - Virtualização
 ---
 
 [1]: passo_1.png "Host-only"
@@ -35,7 +35,7 @@ E porque eu to escrevendo outro post então? Pois é, o post do Rafael deixa alg
 
 ![1]
 
-O campo "Endereço IPv4" é o ip que o seu SO host irá receber na interface de rede vboxnet0(para Windows o nome da interface de rede pode mudar) toda vez que você abrir o seu VirtualBox, no meu caso, usei o ip 193.169.1.1 como analogia ao 192.168.1.1 bastante usado por roteadores. Um ponto importante é que o servidor DHCP dessa rede host-only deve ficar Desabilitado, o que vai nos ajudar a atribuir os ip's estáticos mais adiante.
+O campo "Endereço IPv4" é o ip que o seu SO host irá receber na interface de rede vboxnet0(para Windows o nome da interface de rede pode mudar) toda vez que você abrir o seu VirtualBox, no meu caso, usei o ip 172.16.1.1. Um ponto importante é que o servidor DHCP dessa rede host-only deve ficar Desabilitado, o que vai nos ajudar a atribuir os ip's estáticos mais adiante.
 
 2 - Configurar as interfaces de rede nas VM's: Selecione sua VM e click em Settings > Rede e configure duas interfaces de rede conforme exibido nas imagens abaixo. A primeira interface deve ser do tipo NAT e é ela quem vai garantir acesso a internet para os SO's convidados e a segunda deve ser do tipo host-only, é através dela que as VM's e o host se comunicarão. Na interface host-only você deve selecionar a interface que configuramos no passo 1 para todas as VM's que você quer colocar numa mesma rede.
 
@@ -43,7 +43,7 @@ O campo "Endereço IPv4" é o ip que o seu SO host irá receber na interface de 
 
 ![3]
 
-3 - Atribuir ip's estáticos nas VM's: Nesse momento, o SO host já tem uma interface de rede, que neste caso, foi configurado com o ip 193.169.1.1. Esse ip não mudará(a menos que você faça isso manualmente), falta somente configurarmos os ip's estáticos nas VM's. 
+3 - Atribuir ip's estáticos nas VM's: Nesse momento, o SO host já tem uma interface de rede, que neste caso, foi configurado com o ip 172.16.1.1. Esse ip não mudará(a menos que você faça isso manualmente), falta somente configurarmos os ip's estáticos nas VM's. 
 
 No caso da minha VM Windows a Conexão de rede local 1 representa a interface NAT e a mesma deve pegar um ip através de DHCP(que já é o comportamento padrão), já a Conexão local 2 representa a interface host-only e ela deve ser modificada para receber um ip estaticamente conforme imagem abaixo:
 

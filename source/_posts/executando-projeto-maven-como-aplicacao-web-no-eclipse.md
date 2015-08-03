@@ -8,8 +8,6 @@ categories:
  - Maven
  - Eclipse
 tags:
- - Maven
- - Eclipse
  - m2eclipse
 ---
 
