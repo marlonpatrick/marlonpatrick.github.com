@@ -42,8 +42,9 @@
     <link href="http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/"/>
     <id>http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/</id>
     <published>2015-08-08T19:08:20.000Z</published>
-    <updated>2015-09-13T07:08:39.086Z</updated>
+    <updated>2015-09-13T07:13:22.626Z</updated>
     <content type="html"><![CDATA[<p>Recently, I automate the build of an application that runs in JBoss EAP 6.3 and uses Maven to project management. In general terms, the automated process was:</p>
+<a id="more"></a>
 <ul>
 <li>Create tag in SVN</li>
 <li>Download tag and generate a war file</li>
@@ -126,8 +127,11 @@
 <p>The end! With steps above you will be capable of automating the build of your project with only one click. The complete code of the example is available in my <a href="https://github.com/marlonpatrick10/one-click-deployment-jboss-jenkins-maven" title="[external]" target="_blank" rel="external">GitHub</a>.</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>Recently, I automate the build of an application that runs in JBoss EAP 6.3 and uses Maven to project management. In general terms, the a]]>
+    <![CDATA[<p>Recently, I automate the build of an application that runs in JBoss EAP 6.3 and uses Maven to project management. In general terms, the automated process was:</p>]]>
+    
     </summary>
+    
+      <category term="Flyway" scheme="http://marlonpatrick.info/tags/Flyway/"/>
     
       <category term="JBoss" scheme="http://marlonpatrick.info/tags/JBoss/"/>
     
