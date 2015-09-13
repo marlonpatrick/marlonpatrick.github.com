@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Dicas de um programador]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://marlonpatrick.info//"/>
-  <updated>2015-08-02T12:59:57.661Z</updated>
+  <updated>2015-08-02T12:59:57.000Z</updated>
   <id>http://marlonpatrick.info//</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title><![CDATA[Hello World]]></title>
-    <link href="http://marlonpatrick.info/undefined/2015/08/03/hello-world/"/>
-    <id>http://marlonpatrick.info/undefined/2015/08/03/hello-world/</id>
-    <published>2015-08-03T03:49:01.690Z</published>
-    <updated>2015-08-02T12:59:57.661Z</updated>
+    <link href="http://marlonpatrick.info/undefined/2015/09/12/hello-world/"/>
+    <id>http://marlonpatrick.info/undefined/2015/09/12/hello-world/</id>
+    <published>2015-09-12T18:24:07.971Z</published>
+    <updated>2015-08-02T12:59:57.000Z</updated>
     <content type="html"><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
 <h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 <p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
@@ -38,11 +38,307 @@
   </entry>
   
   <entry>
+    <title><![CDATA[One-Click Deployment in JBoss with Jenkins and Maven]]></title>
+    <link href="http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/"/>
+    <id>http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/</id>
+    <published>2015-08-08T19:08:20.000Z</published>
+    <updated>2015-09-13T07:08:39.086Z</updated>
+    <content type="html"><![CDATA[<p>Recently, I automate the build of an application that runs in JBoss EAP 6.3 and uses Maven to project management. In general terms, the automated process was:</p>
+<ul>
+<li>Create tag in SVN</li>
+<li>Download tag and generate a war file</li>
+<li>Send war file to JBoss</li>
+<li>Deactivate current war file in JBoss</li>
+<li>Run scripts in database (PostgreSQL)</li>
+<li>Activate new war file in JBoss</li>
+</ul>
+<p>The purpose of this post is describe each of the above topics. I will not show how to install Jenkins or JBoss, I will only present settings I used to automate the build of this application. The process and tools adopted here are only a first step, many improvements can be made, so fits things to meet your project requirements.</p>
+<p>The project structure is as follows:</p>
+<ul>
+<li>Main aggregator project</li>
+<li>EJB project (jar)</li>
+<li>Web project(war)</li>
+</ul>
+<p><img src="1-project-structure.png" alt="1" title="Project structure"></p>
+<p>During the post OCDT is short for the project name in Eclipse (One Click Deploy Test).</p>
+<p><strong>1 - Create tag in SVN</strong></p>
+<p>In this project the development occurs always in a branch and for each released version is created a tag in SVN, this way, the code used in the version is easily recovered if necessary. For achieve this objective I used the <a href="http://maven.apache.org/maven-release/maven-release-plugin/" title="[external]" target="_blank" rel="external">maven-release-plugin</a>.</p>
+<p>The first step is add in your main pom the scm tag. The maven-release-plugin will use scm.developerConnection for downloading the source code and for creating a new tag in SVN. In my case, the URL points to a branch and the branch name is parametrized through parameter SVN_BRANCH (the name of this parameter can be anyone). The parameter SVN_BRANCH will be informed in the Jenkins build page.</p>
+<figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">scm</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">developerConnection</span>&gt;</span>scm:svn:http://yoursvnurl/your-project-name/branches/$&#123;SVN_BRANCH&#125;<span class="tag">&lt;/<span class="title">developerConnection</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">scm</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The second step is add and setting the maven-release-plugin in your main pom:</p>
+<figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-release-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.5.2<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">tagNameFormat</span>&gt;</span>v@&#123;project.version&#125;<span class="tag">&lt;/<span class="title">tagNameFormat</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">providerImplementations</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">svn</span>&gt;</span>javasvn<span class="tag">&lt;/<span class="title">svn</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">providerImplementations</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.google.code.maven-scm-provider-svnjava<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-scm-provider-svnjava<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.1.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The tagNameFormat defines the name of the tag that will be created, for example, whether version is 1.0.0-SNAPSHOT the tag name will be v1.0.0. With maven-scm-provider-svnjava is not necessary to install a svn in the OS because this plugin is a svn-client and the maven-relase-plugin will use it for connecting with SVN.</p>
+<p>Now go in Manage Jenkins &gt; Manage Plugins and install “Parameterized Trigger plugin”, this plugin allow us trigger a new job after complete a build and this will be helpful.</p>
+<p>The next step is to create a job in Jenkins of type “Maven project” that will use the maven-release-plugin, the name I gave this job was OCDT_TAG_AND_DEPLOY. In Job Configuration page some options are important:</p>
+<ul>
+<li>Check “This build is parameterized”;</li>
+<li>Add a parameter “List Subversion tags (and more)” called SVN_BRANCH. In Repository URL put something like this: http ://yoursvnurl/your-project-name/branches and inform a user/password in “Credentials” option. This Jenkins parameter will replace the maven parameter in scm.developerConnection;</li>
+<li>In Source Code Management check Subversion. In Repository URL put something like http ://yoursvnurl/your-project-name/branches/${SVN_BRANCH}, after enter a user/password for SVN, in Local module directory put ${SVN_BRANCH} and in Check-out Strategy choice “Use ‘svn update’ as much as possible, with ‘svn revert’ before update”;</li>
+<li>In Build &gt; Goals and options enter “release:clean release:prepare -DSVN_BRANCH=${SVN_BRANCH} -Dusername=your_svn_user -Dpassword=your_svn_password”. Here, the SVN credentials are in the clear format, this is not a security way for supplier credentials to the Jenkins, but, for simplifying this post I used this format;</li>
+<li>In Post-build Actions choice “Trigger parameterized build on other projects”. In Projects to Build enter OCDT_DEPLOY (name of the our next job), after in Add Parameters option select “Parameters from properties files” and put ${SVN_BRANCH}/release.properties in field Use properties from file and check option “Don’t trigger if any files are missing”. Still in Add Parameters select too “Current build parameters”. This configuration will run the job OCDT_DEPLOY after this job and will pass your own parameters and all properties in release.properties file (generated by maven-release-plugin) as parameters for OCDT_DEPLOY.</li>
+</ul>
+<p>At this point, the jobs are capable of downloading source code in SVN and then generate a tag. </p>
+<p><img src="2-build-page-tag-deploy.png" alt="2" title="Jenkins Build Page"></p>
+<p><strong>2 - Download tag and generate a war file</strong></p>
+<p>After the tag be created, the next step is to download her and then build a war file for deploy in JBoss, for this, we will create new job in Jenkins called OCDT_DEPLOY of type “Maven project”. The job configurations are:</p>
+<ul>
+<li>Check “This build is parameterized”;</li>
+<li>Add a parameter “List Subversion tags (and more)” called scm.tag. In Repository URL put something like this: http ://yoursvnurl/your-project-name/tags and inform a user/password in “Credentials” option. This parameter will be used for parametrizing the SVN URL.</li>
+<li>In Source Code Management check Subversion. In Repository URL put something like http ://yoursvnurl/your-project-name/tags/${scm.tag}, after enter a user/password for SVN, in Local module directory put ${scm.tag} and in Check-out Strategy choice “Use ‘svn update’ as much as possible, with ‘svn revert’ before update”;</li>
+<li>In Build &gt; Goals and options enter “clean package”.</li>
+</ul>
+<p>The idea is that the job OCDT_TAG_AND_DEPLOY will generate a tag and pass the tag name for the job OCDT_DEPLOY which will generate a war file based on source code of the tag. The tag name is passed through the release.properties file that contain a property called scm.tag and that points to the tag created by the maven-release-plugin. If you already have a tag, then don’t need execute OCDT_TAG_AND_DEPLOY only executes OCDT_DEPLOY supplying the tag name manually.</p>
+<p>At this moment, the web-module/pom.xml has a build setting like this:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">finalName</span>&gt;</span>ocdt-$&#123;project.version&#125;<span class="tag">&lt;/<span class="title">finalName</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-war-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.6<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">failOnMissingWebXml</span>&gt;</span>false<span class="tag">&lt;/<span class="title">failOnMissingWebXml</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.mpwtecnologia<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>ejb-module<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>And the ejb-module/pom.xml has a build setting like this:</p>
+<figure class="highlight xml"><figcaption><span>ejb-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-ejb-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.5<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">ejbVersion</span>&gt;</span>3.1<span class="tag">&lt;/<span class="title">ejbVersion</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>3 - Send war file to JBoss</strong></p>
+<p>If you running the job OCDT_DEPLOY he will generate a war file, but will not do anything with it. For deploy the war file in JBoss some others configurations are needed. Let’s go!</p>
+<p>The first thing to do is add the <a href="https://docs.jboss.org/jbossas/7/plugins/maven/latest/index.html" title="[external]" target="_blank" rel="external">jboss-as-maven-plugin </a> in the project. This plugin has various goals to executes many tasks in a JBoss Server as deploy, start, shutdown among others.</p>
+<p>Open main pom.xml and add jboss-as-maven-plugin:</p>
+<figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		      <span class="comment">&lt;!-- Previous settings here --&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.as.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-as-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">version</span>&gt;</span>7.7.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">timeout</span>&gt;</span>60000<span class="tag">&lt;/<span class="title">timeout</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">username</span>&gt;</span>your-jboss-admin-user<span class="tag">&lt;/<span class="title">username</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">password</span>&gt;</span>your-jboss-admin-password<span class="tag">&lt;/<span class="title">password</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">hostname</span>&gt;</span>192.168.25.2<span class="tag">&lt;/<span class="title">hostname</span>&gt;</span> <span class="comment">&lt;!-- put your IP or hostname --&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">properties</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">jboss-as.skip</span>&gt;</span>true<span class="tag">&lt;/<span class="title">jboss-as.skip</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>For test purposes this setting is ok, but in a production environment is not a good idea have user/password in clear text.</p>
+<p>The flag jboss-as.skip is setting for true by default to prevent a deploy in job OCDT_TAG_AND_DEPLOY, this way only in job OCDT_DEPLOY is sent a deploy to JBoss.</p>
+<p>In web-module/pom.xml setting jboss-as-maven-plugin:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- Previous settings here --&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.as.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-as-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">executions</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">id</span>&gt;</span>upload-war<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">goal</span>&gt;</span>deploy<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">deployEnabled</span>&gt;</span>false<span class="tag">&lt;/<span class="title">deployEnabled</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">force</span>&gt;</span>true<span class="tag">&lt;/<span class="title">force</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">domain</span>&gt;</span></span><br><span class="line">						<span class="comment">&lt;!-- This configuration is need only if you running JBoss in domain mode --&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">server-groups</span>&gt;</span></span><br><span class="line">								<span class="tag">&lt;<span class="title">server-group</span>&gt;</span>my-domain-group<span class="tag">&lt;/<span class="title">server-group</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;/<span class="title">server-groups</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;/<span class="title">domain</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">				</span><br><span class="line">				<span class="comment">&lt;!-- Execution unassign-war should be used only if you running JBoss in domain mode --&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">id</span>&gt;</span>unassign-war<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">goal</span>&gt;</span>execute-commands<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">batch</span>&gt;</span>true<span class="tag">&lt;/<span class="title">batch</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">commands</span>&gt;</span></span><br><span class="line">								<span class="tag">&lt;<span class="title">command</span>&gt;</span>undeploy $&#123;project.build.finalName&#125;.$&#123;project.packaging&#125; --keep-content --server-groups=my-domain-group<span class="tag">&lt;/<span class="title">command</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;/<span class="title">commands</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;/<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">executions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>In OCDT_DEPLOY job change the Build &gt; Goals to “clean package post-integration-test -Djboss-as.skip=false”.</p>
+<p>This configuration creates a maven execution called upload-war that sends the war file to JBoss without enabling it or disable any other active deploy, this task will be executed in post-integration-test phase. Observe that the execution unassign-war is only needed for domain mode, this is needed because in the next steps we will run another deploy command for activating this war file and if it is assigned to a server-group an error will occur.</p>
+<p>At this moment the Jenkins Server will try connect in JBoss Server and some problems can happen, for prevent this, you should guarantee that Jenkins can connect in JBoss through the port 9999, a simple telnet can test this.</p>
+<p><strong>4 - Deactivate current war file in JBoss</strong></p>
+<p>Now that we have already sent the war file to JBoss the next step is deactivate the current deploy, for this we will add a parameter called ACTIVE_DEPLOY in the two jobs previously created in Jenkins. Go in OCDT_TAG_AND_DEPLOY &gt; Configure &gt; This build is parameterized &gt; Add Parameter and choice “String Parameter”, in Name field put ACTIVE_DEPLOY. Repeat this for OCDT_DEPLOY.</p>
+<p>Still in OCDT_DEPLOY change the Build &gt; Goals to “clean package post-integration-test -Djboss-as.skip=false -DACTIVE_DEPLOY=${ACTIVE_DEPLOY}”.</p>
+<p>After, creates a new execution for jboss-as-maven-plugin in web-module/pom.xml called deactivate-running-deploy:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">id</span>&gt;</span>deactivate-running-deploy<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">goal</span>&gt;</span>execute-commands<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="title">batch</span>&gt;</span>true<span class="tag">&lt;/<span class="title">batch</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="title">commands</span>&gt;</span></span><br><span class="line">		  <span class="comment">&lt;!-- The parameter server-groups is necessary only if you running JBoss in domain mode --&gt;</span></span><br><span class="line">		  <span class="tag">&lt;<span class="title">command</span>&gt;</span>undeploy $&#123;ACTIVE_DEPLOY&#125; --keep-content --server-groups=my-domain-group<span class="tag">&lt;/<span class="title">command</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;/<span class="title">commands</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">executeCommands</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>5 - Run scripts in database</strong></p>
+<p>After sent war file to JBoss and disable the current deploy the next step is running some scripts in the database before active new deploy. </p>
+<p>We will use <a href="http://flywaydb.org/documentation/maven/" title="[external]" target="_blank" rel="external">flyway-maven-plugin</a> for this task. Flyway is a tool for database version control and has many features to facilitates this work including SQL or Java migrations.</p>
+<p>Add flyway-maven-plugin in managed plugins section in the main pom.xml:</p>
+<figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		      <span class="comment">&lt;!-- Previous settings here --&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>flyway-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">version</span>&gt;</span>3.2.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">skip</span>&gt;</span>true<span class="tag">&lt;/<span class="title">skip</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">url</span>&gt;</span>jdbc:postgresql://192.168.25.3:5432/ocdt<span class="tag">&lt;/<span class="title">url</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">user</span>&gt;</span>your-database-user<span class="tag">&lt;/<span class="title">user</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">password</span>&gt;</span>your-database-password<span class="tag">&lt;/<span class="title">password</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">validateOnMigrate</span>&gt;</span>false<span class="tag">&lt;/<span class="title">validateOnMigrate</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">baselineOnMigrate</span>&gt;</span>true<span class="tag">&lt;/<span class="title">baselineOnMigrate</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">schemas</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">schema</span>&gt;</span>ocdt<span class="tag">&lt;/<span class="title">schema</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">schemas</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>In web-module/pom.xml setting flyway-maven-plugin:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- Previous settings here --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>flyway-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">executions</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">id</span>&gt;</span>update-database<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">goal</span>&gt;</span>migrate<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">executions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>In my case, the database is Postgres then I add a dependency to the Postgres driver in ejb-module/pom.xml (could be any pom.xml):</p>
+<figure class="highlight xml"><figcaption><span>ejb-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.postgresql<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>postgresql<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">version</span>&gt;</span>9.3-1101-jdbc41<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Now, in OCDT_DEPLOY change the Build &gt; Goals to “clean package post-integration-test -Djboss-as.skip=false -Dflyway.skip=false -DACTIVE_DEPLOY=${ACTIVE_DEPLOY}”.</p>
+<p>Create a file in src/main/resources/db/migration folder with name V01.00.00__Populate_Database.sql and put some SQL to change the database. For understand more about how Flyway search scripts and manages versions see <a href="http://flywaydb.org/documentation/migration/" title="[external]" target="_blank" rel="external">documentation</a>.</p>
+<p><strong>6 - Activate new war file in JBoss</strong></p>
+<p>To finalize, now that the database is compliance with the new war file then we can activate it, for this only is necessary create more one execution in web-module/pom.xml:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- upload-war --&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- deactivate-running-deploy --&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- update-database --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.as.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-as-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">executions</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">id</span>&gt;</span>enable-this-war<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">goal</span>&gt;</span>execute-commands<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">batch</span>&gt;</span>true<span class="tag">&lt;/<span class="title">batch</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">commands</span>&gt;</span></span><br><span class="line">								<span class="comment">&lt;!-- The parameter server-groups is necessary only if you running JBoss in domain mode --&gt;</span></span><br><span class="line">								<span class="tag">&lt;<span class="title">command</span>&gt;</span>deploy --name=$&#123;project.build.finalName&#125;.$&#123;project.packaging&#125; --server-groups=my-domain-group<span class="tag">&lt;/<span class="title">command</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;/<span class="title">commands</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;/<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">executions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The end! With steps above you will be capable of automating the build of your project with only one click. The complete code of the example is available in my <a href="https://github.com/marlonpatrick10/one-click-deployment-jboss-jenkins-maven" title="[external]" target="_blank" rel="external">GitHub</a>.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Recently, I automate the build of an application that runs in JBoss EAP 6.3 and uses Maven to project management. In general terms, the a]]>
+    </summary>
+    
+      <category term="JBoss" scheme="http://marlonpatrick.info/tags/JBoss/"/>
+    
+      <category term="Jenkins" scheme="http://marlonpatrick.info/tags/Jenkins/"/>
+    
+      <category term="Maven" scheme="http://marlonpatrick.info/tags/Maven/"/>
+    
+      <category term="Jenkins" scheme="http://marlonpatrick.info/categories/Jenkins/"/>
+    
+      <category term="JBoss" scheme="http://marlonpatrick.info/categories/Jenkins/JBoss/"/>
+    
+      <category term="Maven" scheme="http://marlonpatrick.info/categories/Jenkins/JBoss/Maven/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[JBOSS: SQL log in a simple way with jdbcdslog]]></title>
+    <link href="http://marlonpatrick.info/en/2014/12/14/jboss-sql-log-in-simple-way-with-jdbcdslog/"/>
+    <id>http://marlonpatrick.info/en/2014/12/14/jboss-sql-log-in-simple-way-with-jdbcdslog/</id>
+    <published>2014-12-14T20:36:00.000Z</published>
+    <updated>2015-08-03T01:43:09.000Z</updated>
+    <content type="html"><![CDATA[<p>A basic necessity in almost every software project is the log of SQL statements and for this purpose there is a plethora of options. However, despite the many alternatives, the log is often not made the best way:</p>
+<a id="more"></a>
+<ul>
+<li>Excessive log: too much is logged (queries, opening and closing connections, opening and closing resultsets) and the programmer does not have the possibility to configure what should or should not be logged.</li>
+<li>Lack of integration with logging frameworks: the lib caters well to the SQL Log requirements, however, does not integrate with logging frameworks (log4j, java logging, apache commons logging) which ultimately forcing the developer to create a specific log file to SQL.</li>
+<li>Problems to work with DataSources, in particular XA-DataSources: a well logging tool meets the above two requirements, however, is limited to use with java.sql.Connection objects, or in other cases may be used with “normal” DataSources, however, do not meet when we need to log sql XA-DataSource.</li>
+</ul>
+<p>For those who use Hibernate first choice is usually set it to log the generated queries, the result is something like:</p>
+<pre><code><span class="operator">select this_.code <span class="keyword">from</span> employee this_ <span class="keyword">where</span> this_.code=?
+<span class="keyword">INSERT</span> <span class="keyword">INTO</span> stock_transaction (<span class="keyword">CHANGE</span>, <span class="keyword">CLOSE</span>, <span class="built_in">DATE</span>, <span class="keyword">OPEN</span>, STOCK_ID, VOLUME) <span class="keyword">VALUES</span> (?, ?, ?, ?, ?, ?)</span>
+</code></pre><p>In this case we have two problems, the first is that the values of the filters and columns are not logged in, only the character <strong>?</strong> is shown indicating that was replaced by a parameter. The other problem is that queries are not always carried out by Hibernate, in such cases the log would not be displayed, not even the log without parameters.</p>
+<p>Well, after testing some sql log libs found one that met me in all these aspects: control of what is logged, integration with the most popular logging frameworks, work with Connection, DataSource and XA-DataSource, log sql with all its parameters so that I can copy and paste in the database access tool and run the script, and finally, log any sql that be through the monitored connection is made by Hibernate or otherwise. The lib name is <a href="https://code.google.com/p/jdbcdslog/" title="jdbcdslog" target="_blank">jdbcdslog</a>.</p>
+<p>The most basic example is logging the queries of a single Connection object:</p>
+<pre><code>public static void main<span class="params">(String[] args)</span> throws Exception {
+    Class.forName<span class="params">(<span class="string">"org.jdbcdslog.DriverLoggingProxy"</span>)</span>;
+
+    String url = <span class="string">"jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver"</span>;
+    Connection con = DriverManager.getConnection<span class="params">(url, <span class="string">"mpinfo"</span>, <span class="string">"mpinfo"</span>)</span>;
+
+    PreparedStatement ps = con.prepareStatement<span class="params">(<span class="string">"select * from product where id=?"</span>)</span>;
+    ps.setLong<span class="params">(<span class="number">1</span>, <span class="number">1</span>)</span>;
+    ps.execute<span class="params">()</span>;
+
+    con.close<span class="params">()</span>;
+}
+</code></pre><p>In this example I am accessing a PostgreSQL database and notice that the URL is a little different from the norm because jdbcdslog must add the driver as a proxy for the original driver Postgres. You can see this in <strong>jdbc:jdbcdslog:postgresql</strong> and also in <strong>targetDriver</strong> parameter. The result of this code is something like:</p>
+<pre><code>[main] INFO org.jdbcdslog.StatementLogger - <span class="operator">select * <span class="keyword">from</span> ceos.product <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span>;</span>
+</code></pre><p>But what I want to demonstrate even here in this post is how to use this lib to log sql datasources in JBoss, here in my enviroment I will use the JBoss EAP 6.2, but I think from the version of JBoss 7 does not change almost nothing. To do this we create modules to JBoss with the Postgres driver and also jdbcdslog.</p>
+<p>1 - First we must create the folder JBOSS_HOME/modules/system/layers/base/org/postgresql/main/. Inside that folder put the Postgres jar according to the version you use, for example, postgresql-9.3-1101-jdbc41.jar. In addition we must create a file called module.xml with the following content:</p>
+<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"org.postgresql"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"postgresql-9.3-1101-jdbc41.jar"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.api"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+</code></pre><p>This procedure should be done for any database you want to log the queries, either Postgres, Oracle, MySQL etc. The logic is the same, just pay attention to the names of the files and folder which will be placed. The suggestion is to use the name of the main jar package in the case of Postgres is org.postgresql.</p>
+<p>2 - Now is the time to create the jdbcdslog module. For this we create the folder JBOSS_HOME/modules/system/layers/base/com/googlecode/usc/jdbcdslog/main/. In this folder we will put the jdbcdslog jar, for example, jdbcdslog-1.0.6.2.jar. We also need to create a file called module.xml with the following content:</p>
+<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"com.googlecode.usc.jdbcdslog"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"jdbcdslog-1.0.6.2.jar"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.slf4j"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.api"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>/&gt;</span>
+    <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.postgresql"</span> <span class="attribute">optional</span>=<span class="value">"true"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+</code></pre><p>Note that the Postgres module dependency is optional. It must include modules from other databases (Oracle, MySQL) as module dependency of jdbcdslog if you want to log them as well.</p>
+<p>3 - Now open the file JBOSS_HOME/standalone/configuration/standalone.xml and configure the jdbcdslog logs. Look for the log subsystem tag, something like <code>&lt;subsystem xmlns=&quot;urn:jboss:domain:logging:1.3&quot;&gt;</code> within this tag place the following contents:</p>
+<pre><code><span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.StatementLogger"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"DEBUG"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.ConnectionLogger"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.ResultSetLogger"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.SlowQueryLogger"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+</code></pre><p>The various logging options available, the only one left active was the log statements, ie DML and DDL commands log.</p>
+<p>NOTE: If your JBoss is running in domain mode rather than standalone then this setting can be made to the file JBOSS_HOME/domain/configuration/domain.xml.</p>
+<p>4 - Still in standalone.xml file we will create the datasource. Below are two examples, one for a normal datasource and one for an XA-DataSoure, both should stay within the <code>&lt;datasources&gt;</code> tag:</p>
+<pre><code><span class="tag">&lt;<span class="title">datasource</span> <span class="attribute">jta</span>=<span class="value">"true"</span> <span class="attribute">jndi-name</span>=<span class="value">"java:/mpinfods"</span> <span class="attribute">pool-name</span>=<span class="value">"MPINFO-POOL"</span> <span class="attribute">enabled</span>=<span class="value">"true"</span> <span class="attribute">use-ccm</span>=<span class="value">"true"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">connection-url</span>&gt;</span>jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver<span class="tag">&lt;/<span class="title">connection-url</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">driver</span>&gt;</span>jdbcdslog<span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">new-connection-sql</span>&gt;</span>select 1<span class="tag">&lt;/<span class="title">new-connection-sql</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">transaction-isolation</span>&gt;</span>TRANSACTION_READ_COMMITTED<span class="tag">&lt;/<span class="title">transaction-isolation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">pool</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">min-pool-size</span>&gt;</span>10<span class="tag">&lt;/<span class="title">min-pool-size</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">max-pool-size</span>&gt;</span>20<span class="tag">&lt;/<span class="title">max-pool-size</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">pool</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">security</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">user-name</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">user-name</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">password</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">security</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">validation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">validate-on-match</span>&gt;</span>false<span class="tag">&lt;/<span class="title">validate-on-match</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">background-validation</span>&gt;</span>false<span class="tag">&lt;/<span class="title">background-validation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">background-validation-millis</span>&gt;</span>1<span class="tag">&lt;/<span class="title">background-validation-millis</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">validation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">statement</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">prepared-statement-cache-size</span>&gt;</span>32<span class="tag">&lt;/<span class="title">prepared-statement-cache-size</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">share-prepared-statements</span>&gt;</span>false<span class="tag">&lt;/<span class="title">share-prepared-statements</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">statement</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">datasource</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">xa-datasource</span> <span class="attribute">jndi-name</span>=<span class="value">"java:/mpinfoxads"</span> <span class="attribute">pool-name</span>=<span class="value">"MPINFO-XA-POOL"</span> <span class="attribute">enabled</span>=<span class="value">"true"</span> <span class="attribute">use-ccm</span>=<span class="value">"true"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"PortNumber"</span>&gt;</span>5432<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"DatabaseName"</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"ServerName"</span>&gt;</span>172.16.1.6<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"targetDS"</span>&gt;</span>org.postgresql.xa.PGXADataSource<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">driver</span>&gt;</span>jdbcdslog<span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">new-connection-sql</span>&gt;</span>select 1<span class="tag">&lt;/<span class="title">new-connection-sql</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">transaction-isolation</span>&gt;</span>TRANSACTION_READ_COMMITTED<span class="tag">&lt;/<span class="title">transaction-isolation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">xa-pool</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">min-pool-size</span>&gt;</span>0<span class="tag">&lt;/<span class="title">min-pool-size</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">max-pool-size</span>&gt;</span>10<span class="tag">&lt;/<span class="title">max-pool-size</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">flush-strategy</span>&gt;</span>IdleConnections<span class="tag">&lt;/<span class="title">flush-strategy</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">is-same-rm-override</span>&gt;</span>false<span class="tag">&lt;/<span class="title">is-same-rm-override</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">interleaving</span>&gt;</span>false<span class="tag">&lt;/<span class="title">interleaving</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">pad-xid</span>&gt;</span>false<span class="tag">&lt;/<span class="title">pad-xid</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">wrap-xa-resource</span>&gt;</span>false<span class="tag">&lt;/<span class="title">wrap-xa-resource</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">xa-pool</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">security</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">user-name</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">user-name</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">password</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">security</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">validation</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">valid-connection-checker</span> <span class="attribute">class-name</span>=<span class="value">"org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">validate-on-match</span>&gt;</span>true<span class="tag">&lt;/<span class="title">validate-on-match</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">background-validation</span>&gt;</span>false<span class="tag">&lt;/<span class="title">background-validation</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">exception-sorter</span> <span class="attribute">class-name</span>=<span class="value">"org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">validation</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">timeout</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">idle-timeout-minutes</span>&gt;</span>3<span class="tag">&lt;/<span class="title">idle-timeout-minutes</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">timeout</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">statement</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">track-statements</span>&gt;</span>true<span class="tag">&lt;/<span class="title">track-statements</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">share-prepared-statements</span>&gt;</span>false<span class="tag">&lt;/<span class="title">share-prepared-statements</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">statement</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">xa-datasource</span>&gt;</span>
+</code></pre><p>At this point you should pay attention to information as IPs, users, passwords and replace according to your environment, moreover, realize that the tag <code>&lt;driver&gt;</code> use the jdbcdslog driver name that will define the next step.</p>
+<p>5 - Within the <code>&lt;datasources&gt;</code> tag (standalone.xml) add a driver setting that makes the log:</p>
+<pre><code><span class="tag">&lt;<span class="title">drivers</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">driver</span> <span class="attribute">name</span>=<span class="value">"jdbcdslog"</span> <span class="attribute">module</span>=<span class="value">"com.googlecode.usc.jdbcdslog"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">driver-class</span>&gt;</span>org.jdbcdslog.DriverLoggingProxy<span class="tag">&lt;/<span class="title">driver-class</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">xa-datasource-class</span>&gt;</span>org.jdbcdslog.XADataSourceProxy<span class="tag">&lt;/<span class="title">xa-datasource-class</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">drivers</span>&gt;</span>
+</code></pre><p>There, it can already use the datasource and check the log JBoss any select, update, insert which is done through the connections that datasource will be logged, the output will look like:</p>
+<pre><code>11:35:00,066 INFO  [org.jdbcdslog.StatementLogger] (EJB default - 6) <span class="operator">select u.<span class="keyword">password</span> <span class="keyword">from</span> <span class="keyword">user</span> u <span class="keyword">where</span> u.login=<span class="string">'admin'</span>;</span>
+</code></pre><p>If you use an XA-DataSource may be confronted with the following error:</p>
+<pre><code><span class="type">Caused</span> by: javax.resource.<span class="type">ResourceException</span>: <span class="type">IJ000453</span>: <span class="type">Unable</span> to get managed connection <span class="keyword">for</span> java:/<span class="type">MPINFO</span>-<span class="type">XA</span>-<span class="type">Datasource</span>
+
+<span class="type">Caused</span> by: java.lang.<span class="type">LinkageError</span>: loader constraint violation: loader (instance of &lt;bootloader&gt;) previously initiated loading <span class="keyword">for</span> a different <span class="class"><span class="keyword">type</span> <span class="keyword"><span class="keyword">with</span></span> <span class="title">name</span> "<span class="title">javax/transaction/xa/XAResource</span>"</span>
+</code></pre><p>The exception is due to a ClassLoader problem in JBoss, the issue is that there are two definitions for javax.transaction.xa.XAResource class: one that is in the standard JVM package and one that is in a jar inside the JBoss. Then, for some reason, JBoss loads the class from your lib and jdbcdslog loads the class from the standard JVM lib (rt.jar) and this is the exception claiming a class with the same name already have been loaded. Well, to solve this adjusted a setting in JBoss to prevent it from load the class that is contained in their own libs and load only the class from the JVM. The procedure is to change the contents of the file JBOSS_HOME/modules/system/layers/base/javax/transaction/api/main/module.xml:</p>
+<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"jboss-transaction-api_1.1_spec-1.0.1.Final-redhat-2.jar"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">filter</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">exclude</span> <span class="attribute">path</span>=<span class="value">"javax/transaction/xa"</span>/&gt;</span>
+                <span class="tag">&lt;<span class="title">include</span> <span class="attribute">path</span>=<span class="value">"**"</span>/&gt;</span>
+            <span class="tag">&lt;/<span class="title">filter</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">resource-root</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">system</span> <span class="attribute">export</span>=<span class="value">"true"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">paths</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">path</span> <span class="attribute">name</span>=<span class="value">"javax/transaction/xa"</span>/&gt;</span>
+            <span class="tag">&lt;/<span class="title">paths</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">system</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+</code></pre><p>I recommend that you save the original file before making any change, it probably will not have the tag <code>&lt;dependencies&gt;</code> and also will not have the tag `<filter> ‘. With this setting finish all necessary settings, now test and verify that the log is generated in accordance with the executed commands.</filter></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>A basic necessity in almost every software project is the log of SQL statements and for this purpose there is a plethora of options. However, despite the many alternatives, the log is often not made the best way:</p>]]>
+    
+    </summary>
+    
+      <category term="Hibernate" scheme="http://marlonpatrick.info/tags/Hibernate/"/>
+    
+      <category term="JBOSS" scheme="http://marlonpatrick.info/tags/JBOSS/"/>
+    
+      <category term="JPA" scheme="http://marlonpatrick.info/tags/JPA/"/>
+    
+      <category term="Log" scheme="http://marlonpatrick.info/tags/Log/"/>
+    
+      <category term="SQL" scheme="http://marlonpatrick.info/tags/SQL/"/>
+    
+      <category term="jdbcdslog" scheme="http://marlonpatrick.info/tags/jdbcdslog/"/>
+    
+      <category term="JBOSS" scheme="http://marlonpatrick.info/categories/JBOSS/"/>
+    
+      <category term="Log" scheme="http://marlonpatrick.info/categories/JBOSS/Log/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[JBOSS: Log de SQL de maneira simples com jdbcdslog]]></title>
     <link href="http://marlonpatrick.info/pt-br/2014/12/14/jboss-log-de-sql-de-maneira-simples-com-jdbcdslog/"/>
     <id>http://marlonpatrick.info/pt-br/2014/12/14/jboss-log-de-sql-de-maneira-simples-com-jdbcdslog/</id>
     <published>2014-12-14T20:36:00.000Z</published>
-    <updated>2015-08-03T01:26:20.442Z</updated>
+    <updated>2015-08-03T01:26:20.000Z</updated>
     <content type="html"><![CDATA[<p>Uma necessidade básica em quase todos os projetos de software é o log de instruções SQL e para esse fim existe uma infinidade de opções. No entanto, apesar das várias alternativas, muitas vezes o log não é feito da melhor forma:</p>
 <a id="more"></a>
 <ul>
@@ -232,229 +528,11 @@
   </entry>
   
   <entry>
-    <title><![CDATA[JBOSS: SQL log in a simple way with jdbcdslog]]></title>
-    <link href="http://marlonpatrick.info/en/2014/12/14/jboss-sql-log-in-simple-way-with-jdbcdslog/"/>
-    <id>http://marlonpatrick.info/en/2014/12/14/jboss-sql-log-in-simple-way-with-jdbcdslog/</id>
-    <published>2014-12-14T20:36:00.000Z</published>
-    <updated>2015-08-03T01:43:09.889Z</updated>
-    <content type="html"><![CDATA[<p>A basic necessity in almost every software project is the log of SQL statements and for this purpose there is a plethora of options. However, despite the many alternatives, the log is often not made the best way:</p>
-<a id="more"></a>
-<ul>
-<li>Excessive log: too much is logged (queries, opening and closing connections, opening and closing resultsets) and the programmer does not have the possibility to configure what should or should not be logged.</li>
-<li>Lack of integration with logging frameworks: the lib caters well to the SQL Log requirements, however, does not integrate with logging frameworks (log4j, java logging, apache commons logging) which ultimately forcing the developer to create a specific log file to SQL.</li>
-<li>Problems to work with DataSources, in particular XA-DataSources: a well logging tool meets the above two requirements, however, is limited to use with java.sql.Connection objects, or in other cases may be used with “normal” DataSources, however, do not meet when we need to log sql XA-DataSource.</li>
-</ul>
-<p>For those who use Hibernate first choice is usually set it to log the generated queries, the result is something like:</p>
-<pre><code><span class="operator">select this_.code <span class="keyword">from</span> employee this_ <span class="keyword">where</span> this_.code=?
-<span class="keyword">INSERT</span> <span class="keyword">INTO</span> stock_transaction (<span class="keyword">CHANGE</span>, <span class="keyword">CLOSE</span>, <span class="built_in">DATE</span>, <span class="keyword">OPEN</span>, STOCK_ID, VOLUME) <span class="keyword">VALUES</span> (?, ?, ?, ?, ?, ?)</span>
-</code></pre><p>In this case we have two problems, the first is that the values of the filters and columns are not logged in, only the character <strong>?</strong> is shown indicating that was replaced by a parameter. The other problem is that queries are not always carried out by Hibernate, in such cases the log would not be displayed, not even the log without parameters.</p>
-<p>Well, after testing some sql log libs found one that met me in all these aspects: control of what is logged, integration with the most popular logging frameworks, work with Connection, DataSource and XA-DataSource, log sql with all its parameters so that I can copy and paste in the database access tool and run the script, and finally, log any sql that be through the monitored connection is made by Hibernate or otherwise. The lib name is <a href="https://code.google.com/p/jdbcdslog/" title="jdbcdslog" target="_blank">jdbcdslog</a>.</p>
-<p>The most basic example is logging the queries of a single Connection object:</p>
-<pre><code>public static void main<span class="params">(String[] args)</span> throws Exception {
-    Class.forName<span class="params">(<span class="string">"org.jdbcdslog.DriverLoggingProxy"</span>)</span>;
-
-    String url = <span class="string">"jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver"</span>;
-    Connection con = DriverManager.getConnection<span class="params">(url, <span class="string">"mpinfo"</span>, <span class="string">"mpinfo"</span>)</span>;
-
-    PreparedStatement ps = con.prepareStatement<span class="params">(<span class="string">"select * from product where id=?"</span>)</span>;
-    ps.setLong<span class="params">(<span class="number">1</span>, <span class="number">1</span>)</span>;
-    ps.execute<span class="params">()</span>;
-
-    con.close<span class="params">()</span>;
-}
-</code></pre><p>In this example I am accessing a PostgreSQL database and notice that the URL is a little different from the norm because jdbcdslog must add the driver as a proxy for the original driver Postgres. You can see this in <strong>jdbc:jdbcdslog:postgresql</strong> and also in <strong>targetDriver</strong> parameter. The result of this code is something like:</p>
-<pre><code>[main] INFO org.jdbcdslog.StatementLogger - <span class="operator">select * <span class="keyword">from</span> ceos.product <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span>;</span>
-</code></pre><p>But what I want to demonstrate even here in this post is how to use this lib to log sql datasources in JBoss, here in my enviroment I will use the JBoss EAP 6.2, but I think from the version of JBoss 7 does not change almost nothing. To do this we create modules to JBoss with the Postgres driver and also jdbcdslog.</p>
-<p>1 - First we must create the folder JBOSS_HOME/modules/system/layers/base/org/postgresql/main/. Inside that folder put the Postgres jar according to the version you use, for example, postgresql-9.3-1101-jdbc41.jar. In addition we must create a file called module.xml with the following content:</p>
-<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"org.postgresql"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"postgresql-9.3-1101-jdbc41.jar"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.api"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
-</code></pre><p>This procedure should be done for any database you want to log the queries, either Postgres, Oracle, MySQL etc. The logic is the same, just pay attention to the names of the files and folder which will be placed. The suggestion is to use the name of the main jar package in the case of Postgres is org.postgresql.</p>
-<p>2 - Now is the time to create the jdbcdslog module. For this we create the folder JBOSS_HOME/modules/system/layers/base/com/googlecode/usc/jdbcdslog/main/. In this folder we will put the jdbcdslog jar, for example, jdbcdslog-1.0.6.2.jar. We also need to create a file called module.xml with the following content:</p>
-<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"com.googlecode.usc.jdbcdslog"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"jdbcdslog-1.0.6.2.jar"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.slf4j"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.api"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>/&gt;</span>
-    <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.postgresql"</span> <span class="attribute">optional</span>=<span class="value">"true"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
-</code></pre><p>Note that the Postgres module dependency is optional. It must include modules from other databases (Oracle, MySQL) as module dependency of jdbcdslog if you want to log them as well.</p>
-<p>3 - Now open the file JBOSS_HOME/standalone/configuration/standalone.xml and configure the jdbcdslog logs. Look for the log subsystem tag, something like <code>&lt;subsystem xmlns=&quot;urn:jboss:domain:logging:1.3&quot;&gt;</code> within this tag place the following contents:</p>
-<pre><code><span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.StatementLogger"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"DEBUG"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
-<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.ConnectionLogger"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
-<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.ResultSetLogger"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
-<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.SlowQueryLogger"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
-</code></pre><p>The various logging options available, the only one left active was the log statements, ie DML and DDL commands log.</p>
-<p>NOTE: If your JBoss is running in domain mode rather than standalone then this setting can be made to the file JBOSS_HOME/domain/configuration/domain.xml.</p>
-<p>4 - Still in standalone.xml file we will create the datasource. Below are two examples, one for a normal datasource and one for an XA-DataSoure, both should stay within the <code>&lt;datasources&gt;</code> tag:</p>
-<pre><code><span class="tag">&lt;<span class="title">datasource</span> <span class="attribute">jta</span>=<span class="value">"true"</span> <span class="attribute">jndi-name</span>=<span class="value">"java:/mpinfods"</span> <span class="attribute">pool-name</span>=<span class="value">"MPINFO-POOL"</span> <span class="attribute">enabled</span>=<span class="value">"true"</span> <span class="attribute">use-ccm</span>=<span class="value">"true"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">connection-url</span>&gt;</span>jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver<span class="tag">&lt;/<span class="title">connection-url</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">driver</span>&gt;</span>jdbcdslog<span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">new-connection-sql</span>&gt;</span>select 1<span class="tag">&lt;/<span class="title">new-connection-sql</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">transaction-isolation</span>&gt;</span>TRANSACTION_READ_COMMITTED<span class="tag">&lt;/<span class="title">transaction-isolation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">pool</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">min-pool-size</span>&gt;</span>10<span class="tag">&lt;/<span class="title">min-pool-size</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">max-pool-size</span>&gt;</span>20<span class="tag">&lt;/<span class="title">max-pool-size</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">pool</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">security</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">user-name</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">user-name</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">password</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">security</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">validation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">validate-on-match</span>&gt;</span>false<span class="tag">&lt;/<span class="title">validate-on-match</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">background-validation</span>&gt;</span>false<span class="tag">&lt;/<span class="title">background-validation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">background-validation-millis</span>&gt;</span>1<span class="tag">&lt;/<span class="title">background-validation-millis</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">validation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">statement</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">prepared-statement-cache-size</span>&gt;</span>32<span class="tag">&lt;/<span class="title">prepared-statement-cache-size</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">share-prepared-statements</span>&gt;</span>false<span class="tag">&lt;/<span class="title">share-prepared-statements</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">statement</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">datasource</span>&gt;</span>
-
-<span class="tag">&lt;<span class="title">xa-datasource</span> <span class="attribute">jndi-name</span>=<span class="value">"java:/mpinfoxads"</span> <span class="attribute">pool-name</span>=<span class="value">"MPINFO-XA-POOL"</span> <span class="attribute">enabled</span>=<span class="value">"true"</span> <span class="attribute">use-ccm</span>=<span class="value">"true"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"PortNumber"</span>&gt;</span>5432<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"DatabaseName"</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"ServerName"</span>&gt;</span>172.16.1.6<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"targetDS"</span>&gt;</span>org.postgresql.xa.PGXADataSource<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">driver</span>&gt;</span>jdbcdslog<span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">new-connection-sql</span>&gt;</span>select 1<span class="tag">&lt;/<span class="title">new-connection-sql</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">transaction-isolation</span>&gt;</span>TRANSACTION_READ_COMMITTED<span class="tag">&lt;/<span class="title">transaction-isolation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-pool</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">min-pool-size</span>&gt;</span>0<span class="tag">&lt;/<span class="title">min-pool-size</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">max-pool-size</span>&gt;</span>10<span class="tag">&lt;/<span class="title">max-pool-size</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">flush-strategy</span>&gt;</span>IdleConnections<span class="tag">&lt;/<span class="title">flush-strategy</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">is-same-rm-override</span>&gt;</span>false<span class="tag">&lt;/<span class="title">is-same-rm-override</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">interleaving</span>&gt;</span>false<span class="tag">&lt;/<span class="title">interleaving</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">pad-xid</span>&gt;</span>false<span class="tag">&lt;/<span class="title">pad-xid</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">wrap-xa-resource</span>&gt;</span>false<span class="tag">&lt;/<span class="title">wrap-xa-resource</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">xa-pool</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">security</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">user-name</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">user-name</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">password</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">security</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">validation</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">valid-connection-checker</span> <span class="attribute">class-name</span>=<span class="value">"org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">validate-on-match</span>&gt;</span>true<span class="tag">&lt;/<span class="title">validate-on-match</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">background-validation</span>&gt;</span>false<span class="tag">&lt;/<span class="title">background-validation</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">exception-sorter</span> <span class="attribute">class-name</span>=<span class="value">"org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">validation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">timeout</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">idle-timeout-minutes</span>&gt;</span>3<span class="tag">&lt;/<span class="title">idle-timeout-minutes</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">timeout</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">statement</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">track-statements</span>&gt;</span>true<span class="tag">&lt;/<span class="title">track-statements</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">share-prepared-statements</span>&gt;</span>false<span class="tag">&lt;/<span class="title">share-prepared-statements</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">statement</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">xa-datasource</span>&gt;</span>
-</code></pre><p>At this point you should pay attention to information as IPs, users, passwords and replace according to your environment, moreover, realize that the tag <code>&lt;driver&gt;</code> use the jdbcdslog driver name that will define the next step.</p>
-<p>5 - Within the <code>&lt;datasources&gt;</code> tag (standalone.xml) add a driver setting that makes the log:</p>
-<pre><code><span class="tag">&lt;<span class="title">drivers</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">driver</span> <span class="attribute">name</span>=<span class="value">"jdbcdslog"</span> <span class="attribute">module</span>=<span class="value">"com.googlecode.usc.jdbcdslog"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">driver-class</span>&gt;</span>org.jdbcdslog.DriverLoggingProxy<span class="tag">&lt;/<span class="title">driver-class</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">xa-datasource-class</span>&gt;</span>org.jdbcdslog.XADataSourceProxy<span class="tag">&lt;/<span class="title">xa-datasource-class</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">drivers</span>&gt;</span>
-</code></pre><p>There, it can already use the datasource and check the log JBoss any select, update, insert which is done through the connections that datasource will be logged, the output will look like:</p>
-<pre><code>11:35:00,066 INFO  [org.jdbcdslog.StatementLogger] (EJB default - 6) <span class="operator">select u.<span class="keyword">password</span> <span class="keyword">from</span> <span class="keyword">user</span> u <span class="keyword">where</span> u.login=<span class="string">'admin'</span>;</span>
-</code></pre><p>If you use an XA-DataSource may be confronted with the following error:</p>
-<pre><code><span class="type">Caused</span> by: javax.resource.<span class="type">ResourceException</span>: <span class="type">IJ000453</span>: <span class="type">Unable</span> to get managed connection <span class="keyword">for</span> java:/<span class="type">MPINFO</span>-<span class="type">XA</span>-<span class="type">Datasource</span>
-
-<span class="type">Caused</span> by: java.lang.<span class="type">LinkageError</span>: loader constraint violation: loader (instance of &lt;bootloader&gt;) previously initiated loading <span class="keyword">for</span> a different <span class="class"><span class="keyword">type</span> <span class="keyword"><span class="keyword">with</span></span> <span class="title">name</span> "<span class="title">javax/transaction/xa/XAResource</span>"</span>
-</code></pre><p>The exception is due to a ClassLoader problem in JBoss, the issue is that there are two definitions for javax.transaction.xa.XAResource class: one that is in the standard JVM package and one that is in a jar inside the JBoss. Then, for some reason, JBoss loads the class from your lib and jdbcdslog loads the class from the standard JVM lib (rt.jar) and this is the exception claiming a class with the same name already have been loaded. Well, to solve this adjusted a setting in JBoss to prevent it from load the class that is contained in their own libs and load only the class from the JVM. The procedure is to change the contents of the file JBOSS_HOME/modules/system/layers/base/javax/transaction/api/main/module.xml:</p>
-<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"jboss-transaction-api_1.1_spec-1.0.1.Final-redhat-2.jar"</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">filter</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclude</span> <span class="attribute">path</span>=<span class="value">"javax/transaction/xa"</span>/&gt;</span>
-                <span class="tag">&lt;<span class="title">include</span> <span class="attribute">path</span>=<span class="value">"**"</span>/&gt;</span>
-            <span class="tag">&lt;/<span class="title">filter</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">resource-root</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">system</span> <span class="attribute">export</span>=<span class="value">"true"</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">paths</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">path</span> <span class="attribute">name</span>=<span class="value">"javax/transaction/xa"</span>/&gt;</span>
-            <span class="tag">&lt;/<span class="title">paths</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">system</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
-</code></pre><p>I recommend that you save the original file before making any change, it probably will not have the tag <code>&lt;dependencies&gt;</code> and also will not have the tag `<filter> ‘. With this setting finish all necessary settings, now test and verify that the log is generated in accordance with the executed commands.</filter></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>A basic necessity in almost every software project is the log of SQL statements and for this purpose there is a plethora of options. However, despite the many alternatives, the log is often not made the best way:</p>]]>
-    
-    </summary>
-    
-      <category term="Hibernate" scheme="http://marlonpatrick.info/tags/Hibernate/"/>
-    
-      <category term="JBOSS" scheme="http://marlonpatrick.info/tags/JBOSS/"/>
-    
-      <category term="JPA" scheme="http://marlonpatrick.info/tags/JPA/"/>
-    
-      <category term="Log" scheme="http://marlonpatrick.info/tags/Log/"/>
-    
-      <category term="SQL" scheme="http://marlonpatrick.info/tags/SQL/"/>
-    
-      <category term="jdbcdslog" scheme="http://marlonpatrick.info/tags/jdbcdslog/"/>
-    
-      <category term="JBOSS" scheme="http://marlonpatrick.info/categories/JBOSS/"/>
-    
-      <category term="Log" scheme="http://marlonpatrick.info/categories/JBOSS/Log/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[JasperReports: Resolvendo NoSuchMethodError ao usar uma imagem]]></title>
-    <link href="http://marlonpatrick.info/pt-br/2014/04/28/jasperreports-resolvendo-nosuchmethoderror-ao-usar-uma-imagem/"/>
-    <id>http://marlonpatrick.info/pt-br/2014/04/28/jasperreports-resolvendo-nosuchmethoderror-ao-usar-uma-imagem/</id>
-    <published>2014-04-28T12:21:00.000Z</published>
-    <updated>2015-08-02T13:14:51.862Z</updated>
-    <content type="html"><![CDATA[<p>O erro acontece quando você tenta gerar um relatório feito com Jasper/iReport que usa uma imagem. A mensagem de erro é algo como: <strong>Caused by: java.lang.NoSuchMethodError: com.lowagie.text.Image.getPlainWidth()F</strong>.</p>
-<a id="more"></a>
-<p>O problema é que você está usando uma versão do iText incompatível com a versão do JasperReports. Até a versão 3.0.0 do Jasper/iReport a versão correta do iText é 1.3.1. A partir da versão 3.1.0 do Jasper/iReport a versão correta do iText é 2.1.0.</p>
-<p>Uma dica melhor é verificar a pasta lib do seu iReport o qual irá conter todas as libs com suas versões corretas, assim, pode garantir que está usando a versão adequada de cada dependência do Jasper.</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>O erro acontece quando você tenta gerar um relatório feito com Jasper/iReport que usa uma imagem. A mensagem de erro é algo como: <strong>Caused by: java.lang.NoSuchMethodError: com.lowagie.text.Image.getPlainWidth()F</strong>.</p>]]>
-    
-    </summary>
-    
-      <category term="JasperReports" scheme="http://marlonpatrick.info/tags/JasperReports/"/>
-    
-      <category term="iReport" scheme="http://marlonpatrick.info/tags/iReport/"/>
-    
-      <category term="iText" scheme="http://marlonpatrick.info/tags/iText/"/>
-    
-      <category term="JasperReports" scheme="http://marlonpatrick.info/categories/JasperReports/"/>
-    
-      <category term="iReport" scheme="http://marlonpatrick.info/categories/JasperReports/iReport/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[JasperReports: Solving NoSuchMethodError to use an image]]></title>
     <link href="http://marlonpatrick.info/en/2014/04/28/jasperreports-solving-nosuchmethoderror-to-use-an-image/"/>
     <id>http://marlonpatrick.info/en/2014/04/28/jasperreports-solving-nosuchmethoderror-to-use-an-image/</id>
     <published>2014-04-28T12:21:00.000Z</published>
-    <updated>2015-08-03T00:48:19.018Z</updated>
+    <updated>2015-08-03T00:48:19.000Z</updated>
     <content type="html"><![CDATA[<p>The error occurs when you try to generate a report made with Jasper/iReport using an image. The error message is something like: <strong>Caused by: java.lang.NoSuchMethodError: com.lowagie.text.Image.getPlainWidth ()F&lt;/ strong&gt;.</strong></p>
 <a id="more"></a>
 <p>The problem is that you are using a version of iText incompatible with the version of JasperReports. Until the version 3.0.0 of the Jasper/iReport the correct version of iText is 1.3.1. Starting with version 3.1.0 of the Jasper/iReport the correct version of iText is 2.1.0.</p>
@@ -478,11 +556,39 @@
   </entry>
   
   <entry>
+    <title><![CDATA[JasperReports: Resolvendo NoSuchMethodError ao usar uma imagem]]></title>
+    <link href="http://marlonpatrick.info/pt-br/2014/04/28/jasperreports-resolvendo-nosuchmethoderror-ao-usar-uma-imagem/"/>
+    <id>http://marlonpatrick.info/pt-br/2014/04/28/jasperreports-resolvendo-nosuchmethoderror-ao-usar-uma-imagem/</id>
+    <published>2014-04-28T12:21:00.000Z</published>
+    <updated>2015-08-02T13:14:51.000Z</updated>
+    <content type="html"><![CDATA[<p>O erro acontece quando você tenta gerar um relatório feito com Jasper/iReport que usa uma imagem. A mensagem de erro é algo como: <strong>Caused by: java.lang.NoSuchMethodError: com.lowagie.text.Image.getPlainWidth()F</strong>.</p>
+<a id="more"></a>
+<p>O problema é que você está usando uma versão do iText incompatível com a versão do JasperReports. Até a versão 3.0.0 do Jasper/iReport a versão correta do iText é 1.3.1. A partir da versão 3.1.0 do Jasper/iReport a versão correta do iText é 2.1.0.</p>
+<p>Uma dica melhor é verificar a pasta lib do seu iReport o qual irá conter todas as libs com suas versões corretas, assim, pode garantir que está usando a versão adequada de cada dependência do Jasper.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>O erro acontece quando você tenta gerar um relatório feito com Jasper/iReport que usa uma imagem. A mensagem de erro é algo como: <strong>Caused by: java.lang.NoSuchMethodError: com.lowagie.text.Image.getPlainWidth()F</strong>.</p>]]>
+    
+    </summary>
+    
+      <category term="JasperReports" scheme="http://marlonpatrick.info/tags/JasperReports/"/>
+    
+      <category term="iReport" scheme="http://marlonpatrick.info/tags/iReport/"/>
+    
+      <category term="iText" scheme="http://marlonpatrick.info/tags/iText/"/>
+    
+      <category term="JasperReports" scheme="http://marlonpatrick.info/categories/JasperReports/"/>
+    
+      <category term="iReport" scheme="http://marlonpatrick.info/categories/JasperReports/iReport/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[PrimeFaces: around problems with resizable/draggable dataTable]]></title>
     <link href="http://marlonpatrick.info/en/2014/04/26/primefaces-around-problems-with-resizable-slash-draggable-datatable/"/>
     <id>http://marlonpatrick.info/en/2014/04/26/primefaces-around-problems-with-resizable-slash-draggable-datatable/</id>
     <published>2014-04-26T19:29:00.000Z</published>
-    <updated>2015-08-03T02:48:48.522Z</updated>
+    <updated>2015-08-03T02:48:48.000Z</updated>
     <content type="html"><![CDATA[<p>I will leave here workarounds for some PrimeFaces bugs when using dataTable with features resizable or draggable. Some of these bugs have been corrected, but if for some reason you like me works with any version of PrimeFaces containing the error and can not update it will be of great help.</p>
 <a id="more"></a>
 <p><strong>1 - NullPointerException to resize the size of a column (fixed in version 3.5)</strong></p>
@@ -594,7 +700,7 @@ private String getColumnIndex<span class="params">(ColumnResizeEvent event)</spa
     <link href="http://marlonpatrick.info/pt-br/2014/04/26/primefaces-contornando-problemas-com-datatable-resizable-slash-draggable/"/>
     <id>http://marlonpatrick.info/pt-br/2014/04/26/primefaces-contornando-problemas-com-datatable-resizable-slash-draggable/</id>
     <published>2014-04-26T19:29:00.000Z</published>
-    <updated>2015-08-02T13:14:51.866Z</updated>
+    <updated>2015-08-02T13:14:51.000Z</updated>
     <content type="html"><![CDATA[<p>Vou deixar aqui soluções alternativas para alguns bugs do PrimeFaces quando se usa dataTable com as features resizable ou draggable. Alguns desses bugs já foram corrigidos, mas, se por algum motivo você assim como eu trabalha com alguma versão do PrimeFaces que contém o erro e não pode atualizá-la será de grande ajuda.</p>
 <a id="more"></a>
 <p><strong>1 - NullPointerException ao redimensionar o tamanho de uma coluna (corrigido na versão 3.5)</strong></p>
@@ -707,7 +813,7 @@ private String getColumnIndex<span class="params">(ColumnResizeEvent event)</spa
     <link href="http://marlonpatrick.info/en/2013/09/04/ejb-3-dot-1-stateless-session-beans-and-dependencies-reinjection/"/>
     <id>http://marlonpatrick.info/en/2013/09/04/ejb-3-dot-1-stateless-session-beans-and-dependencies-reinjection/</id>
     <published>2013-09-05T01:50:00.000Z</published>
-    <updated>2015-08-02T18:12:34.115Z</updated>
+    <updated>2015-08-02T18:12:34.000Z</updated>
     <content type="html"><![CDATA[<p>When you start working with EJB one of the first things to learn is about the different types of beans, which at 3.1 specification are: Stateful Session Beans (SFSB), Stateless Session Beans (SLSB), Singleton Sessions Beans and Message-Drive Beans. With this comes one of the most common questions: “What is the difference between Stateful and Stateless beans?”. Well, this post is not one to explain these differences, if you need that follows a good <a target="_ blank" href="http://www.theserverside.com/tutorial/Which-EJB-to-use-Stateful-stateless-and-singleton-session-beans-compared">link</a>.</p>
 <a id="more"></a>
 <p>But to my post need to make sense to put the standard response:. “SFSBs preserve the state even if they occur several calls methods in the bean as the container ensures that the customer will always be serviced by the same instance. Already SLSBs not preserve state because, for each method call the customer makes it can be serviced by a different instance.”</p>
@@ -775,7 +881,7 @@ User <span class="number">2</span> invoke
     <link href="http://marlonpatrick.info/pt-br/2013/09/04/ejb-3-dot-1-stateless-session-beans-e-a-reinjecao-de-dependencias/"/>
     <id>http://marlonpatrick.info/pt-br/2013/09/04/ejb-3-dot-1-stateless-session-beans-e-a-reinjecao-de-dependencias/</id>
     <published>2013-09-05T01:50:00.000Z</published>
-    <updated>2015-08-02T18:05:21.722Z</updated>
+    <updated>2015-08-02T18:05:21.000Z</updated>
     <content type="html"><![CDATA[<p>Quando se começa a trabalhar com EJB uma das primeiras coisas a se aprender é sobre os diferentes tipos de beans, que na especificação 3.1 são: Stateful Session Beans (SFSB), Stateless Session Beans (SLSB), Singleton Sessions Beans e os Message-Drive Beans. Com isso vem uma das dúvidas mais comuns: “Qual a diferença entre beans Stateful e Stateless?”. Bem, esse post não é mais um para explicar essas diferenças, se você precisa disso segue um bom <a target="_blank" href="http://www.theserverside.com/tutorial/Which-EJB-to-use-Stateful-stateless-and-singleton-session-beans-compared">link</a>.</p>
 <a id="more"></a>
 <p>Mas, para o meu post fazer sentido preciso colocar a resposta padrão: “SFSBs preservam o estado mesmo que ocorram várias chamadas de métodos no bean, pois, o container garante que o cliente vai ser sempre atendido pela mesma instância. Já os SLSBs não preservam estado, pois, para cada chamada de método que o cliente faz ele pode ser atendido por uma instância diferente.”</p>
@@ -837,11 +943,44 @@ User <span class="number">2</span> invoke
   </entry>
   
   <entry>
+    <title><![CDATA[PrimeFaces: Dynamic Menu and the error Cannot remove the same component twice]]></title>
+    <link href="http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/"/>
+    <id>http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/</id>
+    <published>2013-01-25T01:39:00.000Z</published>
+    <updated>2015-08-08T21:06:27.000Z</updated>
+    <content type="html"><![CDATA[<p>If you are using the MenuBar component PrimeFaces to generate dynamic menus you may have encountered the error:<strong>Can not remove the same component twice</strong>. This error occurs for the same reason explained in the post <a href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/">PrimeFaces: Dynamic Menu and harmless message Unable to Find Component … </a>.</p>
+<a id="more"></a>
+<p>The difference is that the “Unable to find component …” message is just a warnning the server log to a very specific case can be a performance problem, since the message “Cannot remove the same component twice” is an error fact that prevents the rendering of JSF screen. In my case, the error occurs when a JSF Validator throws a ValidatorException a screen that has a dynamic menu (PrimeFaces MenuBar).</p>
+<p>Another important thing is that the error occurs in the 3.4.1 version of PrimeFaces (did not get to check other versions) in conjunction with the implementation Mojarra JSF 2.1.9 or higher. If the Mojarra version 2.1.9 is less than the error occurs instead is played on the server log the message “Unable to find component …”.</p>
+<p>The solution placed in the post mentioned above also serves to this case and there explain better why the issue. Just click <a href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/">here</a> and gives a given. I have even opened a PrimeFaces issue in the bug tracking the following <a target="_blank" href="http://code.google.com/p/primefaces/issues/detail?id=4431">link</a>.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>If you are using the MenuBar component PrimeFaces to generate dynamic menus you may have encountered the error:<strong>Can not remove the same component twice</strong>. This error occurs for the same reason explained in the post <a href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/">PrimeFaces: Dynamic Menu and harmless message Unable to Find Component … </a>.</p>]]>
+    
+    </summary>
+    
+      <category term="Dynamic Menu" scheme="http://marlonpatrick.info/tags/Dynamic-Menu/"/>
+    
+      <category term="JSF" scheme="http://marlonpatrick.info/tags/JSF/"/>
+    
+      <category term="MenuBar" scheme="http://marlonpatrick.info/tags/MenuBar/"/>
+    
+      <category term="Mojarra" scheme="http://marlonpatrick.info/tags/Mojarra/"/>
+    
+      <category term="PrimeFaces" scheme="http://marlonpatrick.info/tags/PrimeFaces/"/>
+    
+      <category term="JSF" scheme="http://marlonpatrick.info/categories/JSF/"/>
+    
+      <category term="PrimeFaces" scheme="http://marlonpatrick.info/categories/JSF/PrimeFaces/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[PrimeFaces: Menu Dinâmico e o erro Cannot remove the same component twice]]></title>
     <link href="http://marlonpatrick.info/pt-br/2013/01/24/primefaces-menu-dinamico-e-o-erro-cannot-remove-the-same-component-twice/"/>
     <id>http://marlonpatrick.info/pt-br/2013/01/24/primefaces-menu-dinamico-e-o-erro-cannot-remove-the-same-component-twice/</id>
     <published>2013-01-25T01:39:00.000Z</published>
-    <updated>2015-08-03T03:26:09.217Z</updated>
+    <updated>2015-08-03T03:26:09.000Z</updated>
     <content type="html"><![CDATA[<p>Se você está usando o componente MenuBar do PrimeFaces para geração de menus dinâmicos pode ter se deparado com o erro:<strong>Cannot remove the same component twice</strong>. Esse erro ocorre pelo mesmo motivo explicado no post <a href="/blog/2013/01/24/primefaces-menu-dinamico-e-a-inofensiva-mensagem-unable-to-find-component-dot-dot-dot">PrimeFaces:Menu Dinâmico E a Inofensiva Mensagem Unable to Find Component…</a>.</p>
 <a id="more"></a>
 <p>A diferença é que a mensagem “Unable to find component…” é apenas um warnning no log do servidor que num caso muito específico pode representar um problema de performance, já a mensagem “Cannot remove the same component twice” é um erro de fato que impede a renderização da tela JSF. No meu caso, o erro ocorre quando um Validator JSF lança uma ValidatorException numa tela que tem um menu dinâmico (PrimeFaces MenuBar).</p>
@@ -870,44 +1009,11 @@ User <span class="number">2</span> invoke
   </entry>
   
   <entry>
-    <title><![CDATA[PrimeFaces: Dynamic Menu and the error Cannot remove the same component twice]]></title>
-    <link href="http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/"/>
-    <id>http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-error-cannot-remove-the-same-component-twice/</id>
-    <published>2013-01-25T01:39:00.000Z</published>
-    <updated>2015-08-03T03:47:10.312Z</updated>
-    <content type="html"><![CDATA[<p>If you are using the MenuBar component PrimeFaces to generate dynamic menus you may have encountered the error:<strong>Can not remove the same component twice</strong>. This error occurs for the same reason explained in the post <a href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/">PrimeFaces: Dynamic Menu and harmless message Unable to Find Component … </a>.</p>
-<a id="more"></a>
-<p>The difference is that the “Unable to find component …” message is just a warnning the server log to a very specific case can be a performance problem, since the message “Cannot remove the same component twice” is an error fact that prevents the rendering of JSF screen. In my case, the error occurs when a JSF Validator throws a ValidatorException a screen that has a dynamic menu (PrimeFaces MenuBar).</p>
-<p>Another important thing is that the error occurs in the 3.4.1 version of PrimeFaces (did not get to check other versions) in conjunction with the implementation Mojarra JSF 2.1.9 or higher. If the Mojarra version 2.1.9 is less than the error occurs instead is played on the server log the message “Unable to find component …”.</p>
-<p>The solution placed in the post mentioned above also serves to this case and there explain better why the issue. Just click <a href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/">aqui</a> and gives a given. I have even opened a PrimeFaces issue in the bug tracking the following <a target="_blank" href="http://code.google.com/p/primefaces/issues/detail?id=4431">link</a>.</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>If you are using the MenuBar component PrimeFaces to generate dynamic menus you may have encountered the error:<strong>Can not remove the same component twice</strong>. This error occurs for the same reason explained in the post <a href="/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/">PrimeFaces: Dynamic Menu and harmless message Unable to Find Component … </a>.</p>]]>
-    
-    </summary>
-    
-      <category term="Dynamic Menu" scheme="http://marlonpatrick.info/tags/Dynamic-Menu/"/>
-    
-      <category term="JSF" scheme="http://marlonpatrick.info/tags/JSF/"/>
-    
-      <category term="MenuBar" scheme="http://marlonpatrick.info/tags/MenuBar/"/>
-    
-      <category term="Mojarra" scheme="http://marlonpatrick.info/tags/Mojarra/"/>
-    
-      <category term="PrimeFaces" scheme="http://marlonpatrick.info/tags/PrimeFaces/"/>
-    
-      <category term="JSF" scheme="http://marlonpatrick.info/categories/JSF/"/>
-    
-      <category term="PrimeFaces" scheme="http://marlonpatrick.info/categories/JSF/PrimeFaces/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[PrimeFaces: Dynamic Menu and harmless message Unable to find component ...]]></title>
     <link href="http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/"/>
     <id>http://marlonpatrick.info/en/2013/01/24/primefaces-dynamic-menu-and-the-harmless-menssage-unable-to-find-component-dot-dot-dot/</id>
     <published>2013-01-24T15:00:00.000Z</published>
-    <updated>2015-08-03T03:06:36.233Z</updated>
+    <updated>2015-08-03T03:06:36.000Z</updated>
     <content type="html"><![CDATA[<p>I am particularly hardcore fan of PrimeFaces and one of the components I like most is to generate dynamic menus. Virtually all applications have the concept of access profile which ends up making the MenuBar component extremely useful for this type of requirement. Basically, the system will only render the menus which point to screens that the user can access.</p>
 <a id="more"></a>
 <p>Well, I’m using that component precisely in the above scenario with the 3.4.1 version of PrimeFaces and the implementation of JSF reference (Mojarra) in the version 2.1.7. With this combination (PrimeFaces/Mojarra) n the versions described above (believe in others as well) realized in the log my application every time performing an ajax call for each menu item generated with the dynamic MenuBar, there was a message something like this:<strong>Unable to find component with clientId ‘menuitem200’, the need to remove it</strong>.</p>
@@ -1029,7 +1135,7 @@ submenuUser.getChildren<span class="params">()</span>.add<span class="params">(l
     <link href="http://marlonpatrick.info/pt-br/2013/01/24/primefaces-menu-dinamico-e-a-inofensiva-mensagem-unable-to-find-component-dot-dot-dot/"/>
     <id>http://marlonpatrick.info/pt-br/2013/01/24/primefaces-menu-dinamico-e-a-inofensiva-mensagem-unable-to-find-component-dot-dot-dot/</id>
     <published>2013-01-24T15:00:00.000Z</published>
-    <updated>2015-08-03T03:25:27.188Z</updated>
+    <updated>2015-08-03T03:25:27.000Z</updated>
     <content type="html"><![CDATA[<p>Eu sou particularmente fã incondicional do PrimeFaces e um dos componentes que mais gosto é o de gerar menus dinâmicos. Praticamente todas as aplicações tem o conceito de perfil de acesso o que acaba tornando o componente MenuBar extremamente útil para esse tipo de requisito. Basicamente, o sistema só irá renderizar os menus o qual apontam para telas que o usuário pode acessar.</p>
 <a id="more"></a>
 <p>Bem, estou usando esse componente exatamente no cenário descrito acima com a versão 3.4.1 do PrimeFaces e a implementação de referência do JSF(Mojarra) na sua versão 2.1.7. Com essa combinação (PrimeFaces/Mojarra) nas versões descritas acima (acredito que em outras também) percebi no log de minha aplicação que todas as vezes que executava uma chamada ajax, para cada item do menu gerado com o MenuBar dinâmico, havia uma mensagem mais ou menos assim:<strong>Unable to find component with clientId ‘menuitem200’, no need to remove it.</strong>.</p>
@@ -1151,7 +1257,7 @@ submenuUser.getChildren<span class="params">()</span>.add<span class="params">(l
     <link href="http://marlonpatrick.info/pt-br/2012/11/02/configurando-o-flushmode-no-seam-persistence/"/>
     <id>http://marlonpatrick.info/pt-br/2012/11/02/configurando-o-flushmode-no-seam-persistence/</id>
     <published>2012-11-02T23:19:00.000Z</published>
-    <updated>2015-08-02T17:49:49.129Z</updated>
+    <updated>2015-08-02T17:49:49.000Z</updated>
     <content type="html"><![CDATA[<p>Uma das grandes vantagens de usar o Seam Persistence é o Seam Managed Persistence Context (SMPC) que permite um melhor gerenciamento do EntityManager na sua aplicação. Com o SMPC é possível colocar o EntityManager num escopo CDI o que pode facilitar bastante a vida de nós desenvolvedores ajudando a minimizar bruscamente erros como o temido LazyInitializationException.</p>
 <a id="more"></a>
 <p>Porém, uma das coisas que tive dificuldade de encontrar na documentação do Seam Persistence foi como definir o FlushMode do meu EntityManager por isso resolvi fazer esse post. Dando uma fuçada no código do Seam, encontrei a classe FlushModeManager e sua implementação padrão FlushModeManagerImpl, que justamente são usadas para definir o flushMode do EntityManager gerenciado pelo SMPC.</p>
@@ -1183,7 +1289,7 @@ submenuUser.getChildren<span class="params">()</span>.add<span class="params">(l
     <link href="http://marlonpatrick.info/en/2012/11/02/configuring-flushmode-seam-persistence/"/>
     <id>http://marlonpatrick.info/en/2012/11/02/configuring-flushmode-seam-persistence/</id>
     <published>2012-11-02T23:19:00.000Z</published>
-    <updated>2015-08-02T17:50:41.447Z</updated>
+    <updated>2015-08-02T17:50:41.000Z</updated>
     <content type="html"><![CDATA[<p>One of the great advantages of using Seam Persistence is the Seam Managed Persistence Context (SMPC) which allows better management of the EntityManager in your application. With the SMPC is possible to place the EntityManager in a CDI scope which can greatly ease the life of developers helping us to sharply minimize errors as the dreaded LazyInitializationException.</p>
 <a id="more"></a>
 <p>But one of the things I had trouble finding in the Seam Persistence documentation was setting the FlushMode of my EntityManager so I decided to make this post. Giving poke around in Seam code, I found the FlushModeManager class and its standard FlushModeManagerImpl implementation, which are just used to set the flushMode in the EntityManager managed by SMPC.</p>
@@ -1215,7 +1321,7 @@ submenuUser.getChildren<span class="params">()</span>.add<span class="params">(l
     <link href="http://marlonpatrick.info/en/2012/10/31/seam-faces-transactionphaselistener-and-the-error-jbas010152/"/>
     <id>http://marlonpatrick.info/en/2012/10/31/seam-faces-transactionphaselistener-and-the-error-jbas010152/</id>
     <published>2012-10-31T19:40:00.000Z</published>
-    <updated>2015-08-03T03:28:24.015Z</updated>
+    <updated>2015-08-03T03:28:24.000Z</updated>
     <content type="html"><![CDATA[<p>If you are using Seam Faces you may have already come across the following message in the log of your application:<br><strong>JBAS010152: APPLICATION ERROR: transaction still active in request with status 0</strong></p>
 <a id="more"></a>
 <p>This message is caused by the malfunction of the transaction control of your system, more specifically, by the malfunction of TransactionPhaseListener class, contained in the Seam Faces jar. Basically, TransactionPhaseListener implements a common JSF PhaseListener at the beginning of every request opens a new transaction and the end of the request performs the transaction commit or rollback.</p>
@@ -1268,7 +1374,7 @@ submenuUser.getChildren<span class="params">()</span>.add<span class="params">(l
     <link href="http://marlonpatrick.info/pt-br/2012/10/31/seam-faces-transactionphaselistener-e-o-erro-jbas010152/"/>
     <id>http://marlonpatrick.info/pt-br/2012/10/31/seam-faces-transactionphaselistener-e-o-erro-jbas010152/</id>
     <published>2012-10-31T19:40:00.000Z</published>
-    <updated>2015-08-03T03:27:22.445Z</updated>
+    <updated>2015-08-03T03:27:22.000Z</updated>
     <content type="html"><![CDATA[<p>Se você está usando Seam Faces pode já ter se deparado com a seguinte mensagem no log de sua aplicação:<br><strong>JBAS010152: APPLICATION ERROR: transaction still active in request with status 0</strong></p>
 <a id="more"></a>
 <p>Essa mensagem é provocada pelo mal funcionamento do controle de transação do seu sistema, mais especificamente, pelo mal funcionamento da classe TransactionPhaseListener, contida no jar do Seam Faces. Basicamente, TransactionPhaseListener implementa um PhaseListener comum do JSF que no início de toda requisição abre uma nova transação e no final da requisição realiza o commit ou rollback da transação.</p>
@@ -1323,7 +1429,7 @@ submenuUser.getChildren<span class="params">()</span>.add<span class="params">(l
     <link href="http://marlonpatrick.info/pt-br/2012/07/12/jsf-form-validation-abordagem-pratica-com-apoio-da-api-bean-validation/"/>
     <id>http://marlonpatrick.info/pt-br/2012/07/12/jsf-form-validation-abordagem-pratica-com-apoio-da-api-bean-validation/</id>
     <published>2012-07-12T22:08:00.000Z</published>
-    <updated>2015-08-03T02:15:52.632Z</updated>
+    <updated>2015-08-03T02:15:52.000Z</updated>
     <content type="html"><![CDATA[<p>Bem, se você já trabalha com JSF a algum tempo sabe que criar telas com fluxos um pouco mais complexos usando as validações built-in ou até mesmo Bean Validation sabe que isso pode se tornar um tanto complicado. Basicamente o problema é que muitas vezes as validações são acionadas em momentos inoportunos, momentos em que não é necessário a tal validação, mas, isso acontece devido ao tão mencionado ciclo de vida JSF.</p>
 <a id="more"></a>
 <p>Um exemplo bem simples pra quem usa Primefaces é ao se trabalhar com abas, onde, cada vez que você muda de aba as validações são chamadas pelo JSF, o que em muitos casos é desnecessário. Para saber mais: <a href="http://code.google.com/p/primefaces/issues/detail?id=3423" target="_blank" rel="external">http://code.google.com/p/primefaces/issues/detail?id=3423</a>.</p>
@@ -1563,7 +1669,7 @@ public <span class="class"><span class="keyword">class</span> <span class="title
     <link href="http://marlonpatrick.info/en/2012/07/12/jsf-form-validation-pratical-approach-with-support-from-bean-validation-api/"/>
     <id>http://marlonpatrick.info/en/2012/07/12/jsf-form-validation-pratical-approach-with-support-from-bean-validation-api/</id>
     <published>2012-07-12T22:08:00.000Z</published>
-    <updated>2015-08-03T02:15:46.081Z</updated>
+    <updated>2015-08-03T02:15:46.000Z</updated>
     <content type="html"><![CDATA[<p>Well, if you already work with JSF some time knows that creating screens with a little more complex flows using the built-in validations or even Bean Validation know that this can become somewhat complicated. Basically the problem is that often the validations are triggered at inopportune moments, times when it is not necessary to such validation, but this is due to overstated JSF lifecycle.</p>
 <a id="more"></a>
 <p>A simple example for those who use Primefaces is when working with tabs, where each time you change tab validations are called by JSF, which in many cases is unnecessary. To learn more: <a href="http://code.google.com/p/primefaces/issues/detail?id=3423" target="_blank" rel="external">http://code.google.com/p/primefaces/issues/detail?id=3423</a>.</p>
@@ -1789,55 +1895,6 @@ public <span class="class"><span class="keyword">class</span> <span class="title
       <category term="JBoss Seam" scheme="http://marlonpatrick.info/categories/JSF/JBoss-Seam/"/>
     
       <category term="Bean Validation" scheme="http://marlonpatrick.info/categories/JSF/JBoss-Seam/Bean-Validation/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[JAXB + Hibernate + Javassist]]></title>
-    <link href="http://marlonpatrick.info/en/2012/07/12/en-jaxb-plus-hibernate-plus-javassist/"/>
-    <id>http://marlonpatrick.info/en/2012/07/12/en-jaxb-plus-hibernate-plus-javassist/</id>
-    <published>2012-07-12T16:08:00.000Z</published>
-    <updated>2015-08-03T03:55:58.703Z</updated>
-    <content type="html"><![CDATA[<p>If you are trying to convert a java object to XML using JAXB may have some problems if the object is being managed by Hibernate. In some cases Hibernate rewrites classes to make some improvements and add extra features, such as objects with Lazy mappings. In such cases Hibernate rewrites the class of the object so that it can do lazy loading of data.</p>
-<a id="more"></a>
-<p>So far so good, we do not have knowledge as we work with the real object interface, however, when using an api as JAXB using reflection for the fields and methods of the object, it may cause some problems. In my case, the error was something like this:</p>
-<pre><code>com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: <span class="number">2</span> counts <span class="keyword">of</span> IllegalAnnotationExceptions
-javassist.util.proxy.MethodHandler <span class="keyword">is</span> an interface, <span class="keyword">and</span> JAXB can't handle interfaces.
-    this problem <span class="keyword">is</span> related <span class="keyword">to</span> <span class="keyword">the</span> following location:
-        <span class="keyword">at</span> javassist.util.proxy.MethodHandler
-        <span class="keyword">at</span> private javassist.util.proxy.MethodHandler User_$$_javassist_19.handler
-        <span class="keyword">at</span> User_$$_javassist_19
-javassist.util.proxy.MethodHandler <span class="keyword">does</span> <span class="keyword">not</span> have a no-arg default constructor.
-    this problem <span class="keyword">is</span> related <span class="keyword">to</span> <span class="keyword">the</span> following location:
-        <span class="keyword">at</span> javassist.util.proxy.MethodHandler
-        <span class="keyword">at</span> private javassist.util.proxy.MethodHandler User_$$_javassist_19.handler
-        <span class="keyword">at</span> User_$$_javassist_19
-</code></pre><p>The case is that Hibernate (using Javassist api) made a proxy in my User class to add Lazy behavior in one of the class properties and added an attribute called handler, which there is no JAXB annotation defining how it should be treated this attribute the marshal time and so the above error occurred.</p>
-<p>Well, giving a searched my solution is to unproxy in class wrapped by Hibernate and then marshal do in my real object. For the correct object with Hibernate simply copy the code below:</p>
-<pre><code>public Object  getUnproxyModel<span class="params">(Object model)</span> {
-    <span class="keyword">if</span> <span class="params">(HibernateProxy.class.isAssignableFrom<span class="params">(model.getClass<span class="params">()</span>)</span>)</span> {
-        return <span class="params">(<span class="params">(HibernateProxy)</span>model)</span>.getHibernateLazyInitializer<span class="params">()</span>.getImplementation<span class="params">()</span>;
-    }
-
-    return model;
-}
-</code></pre><p>So, just do this:</p>
-<pre><code>marshaller.marshal<span class="params">(getUnproxyModel<span class="params">(user)</span>, outputStream)</span>;
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<p>If you are trying to convert a java object to XML using JAXB may have some problems if the object is being managed by Hibernate. In some cases Hibernate rewrites classes to make some improvements and add extra features, such as objects with Lazy mappings. In such cases Hibernate rewrites the class of the object so that it can do lazy loading of data.</p>]]>
-    
-    </summary>
-    
-      <category term="Hibernate" scheme="http://marlonpatrick.info/tags/Hibernate/"/>
-    
-      <category term="JAXB" scheme="http://marlonpatrick.info/tags/JAXB/"/>
-    
-      <category term="Javassist" scheme="http://marlonpatrick.info/tags/Javassist/"/>
-    
-      <category term="JAXB" scheme="http://marlonpatrick.info/categories/JAXB/"/>
-    
-      <category term="Hibernate" scheme="http://marlonpatrick.info/categories/JAXB/Hibernate/"/>
     
   </entry>
   

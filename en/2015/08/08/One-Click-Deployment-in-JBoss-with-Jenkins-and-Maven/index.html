@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en,pt-br,default">
+    
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Marlon Patrick">
+    <title>One-Click Deployment in JBoss with Jenkins and Maven - Marlon Patrick</title>
+    <meta name="author" content="Marlon Patrick">
+    <meta name="description" content="Marlon Patrick">
+    <link rel="icon" href="/assets/images/null">
+    
+        <link rel="alternative" type="application/atom+xml" title="RSS" href="atom.xml">
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style.min.css" type="text/css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29896969-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+</head>
+
+    <body>
+        <div id="blog">
+            <header id="header" data-behavior="1">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <h1 class="header-title">
+        <a class="header-title-link" href="http://marlonpatrick.info">Marlon Patrick</a>
+    </h1>
+    
+</header>
+            <nav id="sidebar" data-behavior="1">
+    
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                    <span class="sidebar-button-desc">Home</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-categories">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                    <span class="sidebar-button-desc">Categories</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-tags">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                    <span class="sidebar-button-desc">Tags</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/all-archives">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                    <span class="sidebar-button-desc">Archive</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link st-search-show-outputs" href="/#search">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-search"></i>
+                    <span class="sidebar-button-desc">Search</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/#about">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+                    <span class="sidebar-button-desc">About</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://github.com/marlonpatrick10" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                    <span class="sidebar-button-desc">GitHub</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://stackoverflow.com/users/1842759/marlon-patrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+                    <span class="sidebar-button-desc">Stack Overflow</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="https://br.linkedin.com/in/marlonpatrick" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                    <span class="sidebar-button-desc">Linked In</span>
+                </a>
+        </li>
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="http://www.shelfari.com/o1515626551/shelf" target="_blank">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-book"></i>
+                    <span class="sidebar-button-desc">Shelfari</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+    <ul class="sidebar-buttons">
+        
+        <li class="sidebar-button">
+            
+                <a  class="sidebar-button-link " href="/atom.xml">
+            
+                    <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                    <span class="sidebar-button-desc">RSS</span>
+                </a>
+        </li>
+        
+    </ul>
+    
+</nav>
+
+            <div id="main" data-behavior="1">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <div class="post-header main-content-wrap">
+    
+        <h1 class="post-title" itemprop="headline">One-Click Deployment in JBoss with Jenkins and Maven</h1>
+    
+    <div class="post-meta">
+    <time  itemprop="datePublished" content="Sat Aug 08 2015 16:08:20 GMT-0300">
+        Aug 08, 2015
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Jenkins/">Jenkins</a>, <a class="category-link" href="/categories/Jenkins/JBoss/">JBoss</a>, <a class="category-link" href="/categories/Jenkins/JBoss/Maven/">Maven</a>
+
+
+    
+</div>
+
+</div>
+    
+    <div class="post-content markdown main-content-wrap" itemprop="articleBody">
+        <p>Recently, I automate the build of an application that runs in JBoss EAP 6.3 and uses Maven to project management. In general terms, the automated process was:</p>
+<ul>
+<li>Create tag in SVN</li>
+<li>Download tag and generate a war file</li>
+<li>Send war file to JBoss</li>
+<li>Deactivate current war file in JBoss</li>
+<li>Run scripts in database (PostgreSQL)</li>
+<li>Activate new war file in JBoss</li>
+</ul>
+<p>The purpose of this post is describe each of the above topics. I will not show how to install Jenkins or JBoss, I will only present settings I used to automate the build of this application. The process and tools adopted here are only a first step, many improvements can be made, so fits things to meet your project requirements.</p>
+<p>The project structure is as follows:</p>
+<ul>
+<li>Main aggregator project</li>
+<li>EJB project (jar)</li>
+<li>Web project(war)</li>
+</ul>
+<p><img src="1-project-structure.png" alt="1" title="Project structure"></p>
+<p>During the post OCDT is short for the project name in Eclipse (One Click Deploy Test).</p>
+<p><strong>1 - Create tag in SVN</strong></p>
+<p>In this project the development occurs always in a branch and for each released version is created a tag in SVN, this way, the code used in the version is easily recovered if necessary. For achieve this objective I used the <a href="http://maven.apache.org/maven-release/maven-release-plugin/" title="[external]" target="_blank" rel="external">maven-release-plugin</a>.</p>
+<p>The first step is add in your main pom the scm tag. The maven-release-plugin will use scm.developerConnection for downloading the source code and for creating a new tag in SVN. In my case, the URL points to a branch and the branch name is parametrized through parameter SVN_BRANCH (the name of this parameter can be anyone). The parameter SVN_BRANCH will be informed in the Jenkins build page.</p>
+<figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">scm</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">developerConnection</span>&gt;</span>scm:svn:http://yoursvnurl/your-project-name/branches/$&#123;SVN_BRANCH&#125;<span class="tag">&lt;/<span class="title">developerConnection</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">scm</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The second step is add and setting the maven-release-plugin in your main pom:</p>
+<figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-release-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.5.2<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">tagNameFormat</span>&gt;</span>v@&#123;project.version&#125;<span class="tag">&lt;/<span class="title">tagNameFormat</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">providerImplementations</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">svn</span>&gt;</span>javasvn<span class="tag">&lt;/<span class="title">svn</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">providerImplementations</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.google.code.maven-scm-provider-svnjava<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-scm-provider-svnjava<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.1.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The tagNameFormat defines the name of the tag that will be created, for example, whether version is 1.0.0-SNAPSHOT the tag name will be v1.0.0. With maven-scm-provider-svnjava is not necessary to install a svn in the OS because this plugin is a svn-client and the maven-relase-plugin will use it for connecting with SVN.</p>
+<p>Now go in Manage Jenkins &gt; Manage Plugins and install “Parameterized Trigger plugin”, this plugin allow us trigger a new job after complete a build and this will be helpful.</p>
+<p>The next step is to create a job in Jenkins of type “Maven project” that will use the maven-release-plugin, the name I gave this job was OCDT_TAG_AND_DEPLOY. In Job Configuration page some options are important:</p>
+<ul>
+<li>Check “This build is parameterized”;</li>
+<li>Add a parameter “List Subversion tags (and more)” called SVN_BRANCH. In Repository URL put something like this: http ://yoursvnurl/your-project-name/branches and inform a user/password in “Credentials” option. This Jenkins parameter will replace the maven parameter in scm.developerConnection;</li>
+<li>In Source Code Management check Subversion. In Repository URL put something like http ://yoursvnurl/your-project-name/branches/${SVN_BRANCH}, after enter a user/password for SVN, in Local module directory put ${SVN_BRANCH} and in Check-out Strategy choice “Use ‘svn update’ as much as possible, with ‘svn revert’ before update”;</li>
+<li>In Build &gt; Goals and options enter “release:clean release:prepare -DSVN_BRANCH=${SVN_BRANCH} -Dusername=your_svn_user -Dpassword=your_svn_password”. Here, the SVN credentials are in the clear format, this is not a security way for supplier credentials to the Jenkins, but, for simplifying this post I used this format;</li>
+<li>In Post-build Actions choice “Trigger parameterized build on other projects”. In Projects to Build enter OCDT_DEPLOY (name of the our next job), after in Add Parameters option select “Parameters from properties files” and put ${SVN_BRANCH}/release.properties in field Use properties from file and check option “Don’t trigger if any files are missing”. Still in Add Parameters select too “Current build parameters”. This configuration will run the job OCDT_DEPLOY after this job and will pass your own parameters and all properties in release.properties file (generated by maven-release-plugin) as parameters for OCDT_DEPLOY.</li>
+</ul>
+<p>At this point, the jobs are capable of downloading source code in SVN and then generate a tag. </p>
+<p><img src="2-build-page-tag-deploy.png" alt="2" title="Jenkins Build Page"></p>
+<p><strong>2 - Download tag and generate a war file</strong></p>
+<p>After the tag be created, the next step is to download her and then build a war file for deploy in JBoss, for this, we will create new job in Jenkins called OCDT_DEPLOY of type “Maven project”. The job configurations are:</p>
+<ul>
+<li>Check “This build is parameterized”;</li>
+<li>Add a parameter “List Subversion tags (and more)” called scm.tag. In Repository URL put something like this: http ://yoursvnurl/your-project-name/tags and inform a user/password in “Credentials” option. This parameter will be used for parametrizing the SVN URL.</li>
+<li>In Source Code Management check Subversion. In Repository URL put something like http ://yoursvnurl/your-project-name/tags/${scm.tag}, after enter a user/password for SVN, in Local module directory put ${scm.tag} and in Check-out Strategy choice “Use ‘svn update’ as much as possible, with ‘svn revert’ before update”;</li>
+<li>In Build &gt; Goals and options enter “clean package”.</li>
+</ul>
+<p>The idea is that the job OCDT_TAG_AND_DEPLOY will generate a tag and pass the tag name for the job OCDT_DEPLOY which will generate a war file based on source code of the tag. The tag name is passed through the release.properties file that contain a property called scm.tag and that points to the tag created by the maven-release-plugin. If you already have a tag, then don’t need execute OCDT_TAG_AND_DEPLOY only executes OCDT_DEPLOY supplying the tag name manually.</p>
+<p>At this moment, the web-module/pom.xml has a build setting like this:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">finalName</span>&gt;</span>ocdt-$&#123;project.version&#125;<span class="tag">&lt;/<span class="title">finalName</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-war-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.6<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">failOnMissingWebXml</span>&gt;</span>false<span class="tag">&lt;/<span class="title">failOnMissingWebXml</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.mpwtecnologia<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>ejb-module<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>And the ejb-module/pom.xml has a build setting like this:</p>
+<figure class="highlight xml"><figcaption><span>ejb-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-ejb-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.5<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">ejbVersion</span>&gt;</span>3.1<span class="tag">&lt;/<span class="title">ejbVersion</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>3 - Send war file to JBoss</strong></p>
+<p>If you running the job OCDT_DEPLOY he will generate a war file, but will not do anything with it. For deploy the war file in JBoss some others configurations are needed. Let’s go!</p>
+<p>The first thing to do is add the <a href="https://docs.jboss.org/jbossas/7/plugins/maven/latest/index.html" title="[external]" target="_blank" rel="external">jboss-as-maven-plugin </a> in the project. This plugin has various goals to executes many tasks in a JBoss Server as deploy, start, shutdown among others.</p>
+<p>Open main pom.xml and add jboss-as-maven-plugin:</p>
+<figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		      <span class="comment">&lt;!-- Previous settings here --&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.as.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-as-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">version</span>&gt;</span>7.7.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">timeout</span>&gt;</span>60000<span class="tag">&lt;/<span class="title">timeout</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">username</span>&gt;</span>your-jboss-admin-user<span class="tag">&lt;/<span class="title">username</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">password</span>&gt;</span>your-jboss-admin-password<span class="tag">&lt;/<span class="title">password</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">hostname</span>&gt;</span>192.168.25.2<span class="tag">&lt;/<span class="title">hostname</span>&gt;</span> <span class="comment">&lt;!-- put your IP or hostname --&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">properties</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">jboss-as.skip</span>&gt;</span>true<span class="tag">&lt;/<span class="title">jboss-as.skip</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>For test purposes this setting is ok, but in a production environment is not a good idea have user/password in clear text.</p>
+<p>The flag jboss-as.skip is setting for true by default to prevent a deploy in job OCDT_TAG_AND_DEPLOY, this way only in job OCDT_DEPLOY is sent a deploy to JBoss.</p>
+<p>In web-module/pom.xml setting jboss-as-maven-plugin:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- Previous settings here --&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.as.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-as-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">executions</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">id</span>&gt;</span>upload-war<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">goal</span>&gt;</span>deploy<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">deployEnabled</span>&gt;</span>false<span class="tag">&lt;/<span class="title">deployEnabled</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">force</span>&gt;</span>true<span class="tag">&lt;/<span class="title">force</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">domain</span>&gt;</span></span><br><span class="line">						<span class="comment">&lt;!-- This configuration is need only if you running JBoss in domain mode --&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">server-groups</span>&gt;</span></span><br><span class="line">								<span class="tag">&lt;<span class="title">server-group</span>&gt;</span>my-domain-group<span class="tag">&lt;/<span class="title">server-group</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;/<span class="title">server-groups</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;/<span class="title">domain</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">				</span><br><span class="line">				<span class="comment">&lt;!-- Execution unassign-war should be used only if you running JBoss in domain mode --&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">id</span>&gt;</span>unassign-war<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">goal</span>&gt;</span>execute-commands<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">batch</span>&gt;</span>true<span class="tag">&lt;/<span class="title">batch</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">commands</span>&gt;</span></span><br><span class="line">								<span class="tag">&lt;<span class="title">command</span>&gt;</span>undeploy $&#123;project.build.finalName&#125;.$&#123;project.packaging&#125; --keep-content --server-groups=my-domain-group<span class="tag">&lt;/<span class="title">command</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;/<span class="title">commands</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;/<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">executions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>In OCDT_DEPLOY job change the Build &gt; Goals to “clean package post-integration-test -Djboss-as.skip=false”.</p>
+<p>This configuration creates a maven execution called upload-war that sends the war file to JBoss without enabling it or disable any other active deploy, this task will be executed in post-integration-test phase. Observe that the execution unassign-war is only needed for domain mode, this is needed because in the next steps we will run another deploy command for activating this war file and if it is assigned to a server-group an error will occur.</p>
+<p>At this moment the Jenkins Server will try connect in JBoss Server and some problems can happen, for prevent this, you should guarantee that Jenkins can connect in JBoss through the port 9999, a simple telnet can test this.</p>
+<p><strong>4 - Deactivate current war file in JBoss</strong></p>
+<p>Now that we have already sent the war file to JBoss the next step is deactivate the current deploy, for this we will add a parameter called ACTIVE_DEPLOY in the two jobs previously created in Jenkins. Go in OCDT_TAG_AND_DEPLOY &gt; Configure &gt; This build is parameterized &gt; Add Parameter and choice “String Parameter”, in Name field put ACTIVE_DEPLOY. Repeat this for OCDT_DEPLOY.</p>
+<p>Still in OCDT_DEPLOY change the Build &gt; Goals to “clean package post-integration-test -Djboss-as.skip=false -DACTIVE_DEPLOY=${ACTIVE_DEPLOY}”.</p>
+<p>After, creates a new execution for jboss-as-maven-plugin in web-module/pom.xml called deactivate-running-deploy:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">id</span>&gt;</span>deactivate-running-deploy<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">goal</span>&gt;</span>execute-commands<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="title">batch</span>&gt;</span>true<span class="tag">&lt;/<span class="title">batch</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="title">commands</span>&gt;</span></span><br><span class="line">		  <span class="comment">&lt;!-- The parameter server-groups is necessary only if you running JBoss in domain mode --&gt;</span></span><br><span class="line">		  <span class="tag">&lt;<span class="title">command</span>&gt;</span>undeploy $&#123;ACTIVE_DEPLOY&#125; --keep-content --server-groups=my-domain-group<span class="tag">&lt;/<span class="title">command</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;/<span class="title">commands</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">executeCommands</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>5 - Run scripts in database</strong></p>
+<p>After sent war file to JBoss and disable the current deploy the next step is running some scripts in the database before active new deploy. </p>
+<p>We will use <a href="http://flywaydb.org/documentation/maven/" title="[external]" target="_blank" rel="external">flyway-maven-plugin</a> for this task. Flyway is a tool for database version control and has many features to facilitates this work including SQL or Java migrations.</p>
+<p>Add flyway-maven-plugin in managed plugins section in the main pom.xml:</p>
+<figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		      <span class="comment">&lt;!-- Previous settings here --&gt;</span></span><br><span class="line"></span><br><span class="line">			<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>flyway-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">version</span>&gt;</span>3.2.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">skip</span>&gt;</span>true<span class="tag">&lt;/<span class="title">skip</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">url</span>&gt;</span>jdbc:postgresql://192.168.25.3:5432/ocdt<span class="tag">&lt;/<span class="title">url</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">user</span>&gt;</span>your-database-user<span class="tag">&lt;/<span class="title">user</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">password</span>&gt;</span>your-database-password<span class="tag">&lt;/<span class="title">password</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">validateOnMigrate</span>&gt;</span>false<span class="tag">&lt;/<span class="title">validateOnMigrate</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">baselineOnMigrate</span>&gt;</span>true<span class="tag">&lt;/<span class="title">baselineOnMigrate</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">schemas</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">schema</span>&gt;</span>ocdt<span class="tag">&lt;/<span class="title">schema</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">schemas</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>In web-module/pom.xml setting flyway-maven-plugin:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- Previous settings here --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>flyway-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">executions</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">id</span>&gt;</span>update-database<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">goal</span>&gt;</span>migrate<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">executions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>In my case, the database is Postgres then I add a dependency to the Postgres driver in ejb-module/pom.xml (could be any pom.xml):</p>
+<figure class="highlight xml"><figcaption><span>ejb-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.postgresql<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>postgresql<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">version</span>&gt;</span>9.3-1101-jdbc41<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Now, in OCDT_DEPLOY change the Build &gt; Goals to “clean package post-integration-test -Djboss-as.skip=false -Dflyway.skip=false -DACTIVE_DEPLOY=${ACTIVE_DEPLOY}”.</p>
+<p>Create a file in src/main/resources/db/migration folder with name V01.00.00__Populate_Database.sql and put some SQL to change the database. For understand more about how Flyway search scripts and manages versions see <a href="http://flywaydb.org/documentation/migration/" title="[external]" target="_blank" rel="external">documentation</a>.</p>
+<p><strong>6 - Activate new war file in JBoss</strong></p>
+<p>To finalize, now that the database is compliance with the new war file then we can activate it, for this only is necessary create more one execution in web-module/pom.xml:</p>
+<figure class="highlight xml"><figcaption><span>web-module/pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- upload-war --&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- deactivate-running-deploy --&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- update-database --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.as.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-as-maven-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">executions</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">id</span>&gt;</span>enable-this-war<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">phase</span>&gt;</span>post-integration-test<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">goal</span>&gt;</span>execute-commands<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">batch</span>&gt;</span>true<span class="tag">&lt;/<span class="title">batch</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;<span class="title">commands</span>&gt;</span></span><br><span class="line">								<span class="comment">&lt;!-- The parameter server-groups is necessary only if you running JBoss in domain mode --&gt;</span></span><br><span class="line">								<span class="tag">&lt;<span class="title">command</span>&gt;</span>deploy --name=$&#123;project.build.finalName&#125;.$&#123;project.packaging&#125; --server-groups=my-domain-group<span class="tag">&lt;/<span class="title">command</span>&gt;</span></span><br><span class="line">							<span class="tag">&lt;/<span class="title">commands</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;/<span class="title">executeCommands</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">executions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The end! With steps above you will be capable of automating the build of your project with only one click. The complete code of the example is available in my <a href="https://github.com/marlonpatrick10/one-click-deployment-jboss-jenkins-maven" title="[external]" target="_blank" rel="external">GitHub</a>.</p>
+
+	<blockquote>
+<p><em>I am the way, the truth and the life. No one comes to the Father except through me.</em><br><strong><em>Jesus Christ</em></strong></p>
+</blockquote>
+
+        
+            
+        
+    </div>
+    <div class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/JBoss/">JBoss</a> <a class="tag tag--primary tag--small t-link" href="/tags/Jenkins/">Jenkins</a> <a class="tag tag--primary tag--small t-link" href="/tags/Maven/">Maven</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/undefined/2015/09/12/hello-world/"  data-tooltip="Hello World">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2014/12/14/jboss-sql-log-in-simple-way-with-jdbcdslog/" data-tooltip="JBOSS: SQL log in a simple way with jdbcdslog">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+        
+            <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="1">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/undefined/2015/09/12/hello-world/"  data-tooltip="Hello World">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/en/2014/12/14/jboss-sql-log-in-simple-way-with-jdbcdslog/" data-tooltip="JBOSS: SQL log in a simple way with jdbcdslog">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">PRÓXIMO</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http://marlonpatrick.info/en/2015/08/08/One-Click-Deployment-in-JBoss-with-Jenkins-and-Maven/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+
+                </div>
+            
+        </div>
+        <div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <h4 id="about-card-name">Marlon Patrick</h4>
+        
+            <h5 id="about-card-bio"><p>Passionate about programming (and soccer), CR Flamengo fan, Husband, Christian</p>
+</h5>
+        
+        
+            <h5 id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Software Developer</p>
+
+            </h5>
+        
+        
+            <h5 id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Pernambuco - Brazil
+            </h5>
+        
+    </div>
+</div>
+
+        <div id="cover" style="background-image:url('/assets/images/cover.png');"></div>
+    </body>
+    <!--SCRIPTS-->
+<script src="/assets/js/script.min.js" type="text/javascript"></script>
+<!--SCRIPTS END-->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'marlonpatrickdicasdeumprogramador';
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+    <script type="text/javascript">
+        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+                (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+            e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+        _st('install','PfLcPuxspuRJ_JEy-A8a','2.0.0');
+    </script>
+
+
+</html>
