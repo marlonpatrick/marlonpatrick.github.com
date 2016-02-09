@@ -188,41 +188,41 @@
 </blockquote>
 <p>Ie the dependency injection is done after creating the bean instance and also before each call of a business method. This was very useful for me, as was already racking their brains on how to keep the EntityManager to inject in my EJBs (through Seam Managed Persistence Context my EntityManager is a @ConversationScoped) according to the EJB client context. As the container reinjected dependencies before each method call actually I do not even need to have worried about it.</p>
 <p>Somehow, this definition can give SLSBs the ability to have a “conversational state”. For example, if you inject in a SLSB a bean with session scope (@SessionScoped), regardless of which pool instance process your request the bean is session-scoped always according to the current client session. In other words, there is no possibility of a SLSB have a session bean another client. This allows a SLSB receive the user logged in as an instance field through @Inject without causing any problem if two users use the same instance of SLSB alternately. For example:</p>
-<pre><code><span class="keyword">@Stateless</span>
-<span class="keyword">public</span> <span class="keyword">class</span> StatelessSessionBean{
-    <span class="keyword">@Inject</span>
-    <span class="keyword">@LoggedInUser</span>
-    <span class="keyword">protected</span> User loggedInUser;<span class="comment">//@SessionScoped</span>
+<pre><code>@Stateless
+public class StatelessSessionBean{
+    @Inject
+    @LoggedInUser
+    protected User loggedInUser;//@SessionScoped
 
-    <span class="keyword">public</span> <span class="keyword">void</span> test(){
-        System.<span class="keyword">out</span>.println(<span class="string">"ejb:"</span>+<span class="keyword">this</span>);
-        System.<span class="keyword">out</span>.println(<span class="string">"user:"</span>+<span class="keyword">this</span>.loggedInUser);
+    public void test(){
+        System.out.println(&quot;ejb:&quot;+this);
+        System.out.println(&quot;user:&quot;+this.loggedInUser);
     }
 }
 </code></pre><p>Then the result of several calls the method “test” by different users is as follows:</p>
-<pre><code>User <span class="number">1</span> invoke
-<span class="number">17</span>:<span class="number">02</span>:<span class="number">20</span>,<span class="number">800</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">5</span>) ejb:StatelessSessionBean@<span class="number">406189</span>
-<span class="number">17</span>:<span class="number">02</span>:<span class="number">20</span>,<span class="number">801</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">5</span>) user:User <span class="number">1</span>
+<pre><code>User 1 invoke
+17:02:20,800 INFO  [stdout] (http--0.0.0.0-8080-5) ejb:StatelessSessionBean@406189
+17:02:20,801 INFO  [stdout] (http--0.0.0.0-8080-5) user:User 1
 
-User <span class="number">2</span> invoke
-<span class="number">17</span>:<span class="number">02</span>:<span class="number">56</span>,<span class="number">227</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) ejb:StatelessSessionBean@<span class="number">406189</span>
-<span class="number">17</span>:<span class="number">02</span>:<span class="number">56</span>,<span class="number">228</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) user:User <span class="number">2</span>
+User 2 invoke
+17:02:56,227 INFO  [stdout] (http--0.0.0.0-8080-8) ejb:StatelessSessionBean@406189
+17:02:56,228 INFO  [stdout] (http--0.0.0.0-8080-8) user:User 2
 
-User <span class="number">2</span> invoke
-<span class="number">17</span>:<span class="number">03</span>:<span class="number">24</span>,<span class="number">376</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) ejb:StatelessSessionBean@<span class="number">406189</span>
-<span class="number">17</span>:<span class="number">03</span>:<span class="number">24</span>,<span class="number">378</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) user:User <span class="number">2</span>
+User 2 invoke
+17:03:24,376 INFO  [stdout] (http--0.0.0.0-8080-8) ejb:StatelessSessionBean@406189
+17:03:24,378 INFO  [stdout] (http--0.0.0.0-8080-8) user:User 2
 
-User <span class="number">1</span> invoke
-<span class="number">17</span>:<span class="number">03</span>:<span class="number">24</span>,<span class="number">517</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">6</span>) ejb:StatelessSessionBean@<span class="number">1</span>c05227
-<span class="number">17</span>:<span class="number">03</span>:<span class="number">24</span>,<span class="number">518</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">6</span>) user:User <span class="number">1</span>
+User 1 invoke
+17:03:24,517 INFO  [stdout] (http--0.0.0.0-8080-6) ejb:StatelessSessionBean@1c05227
+17:03:24,518 INFO  [stdout] (http--0.0.0.0-8080-6) user:User 1
 
-User <span class="number">1</span> invoke
-<span class="number">17</span>:<span class="number">04</span>:<span class="number">24</span>,<span class="number">045</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">1</span>) ejb:StatelessSessionBean@<span class="number">406189</span>
-<span class="number">17</span>:<span class="number">04</span>:<span class="number">24</span>,<span class="number">047</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">1</span>) user:User <span class="number">1</span>
+User 1 invoke
+17:04:24,045 INFO  [stdout] (http--0.0.0.0-8080-1) ejb:StatelessSessionBean@406189
+17:04:24,047 INFO  [stdout] (http--0.0.0.0-8080-1) user:User 1
 
-User <span class="number">2</span> invoke
-<span class="number">17</span>:<span class="number">04</span>:<span class="number">24</span>,<span class="number">179</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) ejb:StatelessSessionBean@<span class="number">1</span>c05227
-<span class="number">17</span>:<span class="number">04</span>:<span class="number">24</span>,<span class="number">179</span> INFO  [<span class="built_in">stdout</span>] (http--<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>-<span class="number">8080</span>-<span class="number">8</span>) user:User <span class="number">2</span>
+User 2 invoke
+17:04:24,179 INFO  [stdout] (http--0.0.0.0-8080-8) ejb:StatelessSessionBean@1c05227
+17:04:24,179 INFO  [stdout] (http--0.0.0.0-8080-8) user:User 2
 </code></pre><p>Note that even being serviced by the same instance, the field “loggedInUser” varies correctly according to the user that invoked the method.</p>
 
 	<blockquote>
@@ -302,7 +302,7 @@ User <span class="number">2</span> invoke
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

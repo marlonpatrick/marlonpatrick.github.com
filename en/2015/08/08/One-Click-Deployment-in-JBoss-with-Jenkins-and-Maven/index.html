@@ -204,7 +204,7 @@
 <p>The second step is add and setting the maven-release-plugin in your main pom:</p>
 <figure class="highlight xml"><figcaption><span>pom.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">plugins</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-release-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.5.2<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">tagNameFormat</span>&gt;</span>v@&#123;project.version&#125;<span class="tag">&lt;/<span class="title">tagNameFormat</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">providerImplementations</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">svn</span>&gt;</span>javasvn<span class="tag">&lt;/<span class="title">svn</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">providerImplementations</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.google.code.maven-scm-provider-svnjava<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-scm-provider-svnjava<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.1.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>The tagNameFormat defines the name of the tag that will be created, for example, whether version is 1.0.0-SNAPSHOT the tag name will be v1.0.0. With maven-scm-provider-svnjava is not necessary to install a svn in the OS because this plugin is a svn-client and the maven-relase-plugin will use it for connecting with SVN.</p>
-<p>Now go in Manage Jenkins &gt; Manage Plugins and install “Parameterized Trigger plugin”, this plugin allow us trigger a new job after complete a build and this will be helpful.</p>
+<p>Now go in Manage Jenkins &gt; Manage Plugins and install “Parameterized Trigger plugin”, this plugin allow us trigger a new job after complete the build and this will be helpful.</p>
 <p>The next step is to create a job in Jenkins of type “Maven project” that will use the maven-release-plugin, the name I gave this job was OCDT_TAG_AND_DEPLOY. In Job Configuration page some options are important:</p>
 <ul>
 <li>Check “This build is parameterized”;</li>
@@ -283,7 +283,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/undefined/2015/09/12/hello-world/"  data-tooltip="Hello World">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/undefined/2015/12/06/hello-world/"  data-tooltip="Hello World">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>
@@ -338,7 +338,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 
@@ -350,7 +350,7 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/undefined/2015/09/12/hello-world/"  data-tooltip="Hello World">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/undefined/2015/12/06/hello-world/"  data-tooltip="Hello World">
                 
                     <i class="fa fa-angle-left"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">ANTERIOR</span>

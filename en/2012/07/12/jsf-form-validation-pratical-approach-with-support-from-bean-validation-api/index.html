@@ -186,101 +186,101 @@
 <p>Note: Any difficulty adding Seam Faces in your project read this other post [Adding Seam Faces In Your Maven Project] (/en/2012/06/14/adding-seam-faces-in-your-maven-project/).</p>
 <p>Thus, we already have a way to validate the form only at the time that it is submitted, but would still have to do the validations manually for each field, that’s when I had the idea to use the api Bean Validation to do this work for me. The idea is simple, I put Bean Validation annotations in my model, I disable the validation of the JSF life cycle with the <f:validatebean> (JSF 2 and Bean Validation are integrated and validations are enabled by default) and the valid model in my form validator calling validations Bean Validation programmatically. That way my form is validated with the api Bean Validation at the exact moment that interests me, that is, the submit.</f:validatebean></p>
 <p>The code for this is as follows:</p>
-<pre><code><span class="built_in">import</span> java.util.ArrayList;
-<span class="built_in">import</span> java.util.LinkedHashSet;
-<span class="built_in">import</span> java.util.Set;
+<pre><code>import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-<span class="built_in">import</span> javax.faces.application.FacesMessage;
-<span class="built_in">import</span> javax.faces.component.UIComponent;
-<span class="built_in">import</span> javax.faces.component.UIInput;
-<span class="built_in">import</span> javax.faces.context.FacesContext;
-<span class="built_in">import</span> javax.faces.validator.BeanValidator;
-<span class="built_in">import</span> javax.faces.validator.FacesValidator;
-<span class="built_in">import</span> javax.faces.validator.Validator;
-<span class="built_in">import</span> javax.faces.validator.ValidatorException;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.BeanValidator;
+import javax.faces.validator.FacesValidator;
+import javax.faces.validator.Validator;
+import javax.faces.validator.ValidatorException;
 
-<span class="built_in">import</span> org.primefaces.component.tabview.Tab;
+import org.primefaces.component.tabview.Tab;
 
-@FacesValidator<span class="params">(<span class="string">"formBeanValidator"</span>)</span>
+@FacesValidator(&quot;formBeanValidator&quot;)
 public class FormBeanValidatorTeste implements Validator {
 
 
     protected Set&lt;FacesMessage&gt; allMessages;
 
     @Override
-    public void validate<span class="params">(FacesContext context, UIComponent component, Object object)</span> throws ValidatorException {
+    public void validate(FacesContext context, UIComponent component, Object object) throws ValidatorException {
 
-        ArrayList&lt;FacesMessage&gt; messages = new ArrayList&lt;FacesMessage&gt;<span class="params">(validateInputs<span class="params">(context, component,
-                new BeanValidator<span class="params">()</span>)</span>)</span>;
+        ArrayList&lt;FacesMessage&gt; messages = new ArrayList&lt;FacesMessage&gt;(validateInputs(context, component,
+                new BeanValidator()));
 
-        <span class="keyword">if</span> <span class="params">(!messages.isEmpty<span class="params">()</span>)</span> {
-            <span class="keyword">if</span> <span class="params">(isThrowsValidatorException<span class="params">()</span>)</span> {
-                throw new ValidatorException<span class="params">(messages)</span>;
+        if (!messages.isEmpty()) {
+            if (isThrowsValidatorException()) {
+                throw new ValidatorException(messages);
             }
 
-            <span class="comment">//The error messages are available for a possible subclass to use</span>
-            this.allMessages = new LinkedHashSet&lt;FacesMessage&gt;<span class="params">(messages)</span>;
+            //The error messages are available for a possible subclass to use
+            this.allMessages = new LinkedHashSet&lt;FacesMessage&gt;(messages);
         }
     }
 
-    <span class="comment">/**
+    /**
      * Scans all form fields and if you are a
      * UIInput calls the standard BeanValidator JSF. 
      *
      *@author marlonpatrick10
-     */</span>
-    private Set&lt;FacesMessage&gt; validateInputs<span class="params">(FacesContext context, UIComponent rootComponent,
-            BeanValidator beanValidator)</span> {
+     */
+    private Set&lt;FacesMessage&gt; validateInputs(FacesContext context, UIComponent rootComponent,
+            BeanValidator beanValidator) {
 
-        Set&lt;FacesMessage&gt; messages = new LinkedHashSet&lt;FacesMessage&gt;<span class="params">()</span>;
+        Set&lt;FacesMessage&gt; messages = new LinkedHashSet&lt;FacesMessage&gt;();
 
-        <span class="keyword">for</span> <span class="params">(UIComponent children : rootComponent.getChildren<span class="params">()</span>)</span> {
-            <span class="keyword">if</span> <span class="params">(children == rootComponent)</span> {
+        for (UIComponent children : rootComponent.getChildren()) {
+            if (children == rootComponent) {
                 continue;
             }
 
-            <span class="keyword">if</span> <span class="params">(!children.isRendered<span class="params">()</span>)</span> {
+            if (!children.isRendered()) {
                 continue;
             }
 
-            <span class="keyword">if</span> <span class="params">(Tab.class.isAssignableFrom<span class="params">(children.getClass<span class="params">()</span>)</span>)</span> {<span class="comment">//Primefaces</span>
-                Tab tab = <span class="params">(Tab)</span><span class="built_in">children</span>;
-                <span class="keyword">if</span> <span class="params">(tab.isDisabled<span class="params">()</span>)</span> {
+            if (Tab.class.isAssignableFrom(children.getClass())) {//Primefaces
+                Tab tab = (Tab)children;
+                if (tab.isDisabled()) {
                     continue;
                 }
             }
 
-            <span class="keyword">if</span> <span class="params">(UIInput.class.isAssignableFrom<span class="params">(children.getClass<span class="params">()</span>)</span>)</span> {
-                <span class="keyword">if</span> <span class="params">(isValidatable<span class="params">(context, <span class="params">(UIInput)</span>children)</span>)</span> {
-                    validate<span class="params">(context, beanValidator, <span class="params">(UIInput)</span>children, messages)</span>;
+            if (UIInput.class.isAssignableFrom(children.getClass())) {
+                if (isValidatable(context, (UIInput)children)) {
+                    validate(context, beanValidator, (UIInput)children, messages);
                 }
             }
 
-            messages.addAll<span class="params">(validateInputs<span class="params">(context, children, beanValidator)</span>)</span>;
+            messages.addAll(validateInputs(context, children, beanValidator));
         }
 
         return messages;
     }
 
-    <span class="comment">/**
+    /**
      * Call the standard JSF BeanValidator
      * For a given UIInput.
      *@author marlonpatrick10
-     */</span>
-    protected void validate<span class="params">(FacesContext context, BeanValidator beanValidator, UIInput component,
-            Set&lt;FacesMessage&gt; messages)</span> {
+     */
+    protected void validate(FacesContext context, BeanValidator beanValidator, UIInput component,
+            Set&lt;FacesMessage&gt; messages) {
         try {
-            beanValidator.validate<span class="params">(context, component, component.getValue<span class="params">()</span>)</span>;
-        } catch <span class="params">(ValidatorException exception)</span> {
-            <span class="keyword">if</span> <span class="params">(exception.getFacesMessages<span class="params">()</span> == null)</span> {
-                messages.add<span class="params">(exception.getFacesMessage<span class="params">()</span>)</span>;
-            } <span class="keyword">else</span> {
-                messages.addAll<span class="params">(exception.getFacesMessages<span class="params">()</span>)</span>;
+            beanValidator.validate(context, component, component.getValue());
+        } catch (ValidatorException exception) {
+            if (exception.getFacesMessages() == null) {
+                messages.add(exception.getFacesMessage());
+            } else {
+                messages.addAll(exception.getFacesMessages());
             }
         }
     }
 
-    <span class="comment">/**
+    /**
      * The default behavior is to validate all UIInput,
      * But it may be not necessary to validate
      * A particular component on a screen.
@@ -290,12 +290,12 @@ public class FormBeanValidatorTeste implements Validator {
      * Must be validated or not.
      *
      *@author marlonpatrick10
-     */</span>
-    protected Boolean isValidatable<span class="params">(FacesContext context, UIInput input)</span> {
-        return <span class="literal">true</span>;
+     */
+    protected Boolean isValidatable(FacesContext context, UIInput input) {
+        return true;
     }
 
-    <span class="comment">/**
+    /**
      * The default behavior is to validate all UIInput,
      * And throw a ValidatorException if there are errors.
      * This validator can be extended and the
@@ -306,85 +306,85 @@ public class FormBeanValidatorTeste implements Validator {
      * Are available in this.allMessages attribute.
      *
      *@author marlonpatrick10
-     */</span>
-    protected Boolean isThrowsValidatorException<span class="params">()</span> {
-        return <span class="literal">true</span>;
+     */
+    protected Boolean isThrowsValidatorException() {
+        return true;
     }
 }
 </code></pre><p>The FormBeanValidator can cater for most screens, but even so there are cases that want to specialize more validations. Here is an example:</p>
-<pre><code><span class="keyword">import</span> java.util.<span class="type">Set</span>;
+<pre><code>import java.util.Set;
 
-<span class="keyword">import</span> javax.faces.application.<span class="type">FacesMessage</span>;
-<span class="keyword">import</span> javax.faces.component.<span class="type">UIInput</span>;
-<span class="keyword">import</span> javax.faces.context.<span class="type">FacesContext</span>;
-<span class="keyword">import</span> javax.faces.validator.<span class="type">BeanValidator</span>;
-<span class="keyword">import</span> javax.faces.validator.<span class="type">FacesValidator</span>;
-<span class="keyword">import</span> javax.inject.<span class="type">Inject</span>;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.BeanValidator;
+import javax.faces.validator.FacesValidator;
+import javax.inject.Inject;
 
-<span class="keyword">import</span> <span class="type">GenericUtils</span>;
-<span class="keyword">import</span> <span class="type">FormBeanValidator</span>;
+import GenericUtils;
+import FormBeanValidator;
 
-<span class="annotation">@FacesValidator</span>(<span class="string">"userFormBeanValidator"</span>)
-public <span class="class"><span class="keyword">class</span> <span class="title">UserFormBeanValidator</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">FormBeanValidator</span> {</span>
+@FacesValidator(&quot;userFormBeanValidator&quot;)
+public class UserFormBeanValidator extends FormBeanValidator {
 
-    <span class="annotation">@Inject</span>
-    <span class="type">UserView</span> userView;<span class="comment">//back bean</span>
+    @Inject
+    UserView userView;//back bean
 
-    <span class="annotation">@Override</span>
-    <span class="keyword">protected</span> <span class="type">Boolean</span> isValidatable(<span class="type">FacesContext</span> context, <span class="type">UIInput</span> input) {
-        <span class="comment">// Upon submit the user registration screen</span>
-        <span class="comment">// No need to validate the fields below        </span>
+    @Override
+    protected Boolean isValidatable(FacesContext context, UIInput input) {
+        // Upon submit the user registration screen
+        // No need to validate the fields below        
 
-        <span class="keyword">if</span> (input.getClientId().endsWith(<span class="string">"fieldX"</span>)) {
-            <span class="keyword">return</span> <span class="literal">false</span>;
+        if (input.getClientId().endsWith(&quot;fieldX&quot;)) {
+            return false;
         }
 
-        <span class="keyword">if</span> (input.getClientId().endsWith(<span class="string">"fieldY"</span>)) {
-            <span class="keyword">return</span> <span class="literal">false</span>;
+        if (input.getClientId().endsWith(&quot;fieldY&quot;)) {
+            return false;
         }
 
-        <span class="keyword">return</span> <span class="literal">true</span>;
+        return true;
     }
 
-    <span class="annotation">@Override</span>
-    <span class="keyword">protected</span> void validate(<span class="type">FacesContext</span> context, <span class="type">BeanValidator</span> beanValidator, <span class="type">UIInput</span> component,
-            <span class="type">Set</span>&lt;<span class="type">FacesMessage</span>&gt; messages) {
+    @Override
+    protected void validate(FacesContext context, BeanValidator beanValidator, UIInput component,
+            Set&lt;FacesMessage&gt; messages) {
 
-        <span class="comment">//email2 can not be annotated with @NotNull therefore your obligation is conditional</span>
+        //email2 can not be annotated with @NotNull therefore your obligation is conditional
 
-        <span class="keyword">if</span> (<span class="keyword">this</span>.userView.isAdmin()) {
-            <span class="keyword">if</span> (component.getClientId().endsWith(<span class="string">"email2"</span>)) {
-                <span class="keyword">if</span> (<span class="type">GenericUtils</span>.isBlankOrNull((<span class="type">String</span>)component.getValue())) {
-                    <span class="keyword">this</span>.allMessages.add(<span class="keyword">new</span> <span class="type">FacesMessage</span>(<span class="type">FacesMessage</span>.<span class="type">SEVERITY_ERROR</span>,
-                            <span class="string">"Admin user should tell two emails."</span>,<span class="literal">null</span>));
+        if (this.userView.isAdmin()) {
+            if (component.getClientId().endsWith(&quot;email2&quot;)) {
+                if (GenericUtils.isBlankOrNull((String)component.getValue())) {
+                    this.allMessages.add(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            &quot;Admin user should tell two emails.&quot;,null));
                 }
             }
         }
 
-        <span class="comment">//Call Bean Validation even email2 therefore</span>
-        <span class="comment">//User.email2 Is annotated with @Email then</span>
-        <span class="comment">//Still needs to be validated</span>
-        <span class="keyword">super</span>.validate(context, beanValidator, component, messages);
+        //Call Bean Validation even email2 therefore
+        //User.email2 Is annotated with @Email then
+        //Still needs to be validated
+        super.validate(context, beanValidator, component, messages);
     }
 }
 </code></pre><p>On page (xhtml) should be something like follows:</p>
-<pre><code><span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.w3.org/1999/xhtml"</span>
-    <span class="attribute">xmlns:h</span>=<span class="value">"http://java.sun.com/jsf/html"</span>
-    <span class="attribute">xmlns:f</span>=<span class="value">"http://java.sun.com/jsf/core"</span>
-    <span class="attribute">xmlns:s</span>=<span class="value">"http://jboss.org/seam/faces"</span>&gt;</span>
+<pre><code>&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+    xmlns:h=&quot;http://java.sun.com/jsf/html&quot;
+    xmlns:f=&quot;http://java.sun.com/jsf/core&quot;
+    xmlns:s=&quot;http://jboss.org/seam/faces&quot;&gt;
 
-    <span class="tag">&lt;<span class="title">h:form</span> <span class="attribute">id</span>=<span class="value">"formInsertUser"</span> <span class="attribute">prependId</span>=<span class="value">"false"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">f:validateBean</span> <span class="attribute">disabled</span>=<span class="value">"true"</span>&gt;</span>
-            <span class="comment">&lt;!-- Fields annotated with Bean Validation should be here --&gt;</span>
-        <span class="tag">&lt;/<span class="title">f:validateBean</span>&gt;</span>
+    &lt;h:form id=&quot;formInsertUser&quot; prependId=&quot;false&quot;&gt;
+        &lt;f:validateBean disabled=&quot;true&quot;&gt;
+            &lt;!-- Fields annotated with Bean Validation should be here --&gt;
+        &lt;/f:validateBean&gt;
 
-        <span class="tag">&lt;<span class="title">h:commandLink</span> <span class="attribute">value</span>=<span class="value">"Save"</span> <span class="attribute">action</span>=<span class="value">"#{userView.insert}"</span> /&gt;</span>
+        &lt;h:commandLink value=&quot;Save&quot; action=&quot;#{userView.insert}&quot; /&gt;
 
-        <span class="comment">&lt;!-- The validator will be called at the click commandLink --&gt;</span>
-        <span class="tag">&lt;<span class="title">s:validateForm</span> <span class="attribute">validatorId</span>=<span class="value">"userFormBeanValidator"</span> /&gt;</span>
-    <span class="tag">&lt;/<span class="title">h:form</span>&gt;</span>
+        &lt;!-- The validator will be called at the click commandLink --&gt;
+        &lt;s:validateForm validatorId=&quot;userFormBeanValidator&quot; /&gt;
+    &lt;/h:form&gt;
 
-<span class="tag">&lt;/<span class="title">html</span>&gt;</span>
+&lt;/html&gt;
 </code></pre><p>This form of validation together with the Bean Validation will help me a lot to build more complex pages with JSF without much headache with validations out of turn, I hope it helps you too.</p>
 
 	<blockquote>
@@ -464,7 +464,7 @@ public <span class="class"><span class="keyword">class</span> <span class="title
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

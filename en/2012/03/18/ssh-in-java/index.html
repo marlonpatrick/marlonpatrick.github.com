@@ -184,55 +184,55 @@
 <p>To make an analogy, the jsch is a Putty in Java that you can execute commands programmatically in the remote machine, for example, a remote-to-local and local-to-remote scp. As Putty, the jsch can access machines Linux via Windows smoothly!</p>
 <p>I will leave here an example quite simple:</p>
 <p>1 - First you need to create a class to store user information. This requires implementing interface com.jcraft.jsch.UserInfo.</p>
-<pre><code><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MPInfoUser</span> <span class="keyword">implements</span> <span class="title">UserInfo</span></span>{
+<pre><code>public class MPInfoUser implements UserInfo{
 
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span></span>{ 
-        <span class="keyword">return</span> <span class="string">"123456"</span>; 
+    @Override
+    public String getPassword(){ 
+        return &quot;123456&quot;; 
     }
 
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">promptYesNo</span><span class="params">(String str)</span></span>{
-        <span class="keyword">return</span> <span class="keyword">true</span>;
+    @Override
+    public boolean promptYesNo(String str){
+        return true;
     }
 
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showMessage</span><span class="params">(String message)</span></span>{
+    @Override
+    public void showMessage(String message){
 
     }
 
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">public</span> String <span class="title">getPassphrase</span><span class="params">()</span> </span>{
-        <span class="keyword">return</span> <span class="keyword">null</span>;
+    @Override
+    public String getPassphrase() {
+        return null;
     }
 
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">promptPassphrase</span><span class="params">(String paramString)</span> </span>{
-        <span class="keyword">return</span> <span class="keyword">true</span>;
+    @Override
+    public boolean promptPassphrase(String paramString) {
+        return true;
     }
 
-    <span class="annotation">@Override</span>
-    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">promptPassword</span><span class="params">(String message)</span></span>{
-        <span class="keyword">return</span> <span class="keyword">true</span>;
+    @Override
+    public boolean promptPassword(String message){
+        return true;
     }    
 }
 </code></pre><p>2 - Then you can just connect to the remote machine</p>
 <pre><code>public class TesteJschMPInfo {
 
-    public static void main<span class="params">(String[] args)</span> throws Exception {
+    public static void main(String[] args) throws Exception {
         try{
-            JSch jsch=new JSch<span class="params">()</span>;
-            Session session = jsch.getSession<span class="params">(<span class="string">"root"</span>, <span class="string">"192.168.1.1"</span>, <span class="number">22</span>)</span>;
-            session.setUserInfo<span class="params">(new M<span class="literal">PI</span>nfoUser<span class="params">()</span>)</span>;
-            session.connect<span class="params">()</span>;
+            JSch jsch=new JSch();
+            Session session = jsch.getSession(&quot;root&quot;, &quot;192.168.1.1&quot;, 22);
+            session.setUserInfo(new MPInfoUser());
+            session.connect();
 
-            ChannelExec channel = <span class="params">(ChannelExec)</span> session.openChannel<span class="params">(<span class="string">"exec"</span>)</span>;
-            channel.setCommand<span class="params">(<span class="string">"echo \"testing...\" &gt;&gt; testmpinfo;"</span>)</span>;
-            channel.connect<span class="params">()</span>;
-            channel.disconnect<span class="params">()</span>;
+            ChannelExec channel = (ChannelExec) session.openChannel(&quot;exec&quot;);
+            channel.setCommand(&quot;echo \&quot;testing...\&quot; &gt;&gt; testmpinfo;&quot;);
+            channel.connect();
+            channel.disconnect();
 
-        }catch<span class="params">(Exception e)</span>{
-            e.printStackTrace<span class="params">()</span>;
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
     }
@@ -316,7 +316,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

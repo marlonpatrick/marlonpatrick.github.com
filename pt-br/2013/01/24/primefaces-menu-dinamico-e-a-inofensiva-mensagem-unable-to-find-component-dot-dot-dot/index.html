@@ -183,91 +183,91 @@
 <p>Bem, estou usando esse componente exatamente no cenário descrito acima com a versão 3.4.1 do PrimeFaces e a implementação de referência do JSF(Mojarra) na sua versão 2.1.7. Com essa combinação (PrimeFaces/Mojarra) nas versões descritas acima (acredito que em outras também) percebi no log de minha aplicação que todas as vezes que executava uma chamada ajax, para cada item do menu gerado com o MenuBar dinâmico, havia uma mensagem mais ou menos assim:<strong>Unable to find component with clientId ‘menuitem200’, no need to remove it.</strong>.</p>
 <p>Até um determinado momento em nada me afetava tal mensagem, e provavelmente é assim para 99% dos casos. Agora, se você assim como eu, caiu no 1% restante, essa mensagem pode causar um sério problema de performance nas chamadas ajax. Esse problema de performance só irá acontecer se você tiver uma página muito grande, com muitos componentes gerados como foi o meu caso.</p>
 <p>Toda vez que eu fazia uma chamada ajax nessa página o procedimento executado pelo PrimeFaces que gerava as mensagens “Unable to find component…” chegava a levar cerca de 1 minuto e 30 segundos para terminar, o que é totalmente inviável. Não é que o código executado na chamada era super pesado, esses mais de 1 minuto se referem apenas execução do método que gerava as mensagens como mostra o log abaixo:</p>
-<pre><code><span class="number">02</span>:<span class="number">40</span>:<span class="number">00</span>,<span class="number">876</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'submenu1'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
-<span class="number">02</span>:<span class="number">40</span>:<span class="number">01</span>,<span class="number">298</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'submenu2'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
-<span class="number">02</span>:<span class="number">40</span>:<span class="number">01</span>,<span class="number">656</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'menuitem45'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
-<span class="number">02</span>:<span class="number">40</span>:<span class="number">02</span>,<span class="number">014</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'menuitem4'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
-<span class="number">02</span>:<span class="number">40</span>:<span class="number">02</span>,<span class="number">361</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'submenu20'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
+<pre><code>02:40:00,876 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;submenu1&apos;, no need to remove it.
+02:40:01,298 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;submenu2&apos;, no need to remove it.
+02:40:01,656 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;menuitem45&apos;, no need to remove it.
+02:40:02,014 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;menuitem4&apos;, no need to remove it.
+02:40:02,361 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;submenu20&apos;, no need to remove it.
 
 ...muitas outras mensagens aqui...
 
-<span class="number">02</span>:<span class="number">40</span>:<span class="number">44</span>,<span class="number">240</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'menuitemespacobefore'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
-<span class="number">02</span>:<span class="number">40</span>:<span class="number">44</span>,<span class="number">917</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'submenuuseractions'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
-<span class="number">02</span>:<span class="number">40</span>:<span class="number">45</span>,<span class="number">249</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'menuitemchangepassword'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
-<span class="number">02</span>:<span class="number">40</span>:<span class="number">45</span>,<span class="number">574</span> INFO  [stdout] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">4</span>) Unable <span class="keyword">to</span> find component <span class="keyword">with</span> clientId <span class="string">'menuitemlogout'</span>, <span class="literal">no</span> need <span class="keyword">to</span> remove <span class="literal">it</span>.
+02:40:44,240 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;menuitemespacobefore&apos;, no need to remove it.
+02:40:44,917 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;submenuuseractions&apos;, no need to remove it.
+02:40:45,249 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;menuitemchangepassword&apos;, no need to remove it.
+02:40:45,574 INFO  [stdout] (http--0.0.0.0-8080-4) Unable to find component with clientId &apos;menuitemlogout&apos;, no need to remove it.
 </code></pre><p>No exemplo acima, o tempo total foi de 46 segundos. Basicamente o que acontece é que na fase JSF Restore View é executado o método que restaura o estado dos menus dinâmicos, onde, para cada item do menu é feito uma busca em toda a árvore de componentes do JSF e devido a página ser grande leva um tempo considerável. O pior é que, como a própria mensagem diz, “no need to remove it”, não é necessário remover tal componente da árvore JSF porque na verdade ele já foi removido.</p>
 <p>No meu caso, o que percebi é que quando o item do menu dinâmico usa um link não é necessário essa remoção que o PrimeFaces tenta fazer, já quando o item do menu usa uma Action Expression, aí sim, esse procedimento é necessário.</p>
-<pre><code><span class="comment">//Não é necessário tentar remover esse MenuItem, pois, ele usa um link</span>
-MenuItem changePassword = new MenuItem<span class="params">()</span>;
-changePassword.setId<span class="params">(<span class="string">"menuitemchangepassword"</span>)</span>;
-changePassword.setValue<span class="params">(<span class="string">"Mudar Senha"</span>)</span>;
-changePassword.setUrl<span class="params">(<span class="string">"/user/changePassword.xhtml?faces-redirect=true"</span>)</span>;
-submenuUser.getChildren<span class="params">()</span>.add<span class="params">(changePassword)</span>;
+<pre><code>//Não é necessário tentar remover esse MenuItem, pois, ele usa um link
+MenuItem changePassword = new MenuItem();
+changePassword.setId(&quot;menuitemchangepassword&quot;);
+changePassword.setValue(&quot;Mudar Senha&quot;);
+changePassword.setUrl(&quot;/user/changePassword.xhtml?faces-redirect=true&quot;);
+submenuUser.getChildren().add(changePassword);
 
-<span class="comment">//De fato é preciso remover o menu item para adicionar o novo objeto na fase de Restore View, pois, ele usa uma Action Expression</span>
-MethodExpression logoutAction = factory.createMethodExpression<span class="params">(context.getELContext<span class="params">()</span>, <span class="string">"#{loginView.logout}"</span>,
-                null, new Class[] {})</span>;
-MenuItem logout = new MenuItem<span class="params">()</span>;
-logout.setId<span class="params">(<span class="string">"menuitemlogout"</span>)</span>;
-logout.setValue<span class="params">(<span class="string">"Sair"</span>)</span>;
-logout.setActionExpression<span class="params">(logoutAction)</span>;
-submenuUser.getChildren<span class="params">()</span>.add<span class="params">(logout)</span>;
+//De fato é preciso remover o menu item para adicionar o novo objeto na fase de Restore View, pois, ele usa uma Action Expression
+MethodExpression logoutAction = factory.createMethodExpression(context.getELContext(), &quot;#{loginView.logout}&quot;,
+                null, new Class[] {});
+MenuItem logout = new MenuItem();
+logout.setId(&quot;menuitemlogout&quot;);
+logout.setValue(&quot;Sair&quot;);
+logout.setActionExpression(logoutAction);
+submenuUser.getChildren().add(logout);
 </code></pre><p>Pra resolver esse problema criei um PhaseListener que retira os itens de menu que usam link dessa fase de restauração desnecessária, deixando apenas os que usam action expression.</p>
-<pre><code>public class <span class="type">RestoreDynamicActionsObserver</span> implements <span class="type">PhaseListener</span>{
+<pre><code>public class RestoreDynamicActionsObserver implements PhaseListener{
 
-    public <span class="keyword">static</span> final <span class="type">String</span> <span class="type">DYNAMIC_ACTIONS_RENDERKIT</span> = <span class="string">"HTML_BASIC"</span>;
+    public static final String DYNAMIC_ACTIONS_RENDERKIT = &quot;HTML_BASIC&quot;;
 
-    @<span class="type">Override</span>
-    public <span class="type">PhaseId</span> getPhaseId() {
-        <span class="keyword">return</span> <span class="type">PhaseId</span>.<span class="type">RESTORE_VIEW</span>;
+    @Override
+    public PhaseId getPhaseId() {
+        return PhaseId.RESTORE_VIEW;
     }
 
-    @<span class="type">Override</span>
-    public <span class="type">void</span> beforePhase(<span class="type">PhaseEvent</span> event) {
+    @Override
+    public void beforePhase(PhaseEvent event) {
 
-        <span class="type">ResponseStateManager</span> rsm = <span class="type">RenderKitUtils</span>.getResponseStateManager(event.getFacesContext(), <span class="type">DYNAMIC_ACTIONS_RENDERKIT</span>);
+        ResponseStateManager rsm = RenderKitUtils.getResponseStateManager(event.getFacesContext(), DYNAMIC_ACTIONS_RENDERKIT);
 
-        <span class="type">HttpServletRequest</span> httpRequest = <span class="type">WebUtils</span>.getRequest();
+        HttpServletRequest httpRequest = WebUtils.getRequest();
 
-        <span class="type">Object</span>[] rawState = (<span class="type">Object</span>[]) rsm.getState(event.getFacesContext(), httpRequest.getRequestURI().replaceFirst(httpRequest.getContextPath(), <span class="string">""</span>).split(<span class="string">"\\?"</span>)[<span class="number">0</span>]);
-        <span class="keyword">if</span> (rawState == null) {
-            <span class="keyword">return</span>;
+        Object[] rawState = (Object[]) rsm.getState(event.getFacesContext(), httpRequest.getRequestURI().replaceFirst(httpRequest.getContextPath(), &quot;&quot;).split(&quot;\\?&quot;)[0]);
+        if (rawState == null) {
+            return;
         }
 
-        <span class="type">Map</span>&lt;<span class="type">String</span>, <span class="type">Object</span>&gt; state = (<span class="type">Map</span>&lt;<span class="type">String</span>,<span class="type">Object</span>&gt;) rawState[<span class="number">1</span>];
+        Map&lt;String, Object&gt; state = (Map&lt;String,Object&gt;) rawState[1];
 
-        <span class="keyword">if</span>(state == null){
-            <span class="keyword">return</span>;
+        if(state == null){
+            return;
         }
 
-        <span class="type">List</span>&lt;<span class="type">Object</span>&gt; savedActions = (<span class="type">List</span>&lt;<span class="type">Object</span>&gt;) state.get(<span class="type">RIConstants</span>.<span class="type">DYNAMIC_ACTIONS</span>);
+        List&lt;Object&gt; savedActions = (List&lt;Object&gt;) state.get(RIConstants.DYNAMIC_ACTIONS);
 
-        <span class="keyword">if</span>(savedActions == null){
-            <span class="keyword">return</span>;
+        if(savedActions == null){
+            return;
         }
 
-        <span class="keyword">for</span> (<span class="type">Iterator</span>&lt;<span class="type">Object</span>&gt; <span class="keyword">iterator</span> = savedActions.<span class="keyword">iterator</span>(); <span class="keyword">iterator</span>.hasNext();) {
-            <span class="type">Object</span> <span class="keyword">object</span> = <span class="keyword">iterator</span>.next();
-            <span class="type">ComponentStruct</span> action = new <span class="type">ComponentStruct</span>();
-            action.restoreState(event.getFacesContext(), <span class="keyword">object</span>); 
+        for (Iterator&lt;Object&gt; iterator = savedActions.iterator(); iterator.hasNext();) {
+            Object object = iterator.next();
+            ComponentStruct action = new ComponentStruct();
+            action.restoreState(event.getFacesContext(), object); 
 
-            //<span class="type">Esses</span> são os únicos itens que usam <span class="type">Action</span> <span class="type">Expression</span>, e portanto, não devem ser mexidos
-            <span class="keyword">if</span>(<span class="type">ComponentStruct</span>.<span class="type">ADD</span>.equals(action.action) &amp;&amp; 
-                (action.clientId.equals(<span class="string">"menuitemlogout"</span>) || action.clientId.equals(<span class="string">"submenuuseractions"</span>))){
-                <span class="keyword">continue</span>;
+            //Esses são os únicos itens que usam Action Expression, e portanto, não devem ser mexidos
+            if(ComponentStruct.ADD.equals(action.action) &amp;&amp; 
+                (action.clientId.equals(&quot;menuitemlogout&quot;) || action.clientId.equals(&quot;submenuuseractions&quot;))){
+                continue;
             }
 
-            //<span class="type">Os</span> demais itens usam link, e por isso, são retirados dessa coleção
-            <span class="keyword">if</span> (action.clientId.startsWith(<span class="string">"menuitem"</span>) 
-                || action.clientId.startsWith(<span class="string">"submenu"</span>)) {                
-                <span class="keyword">iterator</span>.remove();
+            //Os demais itens usam link, e por isso, são retirados dessa coleção
+            if (action.clientId.startsWith(&quot;menuitem&quot;) 
+                || action.clientId.startsWith(&quot;submenu&quot;)) {                
+                iterator.remove();
             }            
         }
 
     }
 
-    @<span class="type">Override</span>
-    public <span class="type">void</span> afterPhase(<span class="type">PhaseEvent</span> event) {
+    @Override
+    public void afterPhase(PhaseEvent event) {
         //
     }
 }
@@ -350,7 +350,7 @@ submenuUser.getChildren<span class="params">()</span>.add<span class="params">(l
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

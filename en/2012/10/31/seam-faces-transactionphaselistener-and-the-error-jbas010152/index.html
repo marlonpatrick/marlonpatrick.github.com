@@ -182,28 +182,28 @@
 <a id="more"></a>
 <p>This message is caused by the malfunction of the transaction control of your system, more specifically, by the malfunction of TransactionPhaseListener class, contained in the Seam Faces jar. Basically, TransactionPhaseListener implements a common JSF PhaseListener at the beginning of every request opens a new transaction and the end of the request performs the transaction commit or rollback.</p>
 <p>The problem is that the TransactionPhaseListener is enabled by default since your project has the Seam Faces, Seam Seam Transaction Persistence and thus the mere fact of placing these libs in your project already adds the behavior described above in the system, and most cases, has conflicting with the transaction control chosen to be used in the application. In my case, the TransactionPhaseListener behavior did not meet and worse, interfered. The solution I found was to disable this behavior through the following setting in beans.xml file:</p>
-<pre><code><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="tag">&lt;<span class="title">beans</span> <span class="attribute">xmlns</span>=<span class="value">"http://java.sun.com/xml/ns/javaee"</span> <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span>
-       <span class="attribute">xmlns:s</span>=<span class="value">"urn:java:ee"</span> <span class="attribute">xmlns:t</span>=<span class="value">"urn:java:org.jboss.seam.transaction"</span>
-       <span class="attribute">xmlns:ft</span>=<span class="value">"urn:java:org.jboss.seam.faces.transaction"</span>
-       <span class="attribute">xmlns:sc</span>=<span class="value">"urn:java:org.jboss.solder.core"</span>
-       <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://java.sun.com/xml/ns/javaee http://docs.jboss.org/cdi/beans_1_0.xsd"</span>&gt;</span>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:s=&quot;urn:java:ee&quot; xmlns:t=&quot;urn:java:org.jboss.seam.transaction&quot;
+       xmlns:ft=&quot;urn:java:org.jboss.seam.faces.transaction&quot;
+       xmlns:sc=&quot;urn:java:org.jboss.solder.core&quot;
+       xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://docs.jboss.org/cdi/beans_1_0.xsd&quot;&gt;
 
-    <span class="comment">&lt;!-- Others Configurations --&gt;</span>
+    &lt;!-- Others Configurations --&gt;
 
-    <span class="tag">&lt;<span class="title">sc:Veto</span>&gt;</span>
-        <span class="comment">&lt;!-- Defines @Veto as a Qualifier --&gt;</span>
-    <span class="tag">&lt;<span class="title">s:Qualifier</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">sc:Veto</span>&gt;</span>
+    &lt;sc:Veto&gt;
+        &lt;!-- Defines @Veto as a Qualifier --&gt;
+    &lt;s:Qualifier/&gt;
+    &lt;/sc:Veto&gt;
 
-    <span class="tag">&lt;<span class="title">ft:TransactionPhaseListener</span>&gt;</span>
-         <span class="comment">&lt;!--  Preventing class TransactionPhaseListener from being installed as CDI bean.
+    &lt;ft:TransactionPhaseListener&gt;
+         &lt;!--  Preventing class TransactionPhaseListener from being installed as CDI bean.
              This class is responsible by message: JBAS010152: APPLICATION ERROR: transaction still active in request with status 0. 
-            --&gt;</span> 
-    <span class="tag">&lt;<span class="title">s:replaces</span>/&gt;</span>
-    <span class="tag">&lt;<span class="title">sc:Veto</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">ft:TransactionPhaseListener</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">beans</span>&gt;</span>
+            --&gt; 
+    &lt;s:replaces/&gt;
+    &lt;sc:Veto/&gt;
+    &lt;/ft:TransactionPhaseListener&gt;
+&lt;/beans&gt;
 </code></pre><p>With this setting in beans.xml the TransactionPhaseListener class will be ignored by the CDI and so is disabled, thus eliminating the problem in the transaction control and that annoying message (JBAS010152). In fact, when I got rid of this problem appeared others in my project because he was hiding some defects in my transaction control, then I recommend trying to validate its strategy after disable TransactionPhaseListener and make sure it is in working order.</p>
 
 	<blockquote>
@@ -283,7 +283,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

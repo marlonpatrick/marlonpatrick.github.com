@@ -186,157 +186,157 @@
 <li>Problems to work with DataSources, in particular XA-DataSources: a well logging tool meets the above two requirements, however, is limited to use with java.sql.Connection objects, or in other cases may be used with “normal” DataSources, however, do not meet when we need to log sql XA-DataSource.</li>
 </ul>
 <p>For those who use Hibernate first choice is usually set it to log the generated queries, the result is something like:</p>
-<pre><code><span class="operator">select this_.code <span class="keyword">from</span> employee this_ <span class="keyword">where</span> this_.code=?
-<span class="keyword">INSERT</span> <span class="keyword">INTO</span> stock_transaction (<span class="keyword">CHANGE</span>, <span class="keyword">CLOSE</span>, <span class="built_in">DATE</span>, <span class="keyword">OPEN</span>, STOCK_ID, VOLUME) <span class="keyword">VALUES</span> (?, ?, ?, ?, ?, ?)</span>
+<pre><code>select this_.code from employee this_ where this_.code=?
+INSERT INTO stock_transaction (CHANGE, CLOSE, DATE, OPEN, STOCK_ID, VOLUME) VALUES (?, ?, ?, ?, ?, ?)
 </code></pre><p>In this case we have two problems, the first is that the values of the filters and columns are not logged in, only the character <strong>?</strong> is shown indicating that was replaced by a parameter. The other problem is that queries are not always carried out by Hibernate, in such cases the log would not be displayed, not even the log without parameters.</p>
 <p>Well, after testing some sql log libs found one that met me in all these aspects: control of what is logged, integration with the most popular logging frameworks, work with Connection, DataSource and XA-DataSource, log sql with all its parameters so that I can copy and paste in the database access tool and run the script, and finally, log any sql that be through the monitored connection is made by Hibernate or otherwise. The lib name is <a href="https://code.google.com/p/jdbcdslog/" title="jdbcdslog" target="_blank">jdbcdslog</a>.</p>
 <p>The most basic example is logging the queries of a single Connection object:</p>
-<pre><code>public static void main<span class="params">(String[] args)</span> throws Exception {
-    Class.forName<span class="params">(<span class="string">"org.jdbcdslog.DriverLoggingProxy"</span>)</span>;
+<pre><code>public static void main(String[] args) throws Exception {
+    Class.forName(&quot;org.jdbcdslog.DriverLoggingProxy&quot;);
 
-    String url = <span class="string">"jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver"</span>;
-    Connection con = DriverManager.getConnection<span class="params">(url, <span class="string">"mpinfo"</span>, <span class="string">"mpinfo"</span>)</span>;
+    String url = &quot;jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver&quot;;
+    Connection con = DriverManager.getConnection(url, &quot;mpinfo&quot;, &quot;mpinfo&quot;);
 
-    PreparedStatement ps = con.prepareStatement<span class="params">(<span class="string">"select * from product where id=?"</span>)</span>;
-    ps.setLong<span class="params">(<span class="number">1</span>, <span class="number">1</span>)</span>;
-    ps.execute<span class="params">()</span>;
+    PreparedStatement ps = con.prepareStatement(&quot;select * from product where id=?&quot;);
+    ps.setLong(1, 1);
+    ps.execute();
 
-    con.close<span class="params">()</span>;
+    con.close();
 }
 </code></pre><p>In this example I am accessing a PostgreSQL database and notice that the URL is a little different from the norm because jdbcdslog must add the driver as a proxy for the original driver Postgres. You can see this in <strong>jdbc:jdbcdslog:postgresql</strong> and also in <strong>targetDriver</strong> parameter. The result of this code is something like:</p>
-<pre><code>[main] INFO org.jdbcdslog.StatementLogger - <span class="operator">select * <span class="keyword">from</span> ceos.product <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span>;</span>
+<pre><code>[main] INFO org.jdbcdslog.StatementLogger - select * from ceos.product where id=1;
 </code></pre><p>But what I want to demonstrate even here in this post is how to use this lib to log sql datasources in JBoss, here in my enviroment I will use the JBoss EAP 6.2, but I think from the version of JBoss 7 does not change almost nothing. To do this we create modules to JBoss with the Postgres driver and also jdbcdslog.</p>
 <p>1 - First we must create the folder JBOSS_HOME/modules/system/layers/base/org/postgresql/main/. Inside that folder put the Postgres jar according to the version you use, for example, postgresql-9.3-1101-jdbc41.jar. In addition we must create a file called module.xml with the following content:</p>
-<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"org.postgresql"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"postgresql-9.3-1101-jdbc41.jar"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.api"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+<pre><code>&lt;module xmlns=&quot;urn:jboss:module:1.1&quot; name=&quot;org.postgresql&quot;&gt;
+    &lt;resources&gt;
+        &lt;resource-root path=&quot;postgresql-9.3-1101-jdbc41.jar&quot;/&gt;
+    &lt;/resources&gt;
+    &lt;dependencies&gt;
+        &lt;module name=&quot;javax.api&quot;/&gt;
+        &lt;module name=&quot;javax.transaction.api&quot;/&gt;
+    &lt;/dependencies&gt;
+&lt;/module&gt;
 </code></pre><p>This procedure should be done for any database you want to log the queries, either Postgres, Oracle, MySQL etc. The logic is the same, just pay attention to the names of the files and folder which will be placed. The suggestion is to use the name of the main jar package in the case of Postgres is org.postgresql.</p>
 <p>2 - Now is the time to create the jdbcdslog module. For this we create the folder JBOSS_HOME/modules/system/layers/base/com/googlecode/usc/jdbcdslog/main/. In this folder we will put the jdbcdslog jar, for example, jdbcdslog-1.0.6.2.jar. We also need to create a file called module.xml with the following content:</p>
-<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"com.googlecode.usc.jdbcdslog"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"jdbcdslog-1.0.6.2.jar"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.slf4j"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.api"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>/&gt;</span>
-    <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.postgresql"</span> <span class="attribute">optional</span>=<span class="value">"true"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+<pre><code>&lt;module xmlns=&quot;urn:jboss:module:1.1&quot; name=&quot;com.googlecode.usc.jdbcdslog&quot;&gt;
+    &lt;resources&gt;
+        &lt;resource-root path=&quot;jdbcdslog-1.0.6.2.jar&quot;/&gt;
+    &lt;/resources&gt;
+    &lt;dependencies&gt;
+        &lt;module name=&quot;org.slf4j&quot;/&gt;
+        &lt;module name=&quot;javax.api&quot;/&gt;
+        &lt;module name=&quot;javax.transaction.api&quot;/&gt;
+    &lt;module name=&quot;org.postgresql&quot; optional=&quot;true&quot;/&gt;
+    &lt;/dependencies&gt;
+&lt;/module&gt;
 </code></pre><p>Note that the Postgres module dependency is optional. It must include modules from other databases (Oracle, MySQL) as module dependency of jdbcdslog if you want to log them as well.</p>
 <p>3 - Now open the file JBOSS_HOME/standalone/configuration/standalone.xml and configure the jdbcdslog logs. Look for the log subsystem tag, something like <code>&lt;subsystem xmlns=&quot;urn:jboss:domain:logging:1.3&quot;&gt;</code> within this tag place the following contents:</p>
-<pre><code><span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.StatementLogger"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"DEBUG"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
-<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.ConnectionLogger"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
-<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.ResultSetLogger"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
-<span class="tag">&lt;<span class="title">logger</span> <span class="attribute">category</span>=<span class="value">"org.jdbcdslog.SlowQueryLogger"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">level</span> <span class="attribute">name</span>=<span class="value">"OFF"</span>/&gt;</span>
-<span class="tag">&lt;/<span class="title">logger</span>&gt;</span>
+<pre><code>&lt;logger category=&quot;org.jdbcdslog.StatementLogger&quot;&gt;
+    &lt;level name=&quot;DEBUG&quot;/&gt;
+&lt;/logger&gt;
+&lt;logger category=&quot;org.jdbcdslog.ConnectionLogger&quot;&gt;
+    &lt;level name=&quot;OFF&quot;/&gt;
+&lt;/logger&gt;
+&lt;logger category=&quot;org.jdbcdslog.ResultSetLogger&quot;&gt;
+    &lt;level name=&quot;OFF&quot;/&gt;
+&lt;/logger&gt;
+&lt;logger category=&quot;org.jdbcdslog.SlowQueryLogger&quot;&gt;
+    &lt;level name=&quot;OFF&quot;/&gt;
+&lt;/logger&gt;
 </code></pre><p>The various logging options available, the only one left active was the log statements, ie DML and DDL commands log.</p>
 <p>NOTE: If your JBoss is running in domain mode rather than standalone then this setting can be made to the file JBOSS_HOME/domain/configuration/domain.xml.</p>
 <p>4 - Still in standalone.xml file we will create the datasource. Below are two examples, one for a normal datasource and one for an XA-DataSoure, both should stay within the <code>&lt;datasources&gt;</code> tag:</p>
-<pre><code><span class="tag">&lt;<span class="title">datasource</span> <span class="attribute">jta</span>=<span class="value">"true"</span> <span class="attribute">jndi-name</span>=<span class="value">"java:/mpinfods"</span> <span class="attribute">pool-name</span>=<span class="value">"MPINFO-POOL"</span> <span class="attribute">enabled</span>=<span class="value">"true"</span> <span class="attribute">use-ccm</span>=<span class="value">"true"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">connection-url</span>&gt;</span>jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver<span class="tag">&lt;/<span class="title">connection-url</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">driver</span>&gt;</span>jdbcdslog<span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">new-connection-sql</span>&gt;</span>select 1<span class="tag">&lt;/<span class="title">new-connection-sql</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">transaction-isolation</span>&gt;</span>TRANSACTION_READ_COMMITTED<span class="tag">&lt;/<span class="title">transaction-isolation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">pool</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">min-pool-size</span>&gt;</span>10<span class="tag">&lt;/<span class="title">min-pool-size</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">max-pool-size</span>&gt;</span>20<span class="tag">&lt;/<span class="title">max-pool-size</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">pool</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">security</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">user-name</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">user-name</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">password</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">security</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">validation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">validate-on-match</span>&gt;</span>false<span class="tag">&lt;/<span class="title">validate-on-match</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">background-validation</span>&gt;</span>false<span class="tag">&lt;/<span class="title">background-validation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">background-validation-millis</span>&gt;</span>1<span class="tag">&lt;/<span class="title">background-validation-millis</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">validation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">statement</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">prepared-statement-cache-size</span>&gt;</span>32<span class="tag">&lt;/<span class="title">prepared-statement-cache-size</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">share-prepared-statements</span>&gt;</span>false<span class="tag">&lt;/<span class="title">share-prepared-statements</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">statement</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">datasource</span>&gt;</span>
+<pre><code>&lt;datasource jta=&quot;true&quot; jndi-name=&quot;java:/mpinfods&quot; pool-name=&quot;MPINFO-POOL&quot; enabled=&quot;true&quot; use-ccm=&quot;true&quot;&gt;
+    &lt;connection-url&gt;jdbc:jdbcdslog:postgresql://172.16.1.6:5432/mpinfo;targetDriver=org.postgresql.Driver&lt;/connection-url&gt;
+    &lt;driver&gt;jdbcdslog&lt;/driver&gt;
+    &lt;new-connection-sql&gt;select 1&lt;/new-connection-sql&gt;
+    &lt;transaction-isolation&gt;TRANSACTION_READ_COMMITTED&lt;/transaction-isolation&gt;
+    &lt;pool&gt;
+    &lt;min-pool-size&gt;10&lt;/min-pool-size&gt;
+    &lt;max-pool-size&gt;20&lt;/max-pool-size&gt;
+    &lt;/pool&gt;
+    &lt;security&gt;
+    &lt;user-name&gt;mpinfo&lt;/user-name&gt;
+    &lt;password&gt;mpinfo&lt;/password&gt;
+    &lt;/security&gt;
+    &lt;validation&gt;
+    &lt;validate-on-match&gt;false&lt;/validate-on-match&gt;
+    &lt;background-validation&gt;false&lt;/background-validation&gt;
+    &lt;background-validation-millis&gt;1&lt;/background-validation-millis&gt;
+    &lt;/validation&gt;
+    &lt;statement&gt;
+    &lt;prepared-statement-cache-size&gt;32&lt;/prepared-statement-cache-size&gt;
+    &lt;share-prepared-statements&gt;false&lt;/share-prepared-statements&gt;
+    &lt;/statement&gt;
+&lt;/datasource&gt;
 
-<span class="tag">&lt;<span class="title">xa-datasource</span> <span class="attribute">jndi-name</span>=<span class="value">"java:/mpinfoxads"</span> <span class="attribute">pool-name</span>=<span class="value">"MPINFO-XA-POOL"</span> <span class="attribute">enabled</span>=<span class="value">"true"</span> <span class="attribute">use-ccm</span>=<span class="value">"true"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"PortNumber"</span>&gt;</span>5432<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"DatabaseName"</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"ServerName"</span>&gt;</span>172.16.1.6<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-datasource-property</span> <span class="attribute">name</span>=<span class="value">"targetDS"</span>&gt;</span>org.postgresql.xa.PGXADataSource<span class="tag">&lt;/<span class="title">xa-datasource-property</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">driver</span>&gt;</span>jdbcdslog<span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">new-connection-sql</span>&gt;</span>select 1<span class="tag">&lt;/<span class="title">new-connection-sql</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">transaction-isolation</span>&gt;</span>TRANSACTION_READ_COMMITTED<span class="tag">&lt;/<span class="title">transaction-isolation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">xa-pool</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">min-pool-size</span>&gt;</span>0<span class="tag">&lt;/<span class="title">min-pool-size</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">max-pool-size</span>&gt;</span>10<span class="tag">&lt;/<span class="title">max-pool-size</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">flush-strategy</span>&gt;</span>IdleConnections<span class="tag">&lt;/<span class="title">flush-strategy</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">is-same-rm-override</span>&gt;</span>false<span class="tag">&lt;/<span class="title">is-same-rm-override</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">interleaving</span>&gt;</span>false<span class="tag">&lt;/<span class="title">interleaving</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">pad-xid</span>&gt;</span>false<span class="tag">&lt;/<span class="title">pad-xid</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">wrap-xa-resource</span>&gt;</span>false<span class="tag">&lt;/<span class="title">wrap-xa-resource</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">xa-pool</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">security</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">user-name</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">user-name</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">password</span>&gt;</span>mpinfo<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">security</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">validation</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">valid-connection-checker</span> <span class="attribute">class-name</span>=<span class="value">"org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">validate-on-match</span>&gt;</span>true<span class="tag">&lt;/<span class="title">validate-on-match</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">background-validation</span>&gt;</span>false<span class="tag">&lt;/<span class="title">background-validation</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">exception-sorter</span> <span class="attribute">class-name</span>=<span class="value">"org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">validation</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">timeout</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">idle-timeout-minutes</span>&gt;</span>3<span class="tag">&lt;/<span class="title">idle-timeout-minutes</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">timeout</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">statement</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">track-statements</span>&gt;</span>true<span class="tag">&lt;/<span class="title">track-statements</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">share-prepared-statements</span>&gt;</span>false<span class="tag">&lt;/<span class="title">share-prepared-statements</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">statement</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">xa-datasource</span>&gt;</span>
+&lt;xa-datasource jndi-name=&quot;java:/mpinfoxads&quot; pool-name=&quot;MPINFO-XA-POOL&quot; enabled=&quot;true&quot; use-ccm=&quot;true&quot;&gt;
+    &lt;xa-datasource-property name=&quot;PortNumber&quot;&gt;5432&lt;/xa-datasource-property&gt;
+    &lt;xa-datasource-property name=&quot;DatabaseName&quot;&gt;mpinfo&lt;/xa-datasource-property&gt;
+    &lt;xa-datasource-property name=&quot;ServerName&quot;&gt;172.16.1.6&lt;/xa-datasource-property&gt;
+    &lt;xa-datasource-property name=&quot;targetDS&quot;&gt;org.postgresql.xa.PGXADataSource&lt;/xa-datasource-property&gt;
+    &lt;driver&gt;jdbcdslog&lt;/driver&gt;
+    &lt;new-connection-sql&gt;select 1&lt;/new-connection-sql&gt;
+    &lt;transaction-isolation&gt;TRANSACTION_READ_COMMITTED&lt;/transaction-isolation&gt;
+    &lt;xa-pool&gt;
+        &lt;min-pool-size&gt;0&lt;/min-pool-size&gt;
+        &lt;max-pool-size&gt;10&lt;/max-pool-size&gt;
+        &lt;flush-strategy&gt;IdleConnections&lt;/flush-strategy&gt;
+        &lt;is-same-rm-override&gt;false&lt;/is-same-rm-override&gt;
+        &lt;interleaving&gt;false&lt;/interleaving&gt;
+        &lt;pad-xid&gt;false&lt;/pad-xid&gt;
+        &lt;wrap-xa-resource&gt;false&lt;/wrap-xa-resource&gt;
+    &lt;/xa-pool&gt;
+    &lt;security&gt;
+        &lt;user-name&gt;mpinfo&lt;/user-name&gt;
+        &lt;password&gt;mpinfo&lt;/password&gt;
+    &lt;/security&gt;
+    &lt;validation&gt;
+        &lt;valid-connection-checker class-name=&quot;org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker&quot;/&gt;
+        &lt;validate-on-match&gt;true&lt;/validate-on-match&gt;
+        &lt;background-validation&gt;false&lt;/background-validation&gt;
+        &lt;exception-sorter class-name=&quot;org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter&quot;/&gt;
+    &lt;/validation&gt;
+    &lt;timeout&gt;
+        &lt;idle-timeout-minutes&gt;3&lt;/idle-timeout-minutes&gt;
+    &lt;/timeout&gt;
+    &lt;statement&gt;
+        &lt;track-statements&gt;true&lt;/track-statements&gt;
+        &lt;share-prepared-statements&gt;false&lt;/share-prepared-statements&gt;
+    &lt;/statement&gt;
+&lt;/xa-datasource&gt;
 </code></pre><p>At this point you should pay attention to information as IPs, users, passwords and replace according to your environment, moreover, realize that the tag <code>&lt;driver&gt;</code> use the jdbcdslog driver name that will define the next step.</p>
 <p>5 - Within the <code>&lt;datasources&gt;</code> tag (standalone.xml) add a driver setting that makes the log:</p>
-<pre><code><span class="tag">&lt;<span class="title">drivers</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">driver</span> <span class="attribute">name</span>=<span class="value">"jdbcdslog"</span> <span class="attribute">module</span>=<span class="value">"com.googlecode.usc.jdbcdslog"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">driver-class</span>&gt;</span>org.jdbcdslog.DriverLoggingProxy<span class="tag">&lt;/<span class="title">driver-class</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">xa-datasource-class</span>&gt;</span>org.jdbcdslog.XADataSourceProxy<span class="tag">&lt;/<span class="title">xa-datasource-class</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">driver</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">drivers</span>&gt;</span>
+<pre><code>&lt;drivers&gt;
+    &lt;driver name=&quot;jdbcdslog&quot; module=&quot;com.googlecode.usc.jdbcdslog&quot;&gt;
+        &lt;driver-class&gt;org.jdbcdslog.DriverLoggingProxy&lt;/driver-class&gt;
+        &lt;xa-datasource-class&gt;org.jdbcdslog.XADataSourceProxy&lt;/xa-datasource-class&gt;
+    &lt;/driver&gt;
+&lt;/drivers&gt;
 </code></pre><p>There, it can already use the datasource and check the log JBoss any select, update, insert which is done through the connections that datasource will be logged, the output will look like:</p>
-<pre><code>11:35:00,066 INFO  [org.jdbcdslog.StatementLogger] (EJB default - 6) <span class="operator">select u.<span class="keyword">password</span> <span class="keyword">from</span> <span class="keyword">user</span> u <span class="keyword">where</span> u.login=<span class="string">'admin'</span>;</span>
+<pre><code>11:35:00,066 INFO  [org.jdbcdslog.StatementLogger] (EJB default - 6) select u.password from user u where u.login=&apos;admin&apos;;
 </code></pre><p>If you use an XA-DataSource may be confronted with the following error:</p>
-<pre><code><span class="type">Caused</span> by: javax.resource.<span class="type">ResourceException</span>: <span class="type">IJ000453</span>: <span class="type">Unable</span> to get managed connection <span class="keyword">for</span> java:/<span class="type">MPINFO</span>-<span class="type">XA</span>-<span class="type">Datasource</span>
+<pre><code>Caused by: javax.resource.ResourceException: IJ000453: Unable to get managed connection for java:/MPINFO-XA-Datasource
 
-<span class="type">Caused</span> by: java.lang.<span class="type">LinkageError</span>: loader constraint violation: loader (instance of &lt;bootloader&gt;) previously initiated loading <span class="keyword">for</span> a different <span class="class"><span class="keyword">type</span> <span class="keyword"><span class="keyword">with</span></span> <span class="title">name</span> "<span class="title">javax/transaction/xa/XAResource</span>"</span>
+Caused by: java.lang.LinkageError: loader constraint violation: loader (instance of &lt;bootloader&gt;) previously initiated loading for a different type with name &quot;javax/transaction/xa/XAResource&quot;
 </code></pre><p>The exception is due to a ClassLoader problem in JBoss, the issue is that there are two definitions for javax.transaction.xa.XAResource class: one that is in the standard JVM package and one that is in a jar inside the JBoss. Then, for some reason, JBoss loads the class from your lib and jdbcdslog loads the class from the standard JVM lib (rt.jar) and this is the exception claiming a class with the same name already have been loaded. Well, to solve this adjusted a setting in JBoss to prevent it from load the class that is contained in their own libs and load only the class from the JVM. The procedure is to change the contents of the file JBOSS_HOME/modules/system/layers/base/javax/transaction/api/main/module.xml:</p>
-<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"javax.transaction.api"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"jboss-transaction-api_1.1_spec-1.0.1.Final-redhat-2.jar"</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">filter</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclude</span> <span class="attribute">path</span>=<span class="value">"javax/transaction/xa"</span>/&gt;</span>
-                <span class="tag">&lt;<span class="title">include</span> <span class="attribute">path</span>=<span class="value">"**"</span>/&gt;</span>
-            <span class="tag">&lt;/<span class="title">filter</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">resource-root</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">system</span> <span class="attribute">export</span>=<span class="value">"true"</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">paths</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">path</span> <span class="attribute">name</span>=<span class="value">"javax/transaction/xa"</span>/&gt;</span>
-            <span class="tag">&lt;/<span class="title">paths</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">system</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
+<pre><code>&lt;module xmlns=&quot;urn:jboss:module:1.1&quot; name=&quot;javax.transaction.api&quot;&gt;
+    &lt;resources&gt;
+        &lt;resource-root path=&quot;jboss-transaction-api_1.1_spec-1.0.1.Final-redhat-2.jar&quot;&gt;
+            &lt;filter&gt;
+                &lt;exclude path=&quot;javax/transaction/xa&quot;/&gt;
+                &lt;include path=&quot;**&quot;/&gt;
+            &lt;/filter&gt;
+        &lt;/resource-root&gt;
+    &lt;/resources&gt;
+    &lt;dependencies&gt;
+        &lt;system export=&quot;true&quot;&gt;
+            &lt;paths&gt;
+                &lt;path name=&quot;javax/transaction/xa&quot;/&gt;
+            &lt;/paths&gt;
+        &lt;/system&gt;
+    &lt;/dependencies&gt;
+&lt;/module&gt;
 </code></pre><p>I recommend that you save the original file before making any change, it probably will not have the tag <code>&lt;dependencies&gt;</code> and also will not have the tag `<filter> ‘. With this setting finish all necessary settings, now test and verify that the log is generated in accordance with the executed commands.</filter></p>
 
 	<blockquote>
@@ -416,7 +416,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

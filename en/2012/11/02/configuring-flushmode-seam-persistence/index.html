@@ -182,12 +182,12 @@
 <a id="more"></a>
 <p>But one of the things I had trouble finding in the Seam Persistence documentation was setting the FlushMode of my EntityManager so I decided to make this post. Giving poke around in Seam code, I found the FlushModeManager class and its standard FlushModeManagerImpl implementation, which are just used to set the flushMode in the EntityManager managed by SMPC.</p>
 <p>By default, Seam Persistence defines flushMode to AUTO. With flushMode the problem set to AUTO is that the developer has no control over the time the ORM will synchronize the in-memory objects with the database, which can often produce unexpected results. If you agree with me and want to change the flushMode used by SMPC Simply copy the code below:</p>
-<pre><code><span class="annotation">@Produces</span>
-<span class="annotation">@ApplicationScoped</span>
-<span class="keyword">protected</span> <span class="function">FlushModeManager <span class="title">createDefaultFlushModeManager</span><span class="params">()</span> </span>{
-    FlushModeManagerImpl flushModeManager = <span class="keyword">new</span> FlushModeManagerImpl();
+<pre><code>@Produces
+@ApplicationScoped
+protected FlushModeManager createDefaultFlushModeManager() {
+    FlushModeManagerImpl flushModeManager = new FlushModeManagerImpl();
     flushModeManager.setFlushModeType(FlushModeType.COMMIT);
-    <span class="keyword">return</span> flushModeManager;
+    return flushModeManager;
 }
 </code></pre><p>This method will produce a CDI bean of type FlushModeManager to be used by SMPC to set the flushMode in the EntityManager. The new bean will override the default bean created by Seam Persistence, and with it, you can set the flushMode in three ways: AUTO, MANUAL and COMMIT.</p>
 
@@ -268,7 +268,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

@@ -180,249 +180,249 @@
     <div class="post-content markdown main-content-wrap" itemprop="articleBody">
         <p>Nos tempos de Maven o título desse post parece até meio idiota, mas, a equipe do JBoss Seam 3 conseguiu tornar algo que deveria ser simples numa atividade dolorosa. Pois é, adicionar o Seam Faces como dependência do seu projeto Maven não é tão simples como é sugerido na <a href="http://seamframework.org/Seam3/FacesModule" target="_blank" title="Seam Faces">página oficial</a>. Lá eles mostram o que deve ser adicionado no seu pom.xml para obter o Seam Faces:</p>
 <a id="more"></a>
-<pre><code><span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-   <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.faces<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-   <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-faces-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-   <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+<pre><code>&lt;dependency&gt;
+   &lt;groupId&gt;org.jboss.seam.faces&lt;/groupId&gt;
+   &lt;artifactId&gt;seam-faces-api&lt;/artifactId&gt;
+   &lt;version&gt;3.1.0.Final&lt;/version&gt;
+&lt;/dependency&gt;
 
-<span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-   <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.faces<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-   <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-faces<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-   <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-   <span class="tag">&lt;<span class="title">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+&lt;dependency&gt;
+   &lt;groupId&gt;org.jboss.seam.faces&lt;/groupId&gt;
+   &lt;artifactId&gt;seam-faces&lt;/artifactId&gt;
+   &lt;version&gt;3.1.0.Final&lt;/version&gt;
+   &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
 </code></pre><p>Não deixa de ser verdade, as libs do Seam Faces serão baixadas pelo Maven, porém, as suas dependências não, por isso que me propus a fazer este post. Se você executar seu projeto apenas com o trecho de código acima no seu pom.xml vai obter erros dos mais variados tipos indo de ClassNotFoundException até “Bean name is ambiguous”, isso porque Seam Faces não baixa todas as suas dependências(pra que serve o Maven então?).</p>
 <p>Bem, depois de muito tentar e pesquisar, cheguei a uma configuração mínima para que o Seam Faces possa ser adicionado no seu projeto sem causar erros. Vale observar que meus testes foram feitos no JBoss AS 7. Segue o pom:</p>
-<pre><code><span class="tag">&lt;<span class="title">project</span> <span class="attribute">xmlns</span>=<span class="value">="http:</span>//<span class="attribute">maven.apache.org</span>/<span class="attribute">POM</span>/<span class="attribute">4.0.0</span>" <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span>
-    <span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="title">modelVersion</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>teste.seam<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-faces<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">packaging</span>&gt;</span>war<span class="tag">&lt;/<span class="title">packaging</span>&gt;</span>
+<pre><code>&lt;project xmlns==&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;teste.seam&lt;/groupId&gt;
+    &lt;artifactId&gt;seam-faces&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
 
-    <span class="tag">&lt;<span class="title">repositories</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">repository</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">id</span>&gt;</span>JBOSS_NEXUS<span class="tag">&lt;/<span class="title">id</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">url</span>&gt;</span>http://repository.jboss.org/nexus/content/groups/public<span class="tag">&lt;/<span class="title">url</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">repository</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">repositories</span>&gt;</span>
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;JBOSS_NEXUS&lt;/id&gt;
+            &lt;url&gt;http://repository.jboss.org/nexus/content/groups/public&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
 
-   <span class="tag">&lt;<span class="title">dependencyManagement</span>&gt;</span>
-      <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+   &lt;dependencyManagement&gt;
+      &lt;dependencies&gt;
 
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.spec<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-javaee-web-6.0<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>2.0.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="title">type</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.spec&lt;/groupId&gt;
+            &lt;artifactId&gt;jboss-javaee-web-6.0&lt;/artifactId&gt;
+            &lt;version&gt;2.0.0.Final&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
 
-      <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
-   <span class="tag">&lt;/<span class="title">dependencyManagement</span>&gt;</span>
+      &lt;/dependencies&gt;
+   &lt;/dependencyManagement&gt;
 
-    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
-        <span class="comment">&lt;!-- CDI  --&gt;</span>        
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>javax.enterprise<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>cdi-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    &lt;dependencies&gt;
+        &lt;!-- CDI  --&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.enterprise&lt;/groupId&gt;
+            &lt;artifactId&gt;cdi-api&lt;/artifactId&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- JSF  --&gt;</span>
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.spec.javax.faces<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-jsf-api_2.0_spec<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- JSF  --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.spec.javax.faces&lt;/groupId&gt;
+            &lt;artifactId&gt;jboss-jsf-api_2.0_spec&lt;/artifactId&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Servlet --&gt;</span>
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.spec.javax.servlet<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-servlet-api_3.0_spec<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Servlet --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.spec.javax.servlet&lt;/groupId&gt;
+            &lt;artifactId&gt;jboss-servlet-api_3.0_spec&lt;/artifactId&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Praticamente todos os modulos do Seam 3 precisam do Solder --&gt;</span>        
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.1.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Praticamente todos os modulos do Seam 3 precisam do Solder --&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+            &lt;artifactId&gt;solder-impl&lt;/artifactId&gt;
+            &lt;version&gt;3.1.1.Final&lt;/version&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Seam Faces precisa do seam-international(mesmo que você não use para nada) --&gt;</span>        
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.international<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-international<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Seam Faces precisa do seam-international(mesmo que você não use para nada) --&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.seam.international&lt;/groupId&gt;
+            &lt;artifactId&gt;seam-international&lt;/artifactId&gt;
+            &lt;version&gt;3.1.0.Final&lt;/version&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-api&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;artifactId&gt;solder-impl&lt;/artifactId&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Seam International precisa do joda-time --&gt;</span>        
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>joda-time<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>joda-time<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Seam International precisa do joda-time --&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;joda-time&lt;/groupId&gt;
+            &lt;artifactId&gt;joda-time&lt;/artifactId&gt;
+            &lt;version&gt;2.1&lt;/version&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Seam Faces precisa do seam-transaction(mesmo que você não use para nada) --&gt;</span>        
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.transaction<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-transaction<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>jboss-servlet-api_3.0_spec<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.spec.javax.servlet<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Seam Faces precisa do seam-transaction(mesmo que você não use para nada) --&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.seam.transaction&lt;/groupId&gt;
+            &lt;artifactId&gt;seam-transaction&lt;/artifactId&gt;
+            &lt;version&gt;3.1.0.Final&lt;/version&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-api&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-impl&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;artifactId&gt;jboss-servlet-api_3.0_spec&lt;/artifactId&gt;
+                    &lt;groupId&gt;org.jboss.spec.javax.servlet&lt;/groupId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Seam Faces precisa do seam-persistence(mesmo que você não use para nada) --&gt;</span>        
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.persistence<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-persistence<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.transaction<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-transaction<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>                
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.transaction<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-transaction-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>                
-            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Seam Faces precisa do seam-persistence(mesmo que você não use para nada) --&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.seam.persistence&lt;/groupId&gt;
+            &lt;artifactId&gt;seam-persistence&lt;/artifactId&gt;
+            &lt;version&gt;3.1.0.Final&lt;/version&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-api&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-impl&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.seam.transaction&lt;/groupId&gt;
+                    &lt;artifactId&gt;seam-transaction&lt;/artifactId&gt;
+                &lt;/exclusion&gt;                
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.seam.transaction&lt;/groupId&gt;
+                    &lt;artifactId&gt;seam-transaction-api&lt;/artifactId&gt;
+                &lt;/exclusion&gt;                
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Seam Persistence precisa do Hibernate(mesmo que você não use para nada) --&gt;</span>        
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.hibernate<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>hibernate-entitymanager<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>4.1.4.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Seam Persistence precisa do Hibernate(mesmo que você não use para nada) --&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;
+            &lt;version&gt;4.1.4.Final&lt;/version&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Seam Faces precisa do seam-security(mesmo que você não use para nada) --&gt;</span>        
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.security<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-security<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.persistence<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-persistence<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-solder<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.international<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-international-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.international<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-international<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Seam Faces precisa do seam-security(mesmo que você não use para nada) --&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.seam.security&lt;/groupId&gt;
+            &lt;artifactId&gt;seam-security&lt;/artifactId&gt;
+            &lt;version&gt;3.1.0.Final&lt;/version&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.seam.persistence&lt;/groupId&gt;
+                    &lt;artifactId&gt;seam-persistence&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.seam.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;seam-solder&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-api&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-impl&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.seam.international&lt;/groupId&gt;
+                    &lt;artifactId&gt;seam-international-api&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.seam.international&lt;/groupId&gt;
+                    &lt;artifactId&gt;seam-international&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Seam Faces precisa do prettyfaces(mesmo que você não use para nada) --&gt;</span>
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.ocpsoft<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>prettyfaces-jsf2<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.3.3<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Seam Faces precisa do prettyfaces(mesmo que você não use para nada) --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.ocpsoft&lt;/groupId&gt;
+            &lt;artifactId&gt;prettyfaces-jsf2&lt;/artifactId&gt;
+            &lt;version&gt;3.3.3&lt;/version&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Seam Faces precisa do drools(mesmo que você não use para nada) --&gt;</span>
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.drools<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>knowledge-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>5.4.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Seam Faces precisa do drools(mesmo que você não use para nada) --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.drools&lt;/groupId&gt;
+            &lt;artifactId&gt;knowledge-api&lt;/artifactId&gt;
+            &lt;version&gt;5.4.0.Final&lt;/version&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+        &lt;/dependency&gt;
 
-        <span class="comment">&lt;!-- Enfim, o Seam Faces --&gt;</span>
-        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.faces<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-faces<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">version</span>&gt;</span>3.1.0.Final<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">exclusions</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.solder<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>solder-impl<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-                <span class="tag">&lt;<span class="title">exclusion</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.jboss.seam.international<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
-                    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>seam-international-api<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
-                <span class="tag">&lt;/<span class="title">exclusion</span>&gt;</span>
-            <span class="tag">&lt;/<span class="title">exclusions</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+        &lt;!-- Enfim, o Seam Faces --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.seam.faces&lt;/groupId&gt;
+            &lt;artifactId&gt;seam-faces&lt;/artifactId&gt;
+            &lt;version&gt;3.1.0.Final&lt;/version&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-api&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.solder&lt;/groupId&gt;
+                    &lt;artifactId&gt;solder-impl&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.jboss.seam.international&lt;/groupId&gt;
+                    &lt;artifactId&gt;seam-international-api&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
 
-    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+    &lt;/dependencies&gt;
 
-<span class="tag">&lt;/<span class="title">project</span>&gt;</span>
+&lt;/project&gt;
 </code></pre><p>Perceba que eu usei bastante as tags de exclusão de artefatos, o caso é que o Solder, por exemplo, é baixado junto com vários módulos como o Seam Faces, Seam Internacional, Seam Transaction e etc. Fiz isso para evitar conflitos e explicitar para o leitor quais as dependências necessárias. Você pode remover algum desses “exclusions” e ir testando para vê se não vai haver problema.</p>
 <p>Com esse pom, meu projeto web foi executado no JBoss AS 7 sem erros na inicialização e então pude usar o Seam Faces para fazer algumas coisas como:</p>
-<pre><code><span class="variable">@Named</span>
-<span class="variable">@RequestScoped</span>
+<pre><code>@Named
+@RequestScoped
 public class SeamFacesTeste {
 
 
-    <span class="variable">@Inject</span>
+    @Inject
     FacesContext facesContext;
 
-    <span class="variable">@Inject</span>
+    @Inject
     Flash flash;
 
-    <span class="variable">@Inject</span>
+    @Inject
     HttpServletRequest request;
 
-    <span class="variable">@Inject</span>
+    @Inject
     HttpServletResponse response;
 
 }
@@ -505,7 +505,7 @@ public class SeamFacesTeste {
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

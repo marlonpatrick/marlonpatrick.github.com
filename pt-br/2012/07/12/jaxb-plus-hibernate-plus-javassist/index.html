@@ -181,28 +181,28 @@
         <p>Se você está tentando converter um objeto java em XML usando JAXB pode ter alguns problemas caso esse objeto esteja sendo gerenciado pelo Hibernate. Em alguns casos o Hibernate reescreve as classes para fazer algumas melhorias e adicionar funcionalidades extras, como por exemplo, objetos com mapeamentos Lazy. Nesses casos o Hibernate reescreve a classe do objeto para que ele então possa fazer o carregamento tardio dos dados.</p>
 <a id="more"></a>
 <p>Até aí tudo bem, nós nem temos conhecimento, pois, trabalhamos com a interface do objeto real, porém, quando usamos uma api como JAXB que usa reflection para obter os campos e métodos do objeto, isso pode causar alguns problemas. No meu caso, o erro foi mais ou menos assim:</p>
-<pre><code>com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: <span class="number">2</span> counts <span class="keyword">of</span> IllegalAnnotationExceptions
-javassist.util.proxy.MethodHandler <span class="keyword">is</span> an interface, <span class="keyword">and</span> JAXB can't handle interfaces.
-    this problem <span class="keyword">is</span> related <span class="keyword">to</span> <span class="keyword">the</span> following location:
-        <span class="keyword">at</span> javassist.util.proxy.MethodHandler
-        <span class="keyword">at</span> private javassist.util.proxy.MethodHandler User_$$_javassist_19.handler
-        <span class="keyword">at</span> User_$$_javassist_19
-javassist.util.proxy.MethodHandler <span class="keyword">does</span> <span class="keyword">not</span> have a no-arg default constructor.
-    this problem <span class="keyword">is</span> related <span class="keyword">to</span> <span class="keyword">the</span> following location:
-        <span class="keyword">at</span> javassist.util.proxy.MethodHandler
-        <span class="keyword">at</span> private javassist.util.proxy.MethodHandler User_$$_javassist_19.handler
-        <span class="keyword">at</span> User_$$_javassist_19
+<pre><code>com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: 2 counts of IllegalAnnotationExceptions
+javassist.util.proxy.MethodHandler is an interface, and JAXB can&apos;t handle interfaces.
+    this problem is related to the following location:
+        at javassist.util.proxy.MethodHandler
+        at private javassist.util.proxy.MethodHandler User_$$_javassist_19.handler
+        at User_$$_javassist_19
+javassist.util.proxy.MethodHandler does not have a no-arg default constructor.
+    this problem is related to the following location:
+        at javassist.util.proxy.MethodHandler
+        at private javassist.util.proxy.MethodHandler User_$$_javassist_19.handler
+        at User_$$_javassist_19
 </code></pre><p>O caso é que o Hibernate (usando a api Javassist) fez um proxy na minha classe User para adicionar comportamento Lazy numa das propriedades da classe e adicionou um atributo chamado handler, o qual, não há nenhuma anotação JAXB definindo como deve ser tratado esse atributo na hora do marshal e por isso o erro acima ocorreu.</p>
 <p>Bem, dando uma pesquisada a minha solução é fazer o unproxy na classe proxyada pelo Hibernate e então faço marshal no meu objeto real. Para obter o objeto correto com Hibernate é só copiar o código abaixo:</p>
-<pre><code>public Object  getUnproxyModel<span class="params">(Object model)</span> {
-    <span class="keyword">if</span> <span class="params">(HibernateProxy.class.isAssignableFrom<span class="params">(model.getClass<span class="params">()</span>)</span>)</span> {
-        return <span class="params">(<span class="params">(HibernateProxy)</span>model)</span>.getHibernateLazyInitializer<span class="params">()</span>.getImplementation<span class="params">()</span>;
+<pre><code>public Object  getUnproxyModel(Object model) {
+    if (HibernateProxy.class.isAssignableFrom(model.getClass())) {
+        return ((HibernateProxy)model).getHibernateLazyInitializer().getImplementation();
     }
 
     return model;
 }
 </code></pre><p>Então, é só fazer assim:</p>
-<pre><code>marshaller.marshal<span class="params">(getUnproxyModel<span class="params">(user)</span>, outputStream)</span>;
+<pre><code>marshaller.marshal(getUnproxyModel(user), outputStream);
 </code></pre>
 	<blockquote>
 <p><em>Eu sou o caminho, e a verdade e a vida; ninguém vem ao Pai, senão por mim.</em><br><strong><em>Jesus Cristo</em></strong></p>
@@ -281,7 +281,7 @@ javassist.util.proxy.MethodHandler <span class="keyword">does</span> <span class
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

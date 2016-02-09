@@ -182,89 +182,89 @@
 <a id="more"></a>
 <p><strong>1 - NullPointerException ao redimensionar o tamanho de uma coluna (corrigido na versão 3.5)</strong></p>
 <p>O problema acontece num dataTable que é resizable e draggable ao mesmo tempo. Encontrei os seguintes tickets no issue tracker do PrimeFaces para tratar do problema: <a href="https://code.google.com/p/primefaces/issues/detail?id=3674" title="Issue 3674" target="_blank">3674</a>, <a href="https://code.google.com/p/primefaces/issues/detail?id=4012" title="Issue 4012" target="_blank">4012</a>,<a href="https://code.google.com/p/primefaces/issues/detail?id=4796" title="Issue 4796" target="_blank">4796</a> e <a href="https://code.google.com/p/primefaces/issues/detail?id=5167" title="Issue 5167" target="_blank">5167</a>. Na versao 3.4.1 do PrimeFaces o log do erro é algo como:</p>
-<pre><code><span class="number">01</span>:<span class="number">40</span>:<span class="number">49</span>,<span class="number">907</span> INFO  [javax<span class="class">.enterprise</span><span class="class">.resource</span><span class="class">.webcontainer</span><span class="class">.jsf</span><span class="class">.context</span>] (http--<span class="number">0.0</span>.<span class="number">0.0</span>-<span class="number">8080</span>-<span class="number">1</span>) java<span class="class">.lang</span><span class="class">.NullPointerException</span>: java<span class="class">.lang</span><span class="class">.NullPointerException</span>
-at org<span class="class">.primefaces</span><span class="class">.component</span><span class="class">.datatable</span><span class="class">.feature</span><span class="class">.ResizableColumnsFeature</span><span class="class">.decode</span>(ResizableColumnsFeature<span class="class">.java</span>:<span class="number">35</span>) [primefaces-<span class="number">3.4</span>.<span class="number">1</span><span class="class">.jar</span>:]
-at org<span class="class">.primefaces</span><span class="class">.component</span><span class="class">.datatable</span><span class="class">.DataTableRenderer</span><span class="class">.decode</span>(DataTableRenderer<span class="class">.java</span>:<span class="number">53</span>) [primefaces-<span class="number">3.4</span>.<span class="number">1</span><span class="class">.jar</span>:]
-at javax<span class="class">.faces</span><span class="class">.component</span><span class="class">.UIComponentBase</span><span class="class">.decode</span>(UIComponentBase<span class="class">.java</span>:<span class="number">787</span>) [jboss-jsf-api_2.<span class="number">1</span>_spec-<span class="number">2.0</span>.<span class="number">1</span><span class="class">.Final</span><span class="class">.jar</span>:<span class="number">2.0</span>.<span class="number">1</span>.Final]
-at org<span class="class">.primefaces</span><span class="class">.component</span><span class="class">.api</span><span class="class">.UIData</span><span class="class">.processDecodes</span>(UIData<span class="class">.java</span>:<span class="number">224</span>) [primefaces-<span class="number">3.4</span>.<span class="number">1</span><span class="class">.jar</span>:]
-at com<span class="class">.sun</span><span class="class">.faces</span><span class="class">.context</span><span class="class">.PartialViewContextImpl</span><span class="variable">$PhaseAwareVisitCallback</span>.<span class="function"><span class="title">visit</span><span class="params">(PartialViewContextImpl.java:<span class="number">506</span>)</span></span> [jsf-impl-<span class="number">2.1</span>.<span class="number">7</span>-jbossorg-<span class="number">2</span><span class="class">.jar</span>:]
-at com<span class="class">.sun</span><span class="class">.faces</span><span class="class">.component</span><span class="class">.visit</span><span class="class">.PartialVisitContext</span><span class="class">.invokeVisitCallback</span>(PartialVisitContext<span class="class">.java</span>:<span class="number">183</span>) [jsf-impl-<span class="number">2.1</span>.<span class="number">7</span>-jbossorg-<span class="number">2</span><span class="class">.jar</span>:]
-at org<span class="class">.primefaces</span><span class="class">.component</span><span class="class">.api</span><span class="class">.UIData</span><span class="class">.visitTree</span>(UIData<span class="class">.java</span>:<span class="number">635</span>) [primefaces-<span class="number">3.4</span>.<span class="number">1</span><span class="class">.jar</span>:]
+<pre><code>01:40:49,907 INFO  [javax.enterprise.resource.webcontainer.jsf.context] (http--0.0.0.0-8080-1) java.lang.NullPointerException: java.lang.NullPointerException
+at org.primefaces.component.datatable.feature.ResizableColumnsFeature.decode(ResizableColumnsFeature.java:35) [primefaces-3.4.1.jar:]
+at org.primefaces.component.datatable.DataTableRenderer.decode(DataTableRenderer.java:53) [primefaces-3.4.1.jar:]
+at javax.faces.component.UIComponentBase.decode(UIComponentBase.java:787) [jboss-jsf-api_2.1_spec-2.0.1.Final.jar:2.0.1.Final]
+at org.primefaces.component.api.UIData.processDecodes(UIData.java:224) [primefaces-3.4.1.jar:]
+at com.sun.faces.context.PartialViewContextImpl$PhaseAwareVisitCallback.visit(PartialViewContextImpl.java:506) [jsf-impl-2.1.7-jbossorg-2.jar:]
+at com.sun.faces.component.visit.PartialVisitContext.invokeVisitCallback(PartialVisitContext.java:183) [jsf-impl-2.1.7-jbossorg-2.jar:]
+at org.primefaces.component.api.UIData.visitTree(UIData.java:635) [primefaces-3.4.1.jar:]
 </code></pre><p>De maneira resumida o erro acontece porque ao redimensionar uma coluna o PrimeFaces processa tanto o redimensionamento (resize) quanto a reordenação da coluna (reorder). Isso pode ser facilmente percebido se você usar os eventos colResize e colReorder para gerar algum log.</p>
 <p>A explicação detalhada é a seguinte: para criar o efeito de redimensionar uma coluna o PrimeFaces cria uma tag <code>&lt;span&gt;</code> no cabeçalho da coluna e torna essa tag um objeto <a href="http://jqueryui.com/draggable/" title="jQuery UI - Draggable" target="_blank">draggable</a>, dessa forma, quando o usuário arrasta a “coluna” para ela ficar maior ou menor e a solta ocorre uma “colisão” entre a funcionalidade resizer e reorder do dataTable. Isso porque, ao informar que o dataTable é draggable o PrimeFaces torna todas as colunas draggable de modo que as mesmas possam ser arrastadas e reordenadas bem como torna todo o cabeçalho da tabela <a href="http://jqueryui.com/droppable/" title="jQuery UI - Droppable" target="_blank">droppable</a>. O problema é que a implementação do PrimeFaces esqueceu de configurar o droppable para aceitar apenas reordenação de colunas e com isso ao soltar o <code>&lt;span&gt;</code> que redimensiona a coluna o drop da reordenação é invocado e o PrimeFaces entende que a coluna está sendo reordenada e redimensionada, com isso o método que deveria ajustar o tamanho da coluna não recebe um parâmetro (o id da coluna redimensionada) que precisa para funcionar corretamente e então provoca o erro.</p>
 <p>Para solucionar esse problema adicionei um script após o fechamento da tag <code>&lt;p:dataTable&gt;</code> que define um escopo específico para o <code>&lt;span&gt;</code> que é usado no redimensionamento das colunas. Assim, ao redimensionar uma coluna mesmo que o usuário solte o mouse sobre o cabeçalho da tabela o drop da reordenação de colunas não será chamado, pois, o objeto draggable <code>&lt;span&gt;</code> possui um escopo diferente do objeto droppable (cabeçalho da tabela). O código fica da seguinte forma:</p>
-<pre><code><span class="tag">&lt;<span class="title">p:dataTable</span> <span class="attribute">draggableColumns</span>=<span class="value">"true"</span> <span class="attribute">resizableColumns</span>=<span class="value">"true"</span>&gt;</span>
-       <span class="comment">&lt;!-- your code --&gt;</span>
-<span class="tag">&lt;/ <span class="attribute">p:</span> <span class="attribute">dataTable</span>&gt;</span>
+<pre><code>&lt;p:dataTable draggableColumns=&quot;true&quot; resizableColumns=&quot;true&quot;&gt;
+       &lt;!-- your code --&gt;
+&lt;/ p: dataTable&gt;
 
-<span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript">
-    $( <span class="string">".ui-column-resizer"</span> ).draggable( <span class="string">"option"</span>, <span class="string">"scope"</span>, <span class="string">'resizer'</span>);<span class="comment">//resizer é o nome do escopo que escolhi, poderia ser qualquer outro nome</span>
-</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+&lt;script type=&quot;text/javascript&quot;&gt;
+    $( &quot;.ui-column-resizer&quot; ).draggable( &quot;option&quot;, &quot;scope&quot;, &apos;resizer&apos;);//resizer é o nome do escopo que escolhi, poderia ser qualquer outro nome
+&lt;/script&gt;
 </code></pre><p><strong>2 - NullPointerException ao redimensionar uma coluna dinâmica (corrigido na versão 3.5.7)</strong></p>
 <p>Nesse caso basta apenas ter um dataTable resizable com colunas dinâmicas para que o erro aconteça. Encontrei os seguintes tickets no issue tracker do PrimeFaces para tratar do problema: <a href="https://code.google.com/p/primefaces/issues/detail?id=4238" title="Issue 4238" target="_blank">4238</a> e <a href="https://code.google.com/p/primefaces/issues/detail?id=4797" title="Issue 4797" target="_blank">4797</a>. Engraçado que mesmo com várias pessoas relatando o problema o time do PrimeFaces marcou ambos issues como “Não foi possível replicar”. Segundo um dos observadores o problema foi resolvido na versão 3.5.7, mas, não pude comprovar.</p>
 <p>O ponto onde acontece o erro é o mesmo do caso descrito acima, assim, o log é semelhante e só o que muda é a causa raiz do problema. No item anterior, o motivo do NullPointer é que o parâmetro com o id da coluna redimensionada não é enviado para o servidor, já no caso das colunas dinâmicas, mesmo quando o id é enviado o PrimeFaces não consegue encontrar a coluna correspondente. O método que é usado para buscar a coluna pelo id é o <code>DataTable.findColumn(String clinetId)</code> o qual só procura por colunas simples e desconsidera as dinâmicas.</p>
 <p>No meu caso, não era tão importante que o objeto Column fosse achado e que o seu campo width fosse setado pois o width usado na minha tela fica armazenado num outro objeto específico do meu sistema. Por isso minha solução foi apenas sobrescrever a classe que processa o evento resize do dataTable (org.primefaces.component.datatable.feature.ResizableColumnsFeature), mas especificamente o método decode:</p>
 <pre><code>@Override
-<span class="keyword">public</span> <span class="literal">void</span> decode(FacesContext context, DataTable table) {
-    <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">String</span>&gt; <span class="keyword">params</span> = FacesContext<span class="built_in">.</span>getCurrentInstance()<span class="built_in">.</span>getExternalContext()<span class="built_in">.</span>getRequestParameterMap();
-    <span class="built_in">String</span> clientId = table<span class="built_in">.</span>getClientId();
+public void decode(FacesContext context, DataTable table) {
+    Map&lt;String, String&gt; params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    String clientId = table.getClientId();
 
-    <span class="built_in">String</span> columnId = <span class="keyword">params</span><span class="built_in">.</span>get(clientId + <span class="string">"_columnId"</span>);
-    <span class="built_in">String</span> width = <span class="keyword">params</span><span class="built_in">.</span>get(clientId + <span class="string">"_width"</span>);
-    Column column = table<span class="built_in">.</span>findColumn(columnId);
+    String columnId = params.get(clientId + &quot;_columnId&quot;);
+    String width = params.get(clientId + &quot;_width&quot;);
+    Column column = table.findColumn(columnId);
 
-    <span class="keyword">if</span>(column != <span class="built_in">null</span>){ <span class="comment">// adicionei esse if para evitar a NullPointerException </span>
-        column<span class="built_in">.</span>setWidth(<span class="built_in">Integer</span><span class="built_in">.</span>parseInt(width));
+    if(column != null){ // adicionei esse if para evitar a NullPointerException 
+        column.setWidth(Integer.parseInt(width));
     }
 }
 </code></pre><p>Dessa forma o evento colResize pode ser invocado e é através dele que resolvo meu problema. Talvez o código seja difícil de aplicar em outro sistema, mas, de toda forma vou deixar aqui pelo menos para você ter uma idéia de como fiz e poder adaptar a solução:</p>
-<pre><code>public void onResizeColumn<span class="params">(ColumnResizeEvent event)</span> {
-    <span class="keyword">if</span> <span class="params">(event.getColumn<span class="params">()</span> == null)</span> {
-        String index = getColumnIndex<span class="params">(event)</span>;
-        DynaColumn dynaColumn = this.getColumns<span class="params">()</span>.get<span class="params">(Integer.parseInt<span class="params">(index)</span>)</span>;<span class="comment">//getColumns() é a lista que uso para gerar as colunas dinâmicas</span>
-        dynaColumn.setWidth<span class="params">(event.getWidth<span class="params">()</span>)</span>;<span class="comment">//DynaColumn é um objeto específico do meu sistema</span>
+<pre><code>public void onResizeColumn(ColumnResizeEvent event) {
+    if (event.getColumn() == null) {
+        String index = getColumnIndex(event);
+        DynaColumn dynaColumn = this.getColumns().get(Integer.parseInt(index));//getColumns() é a lista que uso para gerar as colunas dinâmicas
+        dynaColumn.setWidth(event.getWidth());//DynaColumn é um objeto específico do meu sistema
     }
 }
 
-private String getColumnIndex<span class="params">(ColumnResizeEvent event)</span> {
-    String columnId = FacesContext.getCurrentInstance<span class="params">()</span>.getExternalContext<span class="params">()</span>.getRequestParameterMap<span class="params">()</span>.get<span class="params">(event.getComponent<span class="params">()</span>.getClientId<span class="params">()</span> + <span class="string">"_columnId"</span>)</span>;
-    String[] columnIdSplited = columnId.split<span class="params">(<span class="string">":"</span>)</span>;
-    return columnIdSplited[columnIdSplited.length - <span class="number">1</span>];
+private String getColumnIndex(ColumnResizeEvent event) {
+    String columnId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(event.getComponent().getClientId() + &quot;_columnId&quot;);
+    String[] columnIdSplited = columnId.split(&quot;:&quot;);
+    return columnIdSplited[columnIdSplited.length - 1];
 }
 </code></pre><p>Na minha página JSF uso o campo DynaColumn.width para setar o tamanho da coluna mesmo que o objeto Column do PrimeFaces não tenha sido atualizado.</p>
-<pre><code><span class="xml"><span class="tag">&lt;<span class="title">p:dataTable</span> <span class="attribute">resizableColumns</span>=<span class="value">"true"</span>&gt;</span>
-       <span class="comment">&lt;!-- your code --&gt;</span>
-    <span class="tag">&lt;<span class="title">p:columns</span> <span class="attribute">value</span>=<span class="value">"#</span></span></span><span class="expression">{<span class="variable">viewManager.columns</span>}</span><span class="xml"><span class="tag"><span class="value">"</span> <span class="attribute">var</span>=<span class="value">"dynaColumn"</span>&gt;</span>
-           <span class="comment">&lt;!-- your code --&gt;</span>
-    <span class="tag">&lt;/<span class="title">p:columns</span>&gt;</span>
-<span class="tag">&lt;/ <span class="attribute">p:</span> <span class="attribute">dataTable</span>&gt;</span>
+<pre><code>&lt;p:dataTable resizableColumns=&quot;true&quot;&gt;
+       &lt;!-- your code --&gt;
+    &lt;p:columns value=&quot;#{viewManager.columns}&quot; var=&quot;dynaColumn&quot;&gt;
+           &lt;!-- your code --&gt;
+    &lt;/p:columns&gt;
+&lt;/ p: dataTable&gt;
 
-<span class="tag">&lt;<span class="title">ui:repeat</span> <span class="attribute">var</span>=<span class="value">"dynaColumn"</span> <span class="attribute">value</span>=<span class="value">"#</span></span></span><span class="expression">{<span class="variable">viewManager.columns</span>}</span><span class="xml"><span class="tag"><span class="value">"</span> <span class="attribute">varStatus</span>=<span class="value">"status"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="undefined">
-        var columnWidth = #</span></span><span class="expression">{<span class="variable">dynaColumn.width</span>}</span><span class="xml"><span class="actionscript">;
-        <span class="keyword">if</span>(columnWidth &gt; <span class="number">0</span>)</span></span><span class="expression">{
-            $('[<span class="variable">id</span>=<span class="string">"idDoDataTable:dynamicColumns:#{status.index}"</span>]')<span class="variable">.</span>
-                <span class="variable">children</span>('<span class="variable">.ui-dt-c</span>')<span class="variable">.css</span>('<span class="variable">width</span>',<span class="variable">columnWidth</span>);
-        }</span><span class="xml"><span class="undefined">
-    </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>                
-<span class="tag">&lt;/<span class="title">ui:repeat</span>&gt;</span></span>
+&lt;ui:repeat var=&quot;dynaColumn&quot; value=&quot;#{viewManager.columns}&quot; varStatus=&quot;status&quot;&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        var columnWidth = #{dynaColumn.width};
+        if(columnWidth &gt; 0){
+            $(&apos;[id=&quot;idDoDataTable:dynamicColumns:#{status.index}&quot;]&apos;).
+                children(&apos;.ui-dt-c&apos;).css(&apos;width&apos;,columnWidth);
+        }
+    &lt;/script&gt;                
+&lt;/ui:repeat&gt;
 </code></pre><p>A issue <a href="https://code.google.com/p/primefaces/issues/detail?id=4238" title="Issue 4238" target="_blank">4238</a> propõe uma outra forma de contornar o problema, além disso, outras soluções possíveis seriam ajustar o método ResizableColumnsFeature.decode para procurar a coluna da maneira certa ou então no onResize setar o objeto Column ao invés de um objeto próprio do sistema. Caso alguma dessas correções seja implementada não seria necessário o javascript para ajustar o width das colunas na página JSF o que simplificaria a solução. No meu caso específico há um requisito de negócio que me forçou a fazer da forma aqui apresentada.</p>
 <p><strong>3 - Evento colReorder é executado para qualquer chamada ajax e não apenas na reordenação de colunas</strong></p>
 <p>Para simular esse erro basta apenas ter um dataTable draggable e fazer qualquer chamada ajax na tela. Encontrei o ticket <a href="https://code.google.com/p/primefaces/issues/detail?id=4985" title="Issue 4985" target="_blank">4985</a> no issue tracker do PrimeFaces que aborda o problema. O mesmo foi marcado como “Não será corrigido”, então, acredito que ainda aconteça em qualquer versão.</p>
 <p>Para resolver o problema sobrescrevi a classe org.primefaces.component.datatable.feature.DraggableColumnsFeature para ajustar o método shouldDecode:</p>
-<pre><code><span class="annotation">@Override</span>
-<span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">shouldDecode</span><span class="params">(FacesContext context, DataTable table)</span> </span>{
-  <span class="keyword">return</span> table.isDraggableColumns() &amp;&amp; <span class="keyword">this</span>.isDragRequest(context);
+<pre><code>@Override
+public boolean shouldDecode(FacesContext context, DataTable table) {
+  return table.isDraggableColumns() &amp;&amp; this.isDragRequest(context);
 }
 
-<span class="keyword">private</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isDragRequest</span><span class="params">(FacesContext context)</span> </span>{
-  String eventName =  context.getExternalContext().getRequestParameterMap().get(<span class="string">"javax.faces.behavior.event"</span>);
+private boolean isDragRequest(FacesContext context) {
+  String eventName =  context.getExternalContext().getRequestParameterMap().get(&quot;javax.faces.behavior.event&quot;);
 
-  <span class="keyword">if</span>(<span class="string">"colReorder"</span>.equals(eventName)){
-    <span class="keyword">return</span> <span class="keyword">true</span>;
+  if(&quot;colReorder&quot;.equals(eventName)){
+    return true;
   }
 
-  <span class="keyword">return</span> <span class="keyword">false</span>;
+  return false;
 }
 </code></pre><p>Dessa forma, o evento colReorder agora será chamado no momento apropriado.</p>
 
@@ -345,7 +345,7 @@ private String getColumnIndex<span class="params">(ColumnResizeEvent event)</spa
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 

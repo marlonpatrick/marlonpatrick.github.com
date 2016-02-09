@@ -182,12 +182,12 @@
 <a id="more"></a>
 <p>Porém, uma das coisas que tive dificuldade de encontrar na documentação do Seam Persistence foi como definir o FlushMode do meu EntityManager por isso resolvi fazer esse post. Dando uma fuçada no código do Seam, encontrei a classe FlushModeManager e sua implementação padrão FlushModeManagerImpl, que justamente são usadas para definir o flushMode do EntityManager gerenciado pelo SMPC.</p>
 <p>Por padrão, o Seam Persistence define o flushMode como AUTO. O problema do flushMode configurado como AUTO é que o desenvolvedor não tem domínio sobre o momento que o ORM irá sincronizar os objetos em memória com a base de dados, o que muitas vezes, pode gerar resultados inesperados. Se você concorda comigo e deseja mudar o flushMode usado pelo SMPC é só copiar o código abaixo:</p>
-<pre><code><span class="annotation">@Produces</span>
-<span class="annotation">@ApplicationScoped</span>
-<span class="keyword">protected</span> <span class="function">FlushModeManager <span class="title">createDefaultFlushModeManager</span><span class="params">()</span> </span>{
-    FlushModeManagerImpl flushModeManager = <span class="keyword">new</span> FlushModeManagerImpl();
+<pre><code>@Produces
+@ApplicationScoped
+protected FlushModeManager createDefaultFlushModeManager() {
+    FlushModeManagerImpl flushModeManager = new FlushModeManagerImpl();
     flushModeManager.setFlushModeType(FlushModeType.COMMIT);
-    <span class="keyword">return</span> flushModeManager;
+    return flushModeManager;
 }
 </code></pre><p>Esse método irá produzir um bean CDI do tipo FlushModeManager que será usado pelo SMPC para definir o flushMode do EntityManager que ele irá gerenciar. O novo bean irá substituir o bean padrão criado pelo Seam Persistence, e com ele, você pode definir o flushMode de três maneiras: AUTO, COMMIT e MANUAL.</p>
 
@@ -268,7 +268,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2015 Marlon Patrick. All Rights Reserved.
+        Copyrights &copy; 2016 Marlon Patrick. All Rights Reserved.
     </span>
 </footer>
 
