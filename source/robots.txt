@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://itdepends.tech/sitemap.xml

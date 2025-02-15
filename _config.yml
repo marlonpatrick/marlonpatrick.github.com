@@ -118,7 +118,7 @@ theme: tranquilpeak
 deploy:
   type: git
   repo: https://github.com/marlonpatrick/marlonpatrick.github.com.git
-  branch: master
+  branch: main
 
 feed:
     type: atom
