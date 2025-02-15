@@ -3,17 +3,32 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
-description: ''
-keywords:
-author: John Doe
+title: It Depends
+subtitle: Yet Another Opinionated Software Engineering Blog
+description: Thoughts on software engineering, architecture, technical leadership, and career growth.
+
+# According to tranquilpeak documentation: You can define keywords for search engines. These keywords will be added on all pages.
+# keywords:
+# - technical leadership
+# - tech career
+# - staff engineer
+# - principal engineer
+# - software engineering
+# - software architecture
+# - software development
+# - system design
+# - software scalability
+# - software reliability
+# - software observability
+# - software quality
+
+author: Marlon Patrick
 language: en
-timezone: ''
+timezone: America/Sao_Paulo
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://itdepends.tech
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -40,7 +55,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 syntax_highlighter: highlight.js
@@ -96,9 +111,16 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: tranquilpeak
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/marlonpatrick/marlonpatrick.github.com.git
+  branch: master
+
+feed:
+    type: atom
+    path: atom.xml
+    limit: 20
