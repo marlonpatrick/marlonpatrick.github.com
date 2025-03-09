@@ -65,10 +65,6 @@
             <!-- Define author's picture -->
 
 
-    
-        
-    
-
 <header id="header" data-behavior="5">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
@@ -83,13 +79,13 @@
     
         
             <a
-                class="header-right-picture "
-                href="#about"
-                aria-label="Open the link: /#about"
+                class="header-right-icon open-algolia-search"
+                href="#search"
+                aria-label="Open the link: /#search"
             >
         
         
-            <img class="header-picture" src="https://www.gravatar.com/avatar/752cc981939ff1ba2ef979e69fe2c613?s=90" alt="Author&#39;s picture"/>
+            <i class="fa fa-search fa-lg"></i>
         
         </a>
     
@@ -112,7 +108,7 @@
                 </a>
                 <h4 class="sidebar-profile-name">Marlon Patrick</h4>
                 
-                    <h5 class="sidebar-profile-bio"><p>Christian, husband, father. Passionate about software development and obsessive about learning.</p>
+                    <h5 class="sidebar-profile-bio"><p>Christian, husband, father, passionate software developer, obsessive learner.</p>
 </h5>
                 
             </div>
@@ -131,6 +127,34 @@
                         >
                         <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
                     </a>
             </li>
             
@@ -159,20 +183,6 @@
                         >
                         <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">Archives</span>
-                    </a>
-            </li>
-            
-                <li class="sidebar-button">
-                    
-                        <a
-                            class="sidebar-button-link "
-                            href="#about"
-                            
-                            rel="noopener"
-                            title="About"
-                        >
-                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">About</span>
                     </a>
             </li>
             
@@ -555,7 +565,7 @@
         
             <h4 id="about-card-name">Marlon Patrick</h4>
         
-            <div id="about-card-bio"><p>Christian, husband, father. Passionate about software development and obsessive about learning.</p>
+            <div id="about-card-bio"><p>Christian, husband, father, passionate software developer, obsessive learner.</p>
 </div>
         
         
@@ -573,6 +583,62 @@
                 Brazil
             </div>
         
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://itdepends.tech/2025/02/14/hello-world/"
+                            aria-label=": Hello World"
+                        >
+                            <h3 class="media-heading">Hello World</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Feb 14, 2025
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                1 post found
+            </p>
+        </div>
     </div>
 </div>
 
@@ -606,6 +672,17 @@
     
 
 
+
+    
+<script src="/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('8GW68WARYY', '8545f206d1949105a3449b05a3743c68');
+      var algoliaIndex = algoliaClient.initIndex('my-hexo-blog');
+    </script>
 
 
     </body>
