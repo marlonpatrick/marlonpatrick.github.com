@@ -34,6 +34,16 @@ sidebar:
             title: global.home
             url: /
             icon: fa fa-home
+        about:
+            title: global.about
+            url: "#about"
+            icon: fa fa-question
+        search:
+            title: global.search
+            url: "#search"
+            icon: fa fa-search
+            # `open-algolia-search` classes are used to open algolia search modal
+            class: open-algolia-search
         categories:
             title: global.categories
             url: /all-categories
@@ -46,16 +56,6 @@ sidebar:
             title: global.archives
             url: /all-archives
             icon: fa fa-archive
-        # search:
-        #     title: global.search
-        #     url: "#search"
-        #     icon: fa fa-search
-        #     # `open-algolia-search` classes are used to open algolia search modal
-        #     class: open-algolia-search
-        about:
-            title: global.about
-            url: "#about"
-            icon: fa fa-question
     author_links:
         linked_in:
             title: global.linkedin
@@ -106,9 +106,9 @@ sidebar:
 #     class: open-algolia-search
 header:
     right_link:
-        url: /#about
-        icon:
-        class:
+        url: /#search
+        icon: "fa fa-search"
+        class: open-algolia-search
 
 
 # ------
