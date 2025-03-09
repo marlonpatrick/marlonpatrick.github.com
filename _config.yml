@@ -124,3 +124,23 @@ feed:
     type: atom
     path: atom.xml
     limit: 20
+
+algolia:
+  appId: "8GW68WARYY"
+  apiKey: "8545f206d1949105a3449b05a3743c68" # Search Api Key - Public
+
+  # Should be private - https://dashboard.algolia.com/account/api-keys/all?applicationId=8GW68WARYY
+  # Env variable: ALGOLIA_ADMIN_API_KEY
+  # adminApiKey: "12313123123131"
+
+  chunkSize: 5000
+  indexName: "my-hexo-blog"
+  fields:
+    - content:strip:truncate,0,500
+    - excerpt:strip
+    - gallery
+    - permalink
+    - photos
+    - slug
+    - tags
+    - title
