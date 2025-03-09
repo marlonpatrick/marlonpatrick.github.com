@@ -1,3 +1,2 @@
 User-agent: *
 Sitemap: https://itdepends.tech/sitemap.xml
-# Algolia-Crawler-Verif: 4B2ECC1F2CFB3899
